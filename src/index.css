@@ -128,6 +128,11 @@
     transition: var(--transition-smooth);
   }
   
+  .logo-transitioning {
+    @apply transform-gpu;
+    animation: logo-move 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
+  
   .logo-nav {
     @apply relative z-10;
     transition: var(--transition-smooth);
@@ -143,9 +148,22 @@
   .carousel-container {
     @apply relative overflow-hidden;
     transition: var(--transition-smooth);
+    scroll-behavior: smooth;
+    scroll-snap-type: both mandatory;
   }
   
   .project-slide {
     @apply transform transition-all duration-700 ease-out;
+    scroll-snap-align: center;
+  }
+  
+  /* Smooth logo animation keyframes */
+  @keyframes logo-move {
+    0% {
+      transform: scale(1) translate(0, 0);
+    }
+    100% {
+      transform: scale(0.25) translate(0, -45vh);
+    }
   }
 }

@@ -34,12 +34,12 @@ const Logo = ({ isAnimated = false, size = "large", className = "" }: LogoProps)
 
   if (isAnimated && !animationComplete) {
     return (
-      <div className="logo-centered">
+      <div className={`logo-centered ${isAnimating ? 'logo-transitioning' : ''}`}>
         <img 
           src={logoImage} 
           alt="Company Logo" 
-          className={`${logoSizes.hero} transition-all duration-1000 ease-out ${
-            isAnimating ? 'transform scale-50 translate-y-[-50vh]' : ''
+          className={`${isAnimating ? logoSizes.small : logoSizes.hero} transition-all duration-1500 ease-in-out ${
+            isAnimating ? 'transform translate-x-0 translate-y-[-45vh]' : ''
           }`}
         />
       </div>
