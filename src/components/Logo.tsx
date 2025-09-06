@@ -19,7 +19,7 @@ const Logo = ({ isAnimated = false, size = "large", className = "" }: LogoProps)
         // Complete animation after transition
         setTimeout(() => {
           setAnimationComplete(true);
-        }, 800);
+        }, 1200);
       }, 3000);
 
       return () => clearTimeout(timer);
@@ -34,11 +34,11 @@ const Logo = ({ isAnimated = false, size = "large", className = "" }: LogoProps)
 
   if (isAnimated && !animationComplete) {
     return (
-      <div className={`logo-centered ${isAnimating ? 'opacity-0' : 'opacity-100'} transition-opacity duration-800`}>
+      <div className={`logo-centered ${isAnimating ? 'opacity-0' : 'opacity-100'} transition-opacity duration-1000`}>
         <img 
           src={logoImage} 
           alt="Company Logo" 
-          className={`${logoSizes.hero} transition-all duration-800 ease-out ${
+          className={`${logoSizes.hero} transition-all duration-1000 ease-out ${
             isAnimating ? 'transform scale-50 translate-y-[-50vh]' : ''
           }`}
         />
