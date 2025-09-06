@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
+import { Menu } from "lucide-react";
 import Logo from "./Logo";
 
 const Navigation = () => {
@@ -41,12 +41,7 @@ const Navigation = () => {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="flex items-center gap-2 px-4 py-2 text-text-primary hover:text-accent-hover transition-colors duration-200"
             >
-              <span className="text-sm font-medium">Menu</span>
-              <ChevronDown 
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  isDropdownOpen ? "rotate-180" : ""
-                }`} 
-              />
+              <Menu className="h-5 w-5" />
             </button>
 
             {/* Dropdown */}

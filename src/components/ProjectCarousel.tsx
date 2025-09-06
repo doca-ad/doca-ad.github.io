@@ -51,32 +51,28 @@ const ProjectCarousel = () => {
             {currentProject.title}
           </h2>
           
-          <div className="relative group">
-            <img
-              src={currentImage.url}
-              alt={currentImage.alt}
-              className="w-full h-96 md:h-[500px] object-cover rounded-lg shadow-lg project-slide"
-              key={`${currentProjectIndex}-${currentImageIndex}`}
-            />
-            
-            {/* Image Navigation - Only show if multiple images */}
+          <div className="relative group flex items-center gap-8">
+            {/* Left Arrow - Outside image */}
             {currentProject.images.length > 1 && (
-              <>
-                <button
-                  onClick={() => navigateImage("left")}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                >
-                  <ChevronLeft className="h-5 w-5 text-accent-primary" />
-                </button>
-                
-                <button
-                  onClick={() => navigateImage("right")}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                >
-                  <ChevronRight className="h-5 w-5 text-accent-primary" />
-                </button>
-
-                {/* Image Dots */}
+              <button
+                onClick={() => navigateImage("left")}
+                className="bg-white/80 hover:bg-white p-2 rounded-full shadow-lg opacity-70 hover:opacity-100 transition-opacity duration-200"
+              >
+                <ChevronLeft className="h-5 w-5 text-accent-primary" />
+              </button>
+            )}
+            
+            {/* Image Container */}
+            <div className="flex-1 relative">
+              <img
+                src={currentImage.url}
+                alt={currentImage.alt}
+                className="w-full h-96 md:h-[500px] object-cover shadow-lg project-slide"
+                key={`${currentProjectIndex}-${currentImageIndex}`}
+              />
+              
+              {/* Image Dots */}
+              {currentProject.images.length > 1 && (
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
                   {currentProject.images.map((_, index) => (
                     <button
@@ -88,7 +84,17 @@ const ProjectCarousel = () => {
                     />
                   ))}
                 </div>
-              </>
+              )}
+            </div>
+
+            {/* Right Arrow - Outside image */}
+            {currentProject.images.length > 1 && (
+              <button
+                onClick={() => navigateImage("right")}
+                className="bg-white/80 hover:bg-white p-2 rounded-full shadow-lg opacity-70 hover:opacity-100 transition-opacity duration-200"
+              >
+                <ChevronRight className="h-5 w-5 text-accent-primary" />
+              </button>
             )}
           </div>
         </div>

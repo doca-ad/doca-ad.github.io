@@ -34,7 +34,7 @@ const Logo = ({ isAnimated = false, size = "large", className = "" }: LogoProps)
 
   if (isAnimated && !animationComplete) {
     return (
-      <div className={`logo-centered ${isAnimating ? 'opacity-0' : 'opacity-100'} transition-opacity duration-1000`}>
+      <div className="logo-centered">
         <img 
           src={logoImage} 
           alt="Company Logo" 
