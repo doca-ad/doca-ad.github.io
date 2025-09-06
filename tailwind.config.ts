@@ -19,6 +19,15 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        
+        // Portfolio-specific colors
+        "background-soft": "hsl(var(--background-soft))",
+        "background-subtle": "hsl(var(--background-subtle))",
+        "text-primary": "hsl(var(--text-primary))",
+        "text-secondary": "hsl(var(--text-secondary))",
+        "text-tertiary": "hsl(var(--text-tertiary))",
+        "accent-primary": "hsl(var(--accent-primary))",
+        "accent-hover": "hsl(var(--accent-hover))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

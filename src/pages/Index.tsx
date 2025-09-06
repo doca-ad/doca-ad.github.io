@@ -1,13 +1,42 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useEffect } from "react";
+import Logo from "@/components/Logo";
+import Navigation from "@/components/Navigation";
+import ProjectCarousel from "@/components/ProjectCarousel";
 
 const Index = () => {
+  const [showInitialLogo, setShowInitialLogo] = useState(true);
+
+  useEffect(() => {
+    // Hide initial logo after animation completes
+    const timer = setTimeout(() => {
+      setShowInitialLogo(false);
+    }, 3500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <>
+      {/* SEO Optimization */}
+      <title>Premium Creative Studio - Architectural & Design Portfolio</title>
+      <meta name="description" content="Discover our premium portfolio of architectural projects, brand identity design, and digital experiences. Minimalist design meets sophisticated creativity." />
+      
+      {/* Initial Logo Animation */}
+      {showInitialLogo && <Logo isAnimated />}
+      
+      {/* Main Portfolio Interface */}
+      <div className="min-h-screen bg-background">
+        {/* Navigation */}
+        <Navigation />
+        
+        {/* Main Content Area - Ensures 65%+ white background coverage */}
+        <main className="pt-20 min-h-screen bg-background">
+          <div className="min-h-screen bg-background px-4 md:px-8">
+            <ProjectCarousel />
+          </div>
+        </main>
       </div>
-    </div>
+    </>
   );
 };
 

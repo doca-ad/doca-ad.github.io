@@ -2,14 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Premium Portfolio Design System */
 
 @layer base {
   :root {
+    /* Core Colors - Premium White Focus */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 220 13% 18%;
+    
+    /* White Theme Variants */
+    --background-soft: 0 0% 99%;
+    --background-subtle: 220 14% 96%;
+
+    /* Premium Portfolio Colors */
+    --text-primary: 220 13% 18%;
+    --text-secondary: 220 9% 46%;
+    --text-tertiary: 220 9% 67%;
+    
+    /* Accent & Interactive */
+    --accent-primary: 220 13% 18%;
+    --accent-hover: 220 13% 25%;
+    
+    /* Animations */
+    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-fast: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -100,6 +116,36 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@layer components {
+  /* Logo Animation */
+  .logo-centered {
+    @apply fixed inset-0 z-50 flex items-center justify-center;
+    background: hsl(var(--background));
+    transition: var(--transition-smooth);
+  }
+  
+  .logo-nav {
+    @apply relative z-10;
+    transition: var(--transition-smooth);
+  }
+
+  /* Navigation */
+  .nav-dropdown {
+    @apply bg-white/95 backdrop-blur-lg border border-white/20 shadow-lg;
+    transition: var(--transition-fast);
+  }
+
+  /* Carousel */
+  .carousel-container {
+    @apply relative overflow-hidden;
+    transition: var(--transition-smooth);
+  }
+  
+  .project-slide {
+    @apply transform transition-all duration-700 ease-out;
   }
 }
