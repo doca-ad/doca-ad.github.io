@@ -1,93 +1,166 @@
-import { useState, useEffect } from "react";
-import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { projects, Project } from "@/data/projects";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 const ProjectCarousel = () => {
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const currentProject = projects[currentProjectIndex];
   const currentImage = currentProject?.images[currentImageIndex];
+
+  // Handle scroll with snap behavior
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const scrollTop = container.scrollTop;
+      const containerHeight = container.clientHeight;
+      const newIndex = Math.round(scrollTop / containerHeight);
+      setCurrentProjectIndex(Math.min(Math.max(newIndex, 0), projects.length - 1));
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Reset image index when project changes
   useEffect(() => {
     setCurrentImageIndex(0);
   }, [currentProjectIndex]);
 
-  const navigateProject = (direction: "up" | "down") => {
-    if (direction === "up") {
-      setCurrentProjectIndex((prev) => 
-        prev === 0 ? projects.length - 1 : prev - 1
-      );
-    } else {
-      setCurrentProjectIndex((prev) => 
-        prev === projects.length - 1 ? 0 : prev + 1
-      );
-    }
+  const handleImageClick = (project: Project) => {
+    setSelectedProject(project);
+    setCurrentImageIndex(0);
+    setIsModalOpen(true);
   };
 
-  const navigateImage = (direction: "left" | "right") => {
-    if (!currentProject) return;
+  const navigateImage = (direction: "left" | "right", project?: Project) => {
+    const targetProject = project || selectedProject;
+    if (!targetProject) return;
     
     if (direction === "left") {
       setCurrentImageIndex((prev) => 
-        prev === 0 ? currentProject.images.length - 1 : prev - 1
+        prev === 0 ? targetProject.images.length - 1 : prev - 1
       );
     } else {
       setCurrentImageIndex((prev) => 
-        prev === currentProject.images.length - 1 ? 0 : prev + 1
+        prev === targetProject.images.length - 1 ? 0 : prev + 1
       );
     }
   };
 
-  if (!currentProject || !currentImage) return null;
-
   return (
-    <div className="carousel-container h-screen flex items-center justify-center px-8 scroll-smooth">
-      <div className="relative max-w-4xl mx-auto">
-        {/* Main Project Display */}
-        <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-light text-text-primary mb-12 transition-all duration-500 ease-in-out">
-            {currentProject.title}
-          </h2>
+    <>
+      {/* Vertical Scroll Container */}
+      <div 
+        ref={containerRef}
+        className="h-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory scrollbar-hide"
+      >
+        
+        {projects.map((project, projectIndex) => (
+          <div 
+            key={project.id} 
+            className="h-screen flex items-center justify-center px-8 snap-start"
+          >
+            <div className="relative max-w-4xl mx-auto">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl md:text-3xl font-light text-text-primary mb-12 transition-all duration-500 ease-in-out">
+                  {project.title}
+                </h2>
+                
+                <div className="relative">
+                  <div 
+                    className="cursor-pointer hover:scale-105 transition-transform duration-300"
+                    onClick={() => handleImageClick(project)}
+                  >
+                    <img
+                      src={project.images[0].url}
+                      alt={project.images[0].alt}
+                      className="w-full h-96 md:h-[500px] object-cover shadow-lg"
+                    />
+                    
+                    {/* Image Text Overlay - Left aligned bottom */}
+                    <div className="absolute bottom-4 left-4 text-left">
+                      <p className="text-white text-sm md:text-base font-light drop-shadow-lg">
+                        {project.images[0].alt}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Project Indicators */}
+              <div className="flex items-center justify-center">
+                <div className="flex flex-col gap-2">
+                  {projects.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`w-2 h-8 rounded-full transition-all duration-500 ease-in-out ${
+                        index === projectIndex ? "bg-accent-primary scale-105" : "bg-background-subtle"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Modal for Horizontal Carousel */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-6xl w-[90vw] h-[80vh] p-0 bg-black/95">
+          <button
+            onClick={() => setIsModalOpen(false)}
+            className="absolute top-4 right-4 z-10 bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all duration-300"
+          >
+            <X className="h-5 w-5 text-white" />
+          </button>
           
-          <div className="relative group flex items-center gap-8">
-            {/* Left Arrow - Outside image */}
-            {currentProject.images.length > 1 && (
-              <button
-                onClick={() => navigateImage("left")}
-                className="bg-white/80 hover:bg-white p-2 rounded-full shadow-lg opacity-70 hover:opacity-100 transition-all duration-300 hover:scale-105"
-              >
-                <ChevronLeft className="h-5 w-5 text-accent-primary" />
-              </button>
-            )}
-            
-            {/* Image Container */}
-            <div className="flex-1 relative overflow-hidden">
+          {selectedProject && (
+            <div className="h-full flex items-center justify-center relative group">
+              {/* Left Arrow - Only visible on hover */}
+              {selectedProject.images.length > 1 && (
+                <button
+                  onClick={() => navigateImage("left")}
+                  className="absolute left-4 z-10 bg-white/10 hover:bg-white/20 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105"
+                >
+                  <ChevronLeft className="h-6 w-6 text-white" />
+                </button>
+              )}
+              
+              {/* Image */}
               <img
-                src={currentImage.url}
-                alt={currentImage.alt}
-                className="w-full h-96 md:h-[500px] object-cover shadow-lg project-slide transition-all duration-700 ease-in-out transform"
-                key={`${currentProjectIndex}-${currentImageIndex}`}
+                src={selectedProject.images[currentImageIndex]?.url}
+                alt={selectedProject.images[currentImageIndex]?.alt}
+                className="max-w-full max-h-full object-contain transform scale-130"
+                key={currentImageIndex}
               />
               
-              {/* Image Text Overlay - Left aligned bottom */}
-              {currentImageIndex === 0 && (
-                <div className="absolute bottom-4 left-4 text-left">
-                  <p className="text-white text-sm md:text-base font-light drop-shadow-lg">
-                    {currentImage.alt}
-                  </p>
-                </div>
+              {/* Right Arrow - Only visible on hover */}
+              {selectedProject.images.length > 1 && (
+                <button
+                  onClick={() => navigateImage("right")}
+                  className="absolute right-4 z-10 bg-white/10 hover:bg-white/20 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105"
+                >
+                  <ChevronRight className="h-6 w-6 text-white" />
+                </button>
               )}
               
               {/* Image Dots */}
-              {currentProject.images.length > 1 && (
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
-                  {currentProject.images.map((_, index) => (
+              {selectedProject.images.length > 1 && (
+                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3">
+                  {selectedProject.images.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
-                      className={`w-2 h-2 rounded-full transition-all duration-300 hover:scale-125 ${
+                      className={`w-3 h-3 rounded-full transition-all duration-300 hover:scale-125 ${
                         index === currentImageIndex ? "bg-white scale-110" : "bg-white/50"
                       }`}
                     />
@@ -95,52 +168,10 @@ const ProjectCarousel = () => {
                 </div>
               )}
             </div>
-
-            {/* Right Arrow - Outside image */}
-            {currentProject.images.length > 1 && (
-              <button
-                onClick={() => navigateImage("right")}
-                className="bg-white/80 hover:bg-white p-2 rounded-full shadow-lg opacity-70 hover:opacity-100 transition-all duration-300 hover:scale-105"
-              >
-                <ChevronRight className="h-5 w-5 text-accent-primary" />
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Project Navigation */}
-        <div className="flex items-center justify-center gap-8">
-          <button
-            onClick={() => navigateProject("up")}
-            className="flex flex-col items-center gap-2 p-4 hover:bg-background-soft rounded-lg transition-all duration-300 hover:scale-105"
-          >
-            <ChevronUp className="h-6 w-6 text-text-secondary" />
-            <span className="text-xs text-text-tertiary">Previous</span>
-          </button>
-
-          {/* Project Indicators */}
-          <div className="flex flex-col gap-2">
-            {projects.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentProjectIndex(index)}
-                className={`w-2 h-8 rounded-full transition-all duration-500 ease-in-out hover:scale-110 ${
-                  index === currentProjectIndex ? "bg-accent-primary scale-105" : "bg-background-subtle"
-                }`}
-              />
-            ))}
-          </div>
-
-          <button
-            onClick={() => navigateProject("down")}
-            className="flex flex-col items-center gap-2 p-4 hover:bg-background-soft rounded-lg transition-all duration-300 hover:scale-105"
-          >
-            <ChevronDown className="h-6 w-6 text-text-secondary" />
-            <span className="text-xs text-text-tertiary">Next</span>
-          </button>
-        </div>
-      </div>
-    </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

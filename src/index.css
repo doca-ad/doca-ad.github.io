@@ -157,6 +157,16 @@
     scroll-snap-align: center;
   }
   
+  /* Scrollbar Hide */
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
   /* Smooth logo animation keyframes */
   @keyframes logo-move {
     0% {
