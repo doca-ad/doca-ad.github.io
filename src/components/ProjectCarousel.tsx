@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { projects, Project } from "@/data/projects";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 const ProjectCarousel = () => {
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
@@ -96,63 +95,66 @@ const ProjectCarousel = () => {
       </div>
 
       {/* Modal for Horizontal Carousel */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-6xl w-[90vw] h-[80vh] p-0 bg-background border-0 shadow-none">
-          <button
-            onClick={() => setIsModalOpen(false)}
-            className="absolute top-4 right-4 z-10 bg-background-subtle hover:bg-background-soft p-2 rounded-full transition-all duration-300"
-          >
-            <X className="h-5 w-5 text-text-primary" />
-          </button>
-          
-          {selectedProject && (
-            <div className="h-full flex items-center justify-center relative group">
-              {/* Left Arrow - Only visible on hover */}
-              {selectedProject.images.length > 1 && (
-                <button
-                  onClick={() => navigateImage("left")}
-                  className="absolute left-4 z-10 bg-background-subtle hover:bg-background-soft p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105"
-                >
-                  <ChevronLeft className="h-6 w-6 text-text-primary" />
-                </button>
-              )}
-              
-              {/* Image */}
-              <img
-                src={selectedProject.images[currentImageIndex]?.url}
-                alt={selectedProject.images[currentImageIndex]?.alt}
-                className="max-w-full max-h-full object-contain transform scale-130"
-                key={currentImageIndex}
-              />
-              
-              {/* Right Arrow - Only visible on hover */}
-              {selectedProject.images.length > 1 && (
-                <button
-                  onClick={() => navigateImage("right")}
-                  className="absolute right-4 z-10 bg-background-subtle hover:bg-background-soft p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105"
-                >
-                  <ChevronRight className="h-6 w-6 text-text-primary" />
-                </button>
-              )}
-              
-              {/* Image Dots */}
-              {selectedProject.images.length > 1 && (
-                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3">
-                  {selectedProject.images.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentImageIndex(index)}
-                      className={`w-3 h-3 rounded-full transition-all duration-300 hover:scale-125 ${
-                        index === currentImageIndex ? "bg-text-primary scale-110" : "bg-text-tertiary"
-                      }`}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="fixed inset-0 bg-transparent" onClick={() => setIsModalOpen(false)} />
+          <div className="relative max-w-6xl w-[90vw] h-[80vh] bg-background z-10">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-4 right-4 z-10 bg-background-subtle hover:bg-background-soft p-2 rounded-full transition-all duration-300"
+            >
+              <X className="h-5 w-5 text-text-primary" />
+            </button>
+            
+            {selectedProject && (
+              <div className="h-full flex items-center justify-center relative group">
+                {/* Left Arrow - Only visible on hover */}
+                {selectedProject.images.length > 1 && (
+                  <button
+                    onClick={() => navigateImage("left")}
+                    className="absolute left-4 z-10 bg-background-subtle hover:bg-background-soft p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105"
+                  >
+                    <ChevronLeft className="h-6 w-6 text-text-primary" />
+                  </button>
+                )}
+                
+                {/* Image */}
+                <img
+                  src={selectedProject.images[currentImageIndex]?.url}
+                  alt={selectedProject.images[currentImageIndex]?.alt}
+                  className="max-w-full max-h-full object-contain transform scale-130"
+                  key={currentImageIndex}
+                />
+                
+                {/* Right Arrow - Only visible on hover */}
+                {selectedProject.images.length > 1 && (
+                  <button
+                    onClick={() => navigateImage("right")}
+                    className="absolute right-4 z-10 bg-background-subtle hover:bg-background-soft p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105"
+                  >
+                    <ChevronRight className="h-6 w-6 text-text-primary" />
+                  </button>
+                )}
+                
+                {/* Image Dots */}
+                {selectedProject.images.length > 1 && (
+                  <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3">
+                    {selectedProject.images.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentImageIndex(index)}
+                        className={`w-3 h-3 rounded-full transition-all duration-300 hover:scale-125 ${
+                          index === currentImageIndex ? "bg-text-primary scale-110" : "bg-text-tertiary"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 };
