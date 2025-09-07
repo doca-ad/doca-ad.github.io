@@ -29,7 +29,9 @@ const Navigation = () => {
         <div className="flex items-center justify-between">
           {/* Logo - Centered */}
           <div className="absolute left-1/2 transform -translate-x-1/2">
-            <Logo size="small" />
+            <a href="/" className="hover:opacity-80 transition-opacity duration-200">
+              <Logo size="small" />
+            </a>
           </div>
 
           {/* Spacer */}

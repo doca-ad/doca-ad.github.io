@@ -70,10 +70,6 @@ const ProjectCarousel = () => {
           >
             <div className="relative max-w-4xl mx-auto">
               <div className="text-center mb-8">
-                <h2 className="text-2xl md:text-3xl font-light text-text-primary mb-12 transition-all duration-500 ease-in-out">
-                  {project.title}
-                </h2>
-                
                 <div className="relative">
                   <div 
                     className="cursor-pointer hover:scale-105 transition-transform duration-300"
@@ -94,20 +90,6 @@ const ProjectCarousel = () => {
                   </div>
                 </div>
               </div>
-
-              {/* Project Indicators */}
-              <div className="flex items-center justify-center">
-                <div className="flex flex-col gap-2">
-                  {projects.map((_, index) => (
-                    <div
-                      key={index}
-                      className={`w-2 h-8 rounded-full transition-all duration-500 ease-in-out ${
-                        index === projectIndex ? "bg-accent-primary scale-105" : "bg-background-subtle"
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         ))}
@@ -115,12 +97,12 @@ const ProjectCarousel = () => {
 
       {/* Modal for Horizontal Carousel */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-6xl w-[90vw] h-[80vh] p-0 bg-black/95">
+        <DialogContent className="max-w-6xl w-[90vw] h-[80vh] p-0 bg-background border-0 shadow-none">
           <button
             onClick={() => setIsModalOpen(false)}
-            className="absolute top-4 right-4 z-10 bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all duration-300"
+            className="absolute top-4 right-4 z-10 bg-background-subtle hover:bg-background-soft p-2 rounded-full transition-all duration-300"
           >
-            <X className="h-5 w-5 text-white" />
+            <X className="h-5 w-5 text-text-primary" />
           </button>
           
           {selectedProject && (
@@ -129,9 +111,9 @@ const ProjectCarousel = () => {
               {selectedProject.images.length > 1 && (
                 <button
                   onClick={() => navigateImage("left")}
-                  className="absolute left-4 z-10 bg-white/10 hover:bg-white/20 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105"
+                  className="absolute left-4 z-10 bg-background-subtle hover:bg-background-soft p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105"
                 >
-                  <ChevronLeft className="h-6 w-6 text-white" />
+                  <ChevronLeft className="h-6 w-6 text-text-primary" />
                 </button>
               )}
               
@@ -147,9 +129,9 @@ const ProjectCarousel = () => {
               {selectedProject.images.length > 1 && (
                 <button
                   onClick={() => navigateImage("right")}
-                  className="absolute right-4 z-10 bg-white/10 hover:bg-white/20 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105"
+                  className="absolute right-4 z-10 bg-background-subtle hover:bg-background-soft p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105"
                 >
-                  <ChevronRight className="h-6 w-6 text-white" />
+                  <ChevronRight className="h-6 w-6 text-text-primary" />
                 </button>
               )}
               
@@ -161,7 +143,7 @@ const ProjectCarousel = () => {
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
                       className={`w-3 h-3 rounded-full transition-all duration-300 hover:scale-125 ${
-                        index === currentImageIndex ? "bg-white scale-110" : "bg-white/50"
+                        index === currentImageIndex ? "bg-text-primary scale-110" : "bg-text-tertiary"
                       }`}
                     />
                   ))}
