@@ -13,13 +13,12 @@ const Contact = () => {
         <main className="pt-32 pb-16">
           <div className="max-w-4xl mx-auto px-8">
             <h1 className="text-4xl md:text-5xl font-light text-text-primary text-center mb-16">
-              Let's Work Together
+              Contact
             </h1>
             
             <div className="text-center mb-16">
               <p className="text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed">
-                Ready to start your next project? We'd love to hear about your vision 
-                and explore how we can bring it to life.
+                We are always looking forward to meeting passionate people. Don't hesitate to contact us!
               </p>
             </div>
             
@@ -30,10 +29,10 @@ const Contact = () => {
                 </div>
                 <h3 className="text-lg font-medium text-text-primary mb-2">Email</h3>
                 <a 
-                  href="mailto:hello@studio.com" 
+                  href="mailto:office@doca-ad.ro" 
                   className="text-text-secondary hover:text-accent-hover transition-colors duration-200"
                 >
-                  hello@studio.com
+                  office@doca-ad.ro
                 </a>
               </div>
               
@@ -43,11 +42,18 @@ const Contact = () => {
                 </div>
                 <h3 className="text-lg font-medium text-text-primary mb-2">Phone</h3>
                 <a 
-                  href="tel:+1234567890" 
+                  href="tel:+40760972231" 
                   className="text-text-secondary hover:text-accent-hover transition-colors duration-200"
                 >
-                  +1 (234) 567-890
+                  +40 760972231
                 </a>
+                <a 
+                  href="tel:+40723340088" 
+                  className="text-text-secondary hover:text-accent-hover transition-colors duration-200"
+                >
+                  +40 723340088
+                </a>
+
               </div>
               
               <div className="flex flex-col items-center">
@@ -56,8 +62,8 @@ const Contact = () => {
                 </div>
                 <h3 className="text-lg font-medium text-text-primary mb-2">Studio</h3>
                 <p className="text-text-secondary">
-                  New York, NY<br />
-                  United States
+                  Bucharest<br />
+                  Romania
                 </p>
               </div>
             </div>

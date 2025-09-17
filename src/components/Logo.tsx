@@ -9,20 +9,26 @@ interface LogoProps {
 
 const Logo = ({ isAnimated = false, size = "large", className = "" }: LogoProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(!isAnimated);
 
   useEffect(() => {
     if (isAnimated) {
-      // Start animation after 3 seconds
-      const timer = setTimeout(() => {
+      const startAnimationTimer = setTimeout(() => {
         setIsAnimating(true);
-        // Complete animation after transition
+
+        // Start fade-out shortly before animation ends
+        setTimeout(() => {
+          setFadeOut(true);
+        }, 100); // start fading near end of logo animation
+
+        // Fully remove after everything is done
         setTimeout(() => {
           setAnimationComplete(true);
-        }, 1200);
-      }, 3000);
+        }, 300); // slightly after full fade-out
+      }, 1000); // delay before animation starts
 
-      return () => clearTimeout(timer);
+      return () => clearTimeout(startAnimationTimer);
     }
   }, [isAnimated]);
 
@@ -34,22 +40,31 @@ const Logo = ({ isAnimated = false, size = "large", className = "" }: LogoProps)
 
   if (isAnimated && !animationComplete) {
     return (
-      <div className={`logo-centered ${isAnimating ? 'logo-transitioning' : ''}`}>
-        <img 
-          src={logoImage} 
-          alt="Company Logo" 
-          className={`${isAnimating ? logoSizes.small : logoSizes.hero} transition-all duration-1500 ease-in-out ${
-            isAnimating ? 'transform translate-x-0 translate-y-[-45vh]' : ''
-          }`}
-        />
+      <div
+        className={`fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-[100ms] ease-in-out
+        ${fadeOut ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+      >
+        <img
+          src={logoImage}
+          alt="Company Logo"
+          className={`
+            transition-transform duration-[300ms] ease-in-out transform
+            ${isAnimating ? 'translate-y-[-46vh] scale-[0.20]' : 'translate-y-0 scale-100'}
+            ${logoSizes.hero}
+          `}
+        /> 
       </div>
-    );
+    );     
   }
 
-  return (
-    <img 
-      src={logoImage} 
-      alt="Company Logo" 
+  if (isAnimated && animationComplete) {
+    return null; // let another component render the static logo
+  }
+           
+  return ( 
+    <img
+      src={logoImage}
+      alt="Company Logo"
       className={`${logoSizes[size]} logo-nav ${className}`}
     />
   );

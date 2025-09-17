@@ -4,45 +4,86 @@ const Info = () => {
   return (
     <>
       <title>Info - Premium Creative Studio</title>
-      <meta name="description" content="Learn about our creative studio's philosophy, approach, and commitment to exceptional design." />
-      
+      <meta
+        name="description"
+        content="Learn about our creative studio's philosophy, approach, and commitment to exceptional design."
+      />
+
       <div className="min-h-screen bg-background">
         <Navigation />
-        
+
         <main className="pt-32 pb-16">
           <div className="max-w-4xl mx-auto px-8">
             <h1 className="text-4xl md:text-5xl font-light text-text-primary text-center mb-16">
               About Our Studio
             </h1>
-            
-            <div className="space-y-12 text-center">
+
+            <div className="space-y-12">
               <div className="max-w-3xl mx-auto">
-                <p className="text-lg text-text-secondary leading-relaxed mb-8">
-                  We are a creative studio dedicated to crafting exceptional experiences through 
-                  thoughtful design and meticulous attention to detail.
+                <p className="text-lg text-text-secondary leading-relaxed text-justify mb-8">
+                  DOCA Architecture & Design is a Romania-based architecture practice,
+                  founded in 2024 by Ștefan Diaconescu and Vlad Căpitanu.
                 </p>
-                
-                <p className="text-base text-text-tertiary leading-relaxed">
-                  Our work spans architecture, brand identity, and digital experiences, 
-                  always with a focus on minimalism, functionality, and timeless elegance.
+
+                <p className="text-lg text-text-tertiary leading-relaxed text-justify mb-8">
+                  Our long-standing professional collaboration naturally evolved into
+                  establishing DOCA, building on a series of early joint projects and
+                  international competitions. From the outset, our work has engaged
+                  with diverse scales, with a strong emphasis on space efficiency,
+                  usability, urban integration, and human-scale architecture.
                 </p>
-              </div>
-              
-              <div className="grid md:grid-cols-3 gap-8 mt-16">
-                <div className="text-center">
-                  <h3 className="text-xl font-medium text-text-primary mb-4">Philosophy</h3>
-                  <p className="text-text-secondary">Less is more. Every element serves a purpose.</p>
-                </div>
+
+                <p className="text-lg text-text-tertiary leading-relaxed text-justify mb-8">
+                  At the core of our philosophy lies the experience of the end-user. We
+                  place the individual at the center of the architectural process,
+                  designing spaces that are not only functional but also sculptural—
+                  living environments shaped to enrich daily life.
+                </p>
+
+                <br/>
                 
-                <div className="text-center">
-                  <h3 className="text-xl font-medium text-text-primary mb-4">Approach</h3>
-                  <p className="text-text-secondary">Collaborative process with attention to detail.</p>
+                <div className="text-lg text-text-tertiary leading-relaxed text-justify mb-8">
+                  <p className="font-semibold mb-4">
+                    Selected Competitions & Projects
+                  </p>
+
+                  Central Park Book Studio – New York, 2019<br/>
+                  Weave – Sustainable Fashion Hub – Milan, 2019<br/>
+                  City Link – Copenhagen, 2020<br/>
+                  Roots – MilanCall – Milan, 2020 (2nd Prize)<br/>
                 </div>
-                
-                <div className="text-center">
-                  <h3 className="text-xl font-medium text-text-primary mb-4">Quality</h3>
-                  <p className="text-text-secondary">Uncompromising standards in every project.</p>
+                <br/>
+
+                <div className="text-lg text-text-tertiary leading-relaxed text-justify mb-8">
+                  <p className="font-semibold mb-4">
+                    Our Complementary Professional Paths
+                  </p>
+                  <ul className="list-inside space-y-4 text-justify text-center">
+                    <li>
+                      <span className="font-medium">Ștefan Diaconescu</span> refined his
+                      expertise in BIM management and project management, with a focus
+                      on problem-solving, site coordination, and technical detailing.
+                      His ongoing research into technical solutions continuously
+                      enhances the quality and innovation of our work.
+                    </li>
+                    <li>
+                      <span className="font-medium">Vlad Căpitanu</span> deepened his
+                      architectural perspective through a Master’s degree in Sustainable
+                      Urban Planning and Design at KTH, Sweden. His Scandinavian
+                      experience—both academic and professional—shapes his design
+                      philosophy, emphasizing scale, materiality, sustainability, and
+                      geometry.
+                    </li>
+                  </ul>
                 </div>
+
+                <p className="text-lg text-text-tertiary leading-relaxed text-justify">
+                  DOCA represents the synthesis of these experiences—a balance between
+                  technical precision and conceptual vision. We believe architecture
+                  should be human-centered, creating spaces that respond to both
+                  individual and collective needs while integrating seamlessly into
+                  their cultural and urban contexts.
+                </p>
               </div>
             </div>
           </div>

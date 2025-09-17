@@ -27,6 +27,14 @@ const Navigation = () => {
     <nav className="fixed top-0 left-0 right-0 z-40 bg-background/80 backdrop-blur-lg border-b border-background-subtle">
       <div className="max-w-7xl mx-auto px-8 py-4">
         <div className="flex items-center justify-between">
+
+          {/* Text - Left */}
+          <div className="absolute left transform">
+            <a href="/" className="hover:opacity-80 transition-opacity duration-200">
+              DOCA &nbsp; | &nbsp; Architecture & Design
+            </a>
+          </div>
+
           {/* Logo - Centered */}
           <div className="absolute left-1/2 transform -translate-x-1/2">
             <a href="/" className="hover:opacity-80 transition-opacity duration-200">
