@@ -13,7 +13,6 @@ const ProjectCarousel = () => {
   const currentProject = projects[currentProjectIndex];
   const currentImage = currentProject?.images[currentImageIndex];
 
-
   const [direction, setDirection] = useState<"left" | "right">("right");
 
   const navigateImage = (dir: "left" | "right", project?: Project) => {
@@ -53,6 +52,21 @@ const ProjectCarousel = () => {
     setCurrentImageIndex(0);
   }, [currentProjectIndex]);
 
+  // Close modal on Escape key
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsModalOpen(false);
+      }
+    };
+
+    if (isModalOpen) {
+      document.addEventListener("keydown", handleEsc);
+    }
+
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [isModalOpen]);
+
   const handleImageClick = (project: Project) => {
     setSelectedProject(project);
     setCurrentImageIndex(0);
@@ -66,10 +80,7 @@ const ProjectCarousel = () => {
         ref={containerRef}
         className="h-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory scrollbar-hide"
       >
-        
-        {projects.map((project, projectIndex) => {
-          if (project.home)
-            return (
+        {projects.map((project) => project.home && (
           <div 
             key={project.id} 
             className="h-screen flex items-center justify-center px-8 snap-start"
@@ -86,22 +97,12 @@ const ProjectCarousel = () => {
                       alt={project.images[0].alt}
                       className="w-full h-96 md:h-[500px] object-cover shadow-lg"
                     />
-                    
-                    {/* Image Text Overlay - Left aligned bottom */}
-                    <div className="absolute bottom-4 left-4 text-left">
-                      <p className="text-white text-sm md:text-base font-light drop-shadow-lg">
-                      </p>
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          )
-        }
-        )
-          
-        }
+        ))}
       </div>
 
       {/* Modal for Horizontal Carousel */}
@@ -115,7 +116,7 @@ const ProjectCarousel = () => {
           >
             {/* Backdrop */}
             <motion.div
-              className="fixed inset-0 "
+              className="fixed inset-0"
               onClick={() => setIsModalOpen(false)}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -139,7 +140,7 @@ const ProjectCarousel = () => {
 
               {selectedProject && (
                 <div className="h-full flex items-center justify-center relative group">
-                  {/* Left Arrow - Only visible on hover */}
+                  {/* Left Arrow */}
                   {selectedProject.images.length > 1 && (
                     <button
                       onClick={() => navigateImage("left")}
@@ -148,9 +149,8 @@ const ProjectCarousel = () => {
                       <ChevronLeft className="h-6 w-6 text-text-primary" />
                     </button>
                   )}
-                
-                  {/* Image */}
 
+                  {/* Image */}
                   <AnimatePresence mode="wait">
                     <motion.img
                       key={currentImageIndex}
@@ -163,8 +163,8 @@ const ProjectCarousel = () => {
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                     />
                   </AnimatePresence>
-                
-                  {/* Right Arrow - Only visible on hover */}
+
+                  {/* Right Arrow */}
                   {selectedProject.images.length > 1 && (
                     <button
                       onClick={() => navigateImage("right")}
@@ -173,7 +173,7 @@ const ProjectCarousel = () => {
                       <ChevronRight className="h-6 w-6 text-text-primary" />
                     </button>
                   )}
-                
+
                   {/* Image Dots */}
                   {selectedProject.images.length > 1 && (
                     <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3">
@@ -190,7 +190,6 @@ const ProjectCarousel = () => {
                   )}
                 </div>
               )}
-
             </motion.div>
           </motion.div>
         )}

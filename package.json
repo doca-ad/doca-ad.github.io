@@ -6,6 +6,7 @@
   "homepage": "https://doca-ad.github.io/doca-ad",
   "scripts": {
     "deploy": "npm run build && gh-pages -d dist",
+    "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview --port 8080"

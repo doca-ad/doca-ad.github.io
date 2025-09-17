@@ -39,6 +39,21 @@ const Projects = () => {
     };
   }, [expandedProject, selectedImage]);
 
+  // Close modal on Escape key
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedImage(null);
+      }
+    };
+
+    if (selectedImage) {
+      document.addEventListener("keydown", handleEsc);
+    }
+
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [selectedImage]);
+
   const ProjectRow = ({ project }: { project: Project }) => {
     const isExpanded = expandedProject === project.id;
 
@@ -73,17 +88,18 @@ const Projects = () => {
                         alt={image.alt}
                         className="h-auto max-h-48 w-auto object-contain shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
                         onClick={(e) => {
-                          e.stopPropagation(); // prevent collapsing/expanding project
+                          e.stopPropagation();
                           setSelectedImage(image.url);
                         }}
                       />
                     </div>
                   </CarouselItem>
                 ))}
-                {/* Description card */}
+
+                {/* Description card with scrollable text */}
                 <CarouselItem className="md:basis-1/2 lg:basis-1/2">
                   <div className="p-1">
-                    <div className="h-48 bg-muted/20 flex flex-col justify-center p-6">
+                    <div className="h-48 bg-muted/20 flex flex-col p-6 overflow-y-auto">
                       <h3 className="text-lg font-medium text-text-primary mb-3">
                         {project.title}
                       </h3>
@@ -94,6 +110,7 @@ const Projects = () => {
                   </div>
                 </CarouselItem>
               </CarouselContent>
+
               {project.images.length > 2 && (
                 <>
                   <CarouselPrevious className="left-2" />
@@ -147,31 +164,24 @@ const Projects = () => {
               setSelectedImage(null);
             }}
           >
-            <div
-              className="relative max-w-6xl w-[90vw] h-[80vh] z-10"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-            >
+            <div className="relative max-w-6xl w-[90vw] h-[80vh] z-10">
+              <button
+                className="absolute top-6 right-6 text-white text-3xl font-bold"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedImage(null);
+                }}
+              >
+                ✕
+              </button>
 
-            <button
-              className="absolute top right-6 text-white text-3xl font-bold"
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedImage(null);
-              }}
-            >
-              ✕
-            </button>
               <div className="h-full flex items-center justify-center relative group">
-
-            <img
-              src={selectedImage}
-              alt="Expanded"
-              className="max-w-full max-h-full object-contain transform"
-              onClick={(e) => e.stopPropagation()} // prevent close when clicking image itself
-            />
+                <img
+                  src={selectedImage}
+                  alt="Expanded"
+                  className="max-w-full max-h-full object-contain transform"
+                  onClick={(e) => e.stopPropagation()}
+                />
               </div>
             </div>
           </div>
