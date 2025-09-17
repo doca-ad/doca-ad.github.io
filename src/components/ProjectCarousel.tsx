@@ -67,7 +67,9 @@ const ProjectCarousel = () => {
         className="h-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory scrollbar-hide"
       >
         
-        {projects.map((project, projectIndex) => (
+        {projects.map((project, projectIndex) => {
+          if (project.home)
+            return (
           <div 
             key={project.id} 
             className="h-screen flex items-center justify-center px-8 snap-start"
@@ -95,7 +97,11 @@ const ProjectCarousel = () => {
               </div>
             </div>
           </div>
-        ))}
+          )
+        }
+        )
+          
+        }
       </div>
 
       {/* Modal for Horizontal Carousel */}
