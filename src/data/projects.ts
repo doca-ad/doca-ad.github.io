@@ -40,6 +40,7 @@ export const projects: Project[] = [
     year: "2024",
     type: "Architecture",
     home: true,
+    description: "The project is strongly defined by its relationship to the Danube River and its deliberate southern orientation. One of the site’s most distinctive characteristics lies in its cardinal positioning, with the southern axis aligning directly with the main river view. Embracing this natural condition, the design opens itself towards the landscape, establishing expansive glazed surfaces that frame the panorama and dissolve the boundary between interior and exterior. These transparent elements not only strengthen the transversal axis—linking entrance, dwelling, courtyard, and river—but also act as delicate thresholds, blurring the line between built space and natural surroundings.Set within a rural context, the project draws inspiration from the surrounding vernacular. The presence of predominantly single-story houses informed a restrained volumetric approach. The result is a discreet silhouette: a low, elongated roof with an attic-like upper floor, ensuring the intervention integrates seamlessly into the existing urban fabric.Materiality plays a pivotal role in grounding the architecture within its context. Local textures and finishes are employed to accentuate the clarity of the geometry while anchoring the building deeply into its landscape. Through this interplay of volume, orientation, and material, the house emerges as both a continuation of its environment and a contemporary reinterpretation of place.",
     images: [
       {
         id: "arch-1",
@@ -128,11 +129,11 @@ export const projects: Project[] = [
   {
     id: "project-5",
     home: false,
-    location: "",
-    year: "2024",
-    type: "",
-    title: "?",
-    description: "",
+    location: "Sibiu Romania",
+    year: "2025",
+    type: "Interior Design",
+    title: "Interior design for a private residence",
+    description: "The design concept is built around a continuous horizontal band of color that visually anchors and unifies the kitchen, dining and living areas. A folding glass partition separates the kitchen from the dining space, allowing it to open up entirely or close off as needed - offering flexibility without compromising flow. The result is a balanced, functional interior where cohesion and comfort defines the experience.",
     images: [
       {
         id: "arch-1",

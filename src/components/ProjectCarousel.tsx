@@ -52,20 +52,24 @@ const ProjectCarousel = () => {
     setCurrentImageIndex(0);
   }, [currentProjectIndex]);
 
-  // Close modal on Escape key
+  // Close modal on Escape key + navigate with arrows
   useEffect(() => {
-    const handleEsc = (event: KeyboardEvent) => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsModalOpen(false);
+      } else if (event.key === "ArrowLeft") {
+        navigateImage("left");
+      } else if (event.key === "ArrowRight") {
+        navigateImage("right");
       }
     };
 
     if (isModalOpen) {
-      document.addEventListener("keydown", handleEsc);
+      document.addEventListener("keydown", handleKeyDown);
     }
 
-    return () => document.removeEventListener("keydown", handleEsc);
-  }, [isModalOpen]);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isModalOpen, selectedProject]); 
 
   const handleImageClick = (project: Project) => {
     setSelectedProject(project);

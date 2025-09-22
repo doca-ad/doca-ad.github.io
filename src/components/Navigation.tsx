@@ -31,7 +31,8 @@ const Navigation = () => {
           {/* Text - Left */}
           <div className="absolute left transform">
             <a href="/" className="hover:opacity-80 transition-opacity duration-200">
-              DOCA &nbsp; | &nbsp; Architecture & Design
+              <span className="md:hidden">DOCA</span>
+              <span className="hidden md:inline">DOCA &nbsp; | &nbsp; Architecture & Design</span>
             </a>
           </div>
 

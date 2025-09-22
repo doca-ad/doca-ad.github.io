@@ -60,13 +60,13 @@ const Projects = () => {
     return (
       <div className="border-b border-border overflow-hidden">
         <div
-          className="grid grid-cols-4 gap-4 py-3 px-4 cursor-pointer hover:bg-muted/30 transition-colors"
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 py-3 px-4 cursor-pointer hover:bg-muted/30 transition-colors"
           onClick={() => toggleExpanded(project.id)}
         >
           <div className="font-medium text-text-primary text-sm">{project.title}</div>
           <div className="text-text-secondary text-sm">{project.type}</div>
-          <div className="text-text-secondary text-sm">{project.location}</div>
-          <div className="text-text-secondary text-sm">{project.year}</div>
+          <div className="text-text-secondary text-sm hidden md:block">{project.location}</div>
+          <div className="text-text-secondary text-sm hidden md:block">{project.year}</div>
         </div>
 
         <div
