@@ -26,7 +26,7 @@ const Logo = ({ isAnimated = false, size = "large", className = "" }: LogoProps)
         setTimeout(() => {
           setAnimationComplete(true);
         }, 1300); // slightly after full fade-out
-      }, 2000); // delay before animation starts
+      }, 800); // delay before animation starts
 
       return () => clearTimeout(startAnimationTimer);
     }
