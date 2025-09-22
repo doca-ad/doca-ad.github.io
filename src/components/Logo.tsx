@@ -20,12 +20,12 @@ const Logo = ({ isAnimated = false, size = "large", className = "" }: LogoProps)
         // Start fade-out shortly before animation ends
         setTimeout(() => {
           setFadeOut(true);
-        }, 100); // start fading near end of logo animation
+        }, 800); // start fading near end of logo animation
 
         // Fully remove after everything is done
         setTimeout(() => {
           setAnimationComplete(true);
-        }, 300); // slightly after full fade-out
+        }, 1300); // slightly after full fade-out
       }, 2000); // delay before animation starts
 
       return () => clearTimeout(startAnimationTimer);
@@ -48,7 +48,7 @@ const Logo = ({ isAnimated = false, size = "large", className = "" }: LogoProps)
           src={logoImage}
           alt="Company Logo"
           className={`
-            transition-transform duration-[300ms] ease-in-out transform
+            transition-transform duration-1000 ease-in-out
             ${isAnimating ? 'translate-y-[-46vh] scale-[0.20]' : 'translate-y-0 scale-100'}
             ${logoSizes.hero}
           `}
