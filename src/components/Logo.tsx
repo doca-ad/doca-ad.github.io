@@ -33,7 +33,7 @@ const Logo = ({ isAnimated = false, size = "large", className = "" }: LogoProps)
   }, [isAnimated]);
 
   const logoSizes = {
-    small: "h-8 w-auto",
+    small: "h-11 w-auto",
     large: "h-16 w-auto md:h-20",
     hero: "h-32 w-auto md:h-40"
   };
@@ -49,7 +49,7 @@ const Logo = ({ isAnimated = false, size = "large", className = "" }: LogoProps)
           alt="Company Logo"
           className={`
             transition-transform duration-1000 ease-in-out
-            ${isAnimating ? 'translate-y-[-46vh] scale-[0.20]' : 'translate-y-0 scale-100'}
+            ${isAnimating ? 'translate-y-[-46vh] scale-[0.275]' : 'translate-y-0 scale-100'}
             ${logoSizes.hero}
           `}
         /> 

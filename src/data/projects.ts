@@ -110,7 +110,7 @@ export const projects: Project[] = [
 	{
 		id: "project-4",
 		home: false,
-		location: "Voluntari, Bucharest, Romania",
+		location: "Bucharest, Romania",
 		year: "2024",
 		type: "Interior Design",
 		title: "INTERIOR DESIGN FOR A PRIVATE RESIDENCE",

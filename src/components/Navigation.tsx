@@ -25,12 +25,12 @@ const Navigation = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 bg-background/80 backdrop-blur-lg border-b border-background-subtle">
-      <div className="max-w-7xl mx-auto px-8 py-4">
+      <div className="w-full px-8 py-6">
         <div className="flex items-center justify-between">
 
           {/* Text - Left */}
-          <div className="absolute left transform">
-            <a href="/" className="hover:opacity-80 transition-opacity duration-200">
+          <div className="flex-none">
+            <a href="/" className="hover:opacity-80 transition-opacity duration-200 text-lg">
               <span className="md:hidden">DOCA</span>
               <span className="hidden md:inline">DOCA &nbsp; | &nbsp; Architecture & Design</span>
             </a>
@@ -47,12 +47,12 @@ const Navigation = () => {
           <div className="flex-1" />
 
           {/* Dropdown Menu - Right */}
-          <div className="relative" ref={dropdownRef}>
+          <div className="relative flex-none" ref={dropdownRef}>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-2 px-4 py-2 text-text-primary hover:text-accent-hover transition-colors duration-200"
+              className="flex items-center gap-2 text-text-primary hover:text-accent-hover transition-colors duration-200"
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="h-6 w-6" />
             </button>
 
             {/* Dropdown */}
