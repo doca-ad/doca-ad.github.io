@@ -52,6 +52,43 @@ const ProjectCarousel = () => {
     setCurrentImageIndex(0);
   }, [currentProjectIndex]);
 
+  // Auto-scroll after 30 seconds of inactivity
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || isModalOpen) return;
+
+    let inactivityTimer: NodeJS.Timeout;
+
+    const resetTimer = () => {
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(() => {
+        const homeProjects = projects.filter(p => p.home);
+        const currentIndex = homeProjects.findIndex(p => p.id === projects[currentProjectIndex]?.id);
+        const nextIndex = (currentIndex + 1) % homeProjects.length;
+        const nextProjectIndex = projects.findIndex(p => p.id === homeProjects[nextIndex]?.id);
+
+        container.scrollTo({
+          top: nextProjectIndex * container.clientHeight,
+          behavior: 'smooth'
+        });
+      }, 30000);
+    };
+
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    events.forEach(event => {
+      document.addEventListener(event, resetTimer);
+    });
+
+    resetTimer();
+
+    return () => {
+      clearTimeout(inactivityTimer);
+      events.forEach(event => {
+        document.removeEventListener(event, resetTimer);
+      });
+    };
+  }, [currentProjectIndex, isModalOpen]);
+
   // Close modal on Escape key + navigate with arrows
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -80,29 +117,33 @@ const ProjectCarousel = () => {
   return (
     <>
       {/* Vertical Scroll Container */}
-      <div 
+      <div
         ref={containerRef}
-        className="h-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory scrollbar-hide"
+        className="h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
+        style={{ scrollBehavior: 'smooth' }}
       >
         {projects.map((project) => project.home && (
-          <div 
-            key={project.id} 
-            className="h-screen flex items-center justify-center px-8 snap-start"
+          <div
+            key={project.id}
+            className="h-screen flex flex-col justify-center px-8 snap-start pt-32"
           >
             <div className="relative max-w-4xl mx-auto">
-              <div className="text-center mb-8">
+              <div className="text-center">
                 <div className="relative">
-                  <div 
+                  <div
                     className="cursor-pointer hover:scale-105 transition-transform duration-300"
                     onClick={() => handleImageClick(project)}
                   >
                     <img
                       src={project.images[0].url}
                       alt={project.images[0].alt}
-                      className="w-full h-96 md:h-[500px] object-cover shadow-lg"
+                      className="w-full h-[66.67vh] object-cover shadow-lg mx-auto"
                     />
                   </div>
                 </div>
+                <h2 className="mt-8 text-xl md:text-2xl font-light text-text-primary">
+                  {project.title}
+                </h2>
               </div>
             </div>
           </div>

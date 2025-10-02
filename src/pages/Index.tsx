@@ -30,8 +30,8 @@ const Index = () => {
                 <Navigation />
         
                 {/* Main Content Area - Ensures 65%+ white background coverage */}
-                <main className="pt-20 min-h-screen bg-background">
-                    <div className="min-h-screen bg-background px-4 md:px-8">
+                <main className="min-h-screen bg-background">
+                    <div className="h-screen bg-background px-4 md:px-8">
                         <ProjectCarousel />
                     </div>
                 </main>

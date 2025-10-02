@@ -74,50 +74,51 @@ const Projects = () => {
             isExpanded ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <div className="px-4 pb-4">
-            <Carousel className="w-full">
-              <CarouselContent>
-                {project.images.map((image) => (
-                  <CarouselItem
-                    key={image.id}
-                    className="basis-auto shrink-0 grow-0 w-fit"
-                  >
-                    <div className="p-1">
-                      <img
-                        src={image.url}
-                        alt={image.alt}
-                        className="h-auto max-h-48 w-auto object-contain shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedImage(image.url);
-                        }}
-                      />
-                    </div>
-                  </CarouselItem>
-                ))}
+          <div className="px-4 pb-4 flex gap-4">
+            {/* Carousel - 2/3 width */}
+            <div className="w-2/3 px-12">
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {project.images.map((image) => (
+                    <CarouselItem
+                      key={image.id}
+                      className="basis-auto shrink-0 grow-0 w-fit"
+                    >
+                      <div className="p-1">
+                        <img
+                          src={image.url}
+                          alt={image.alt}
+                          className="h-auto max-h-60 w-auto object-contain shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedImage(image.url);
+                          }}
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
 
-                {/* Description card with scrollable text */}
-                <CarouselItem className="md:basis-1/2 lg:basis-1/2">
-                  <div className="p-1">
-                    <div className="h-48 bg-muted/20 flex flex-col p-6 overflow-y-auto">
-                      <h3 className="text-lg font-medium text-text-primary mb-3">
-                        {project.title}
-                      </h3>
-                      <p className="text-sm text-text-secondary leading-relaxed">
-                        {project.description}
-                      </p>
-                    </div>
-                  </div>
-                </CarouselItem>
-              </CarouselContent>
+                {project.images.length > 1 && (
+                  <>
+                    <CarouselPrevious className="-left-12" />
+                    <CarouselNext className="-right-12" />
+                  </>
+                )}
+              </Carousel>
+            </div>
 
-              {project.images.length > 2 && (
-                <>
-                  <CarouselPrevious className="left-2" />
-                  <CarouselNext className="right-2" />
-                </>
-              )}
-            </Carousel>
+            {/* Description - 1/3 width */}
+            <div className="w-1/3">
+              <div className="h-60 bg-muted/20 flex flex-col p-6 overflow-y-auto">
+                <h3 className="text-lg font-medium text-text-primary mb-3">
+                  {project.title}
+                </h3>
+                <p className="text-sm text-text-secondary leading-relaxed">
+                  {project.description}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
