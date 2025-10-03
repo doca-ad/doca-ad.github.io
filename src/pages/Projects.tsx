@@ -99,12 +99,12 @@ const Projects = () => {
 
         <div
           className={`transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
-            isExpanded ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
+            isExpanded ? "max-h-[600px] md:max-h-80 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <div className="px-4 pb-4 flex gap-4">
-            {/* Carousel - 2/3 width */}
-            <div className="w-2/3 px-12">
+          <div className="px-4 pb-4 flex flex-col md:flex-row gap-4">
+            {/* Carousel - full width on mobile, 2/3 width on desktop */}
+            <div className="w-full md:w-2/3 px-12">
               <Carousel className="w-full">
                 <CarouselContent>
                   {project.images.map((image, index) => (
@@ -136,8 +136,8 @@ const Projects = () => {
               </Carousel>
             </div>
 
-            {/* Description - 1/3 width */}
-            <div className="w-1/3">
+            {/* Description - full width on mobile, 1/3 width on desktop */}
+            <div className="w-full md:w-1/3">
               <div className="h-60 bg-muted/20 flex flex-col p-6 overflow-y-auto">
                 <h3 className="text-lg font-medium text-text-primary mb-3">
                   {project.title}

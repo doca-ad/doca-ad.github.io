@@ -150,13 +150,13 @@ const ProjectCarousel = () => {
         ))}
 
         {/* Contact Section */}
-        <div className="h-screen flex flex-col justify-center px-8 snap-start pt-32">
+        <div className="h-screen flex flex-col justify-center px-4 md:px-8 snap-start pt-32 pb-8">
           <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-16">
-              <p className="text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed mb-4">
+            <div className="text-center mb-12 md:mb-16">
+              <p className="text-base md:text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed mb-4">
                 We are always looking forward to meeting passionate people. Don't hesitate to contact us!
               </p>
-              <p className="text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed">
+              <p className="text-base md:text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed">
                 You can also find us on social media platforms:{" "}
                 <a
                   href="https://www.instagram.com/doca_architecture/"
@@ -178,7 +178,7 @@ const ProjectCarousel = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-12 text-center">
+            <div className="grid md:grid-cols-3 gap-8 md:gap-12 text-center">
               <div className="flex flex-col items-center">
                 <a
                   href="mailto:office@doca-ad.ro"

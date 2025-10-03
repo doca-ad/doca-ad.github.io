@@ -10,18 +10,18 @@ const Contact = () => {
         <Navigation />
 
         <main className="min-h-screen flex flex-col">
-          <div className="max-w-4xl mx-auto px-8 pt-32">
-            <h1 className="text-4xl md:text-5xl font-light text-text-primary text-center mb-16">
+          <div className="max-w-4xl mx-auto px-4 md:px-8 pt-32 pb-8">
+            <h1 className="text-4xl md:text-5xl font-light text-text-primary text-center mb-8 md:mb-16">
               Contact
             </h1>
           </div>
 
-          <div className="max-w-4xl mx-auto px-8 flex-1 flex flex-col justify-center -mt-32">
-            <div className="text-center mb-16">
-              <p className="text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed mb-4">
+          <div className="max-w-4xl mx-auto px-4 md:px-8 flex-1 flex flex-col justify-center md:-mt-32">
+            <div className="text-center mb-12 md:mb-16">
+              <p className="text-base md:text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed mb-4">
                 We are always looking forward to meeting passionate people. Don't hesitate to contact us!
               </p>
-              <p className="text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed">
+              <p className="text-base md:text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed">
                 You can also find us on social media platforms:{" "}
                 <a
                   href="https://www.instagram.com/doca_architecture/"
@@ -43,7 +43,7 @@ const Contact = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-12 text-center">
+            <div className="grid md:grid-cols-3 gap-8 md:gap-12 text-center">
               <div className="flex flex-col items-center">
                 <a
                   href="mailto:office@doca-ad.ro"
