@@ -84,9 +84,14 @@ const Contact = () => {
               </div>
 
               <div className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-background-subtle rounded-full flex items-center justify-center mb-4">
+                <a
+                  href="https://www.google.com/maps/space/moon/@47.8248832,79.6698943,22671584m/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI1MDkzMC4wIKXMDSoASAFQAw%3D%3D"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-12 h-12 bg-background-subtle rounded-full flex items-center justify-center mb-4 hover:bg-background-soft transition-colors duration-200"
+                >
                   <MapPin className="h-5 w-5 text-accent-primary" />
-                </div>
+                </a>
                 <h3 className="text-lg font-medium text-text-primary mb-2">Studio</h3>
                 <p className="text-text-secondary">
                   Bucharest<br />
