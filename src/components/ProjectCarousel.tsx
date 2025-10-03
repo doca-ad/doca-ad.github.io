@@ -125,9 +125,9 @@ const ProjectCarousel = () => {
         {projects.map((project) => project.home && (
           <div
             key={project.id}
-            className="h-screen flex flex-col justify-center px-8 snap-start pt-32"
+            className="h-screen flex flex-col justify-center px-8 snap-start pt-24 md:pt-32 pb-16"
           >
-            <div className="relative max-w-4xl mx-auto">
+            <div className="relative max-w-4xl mx-auto w-full">
               <div className="text-center">
                 <div className="relative">
                   <div
@@ -137,11 +137,11 @@ const ProjectCarousel = () => {
                     <img
                       src={project.images[0].url}
                       alt={project.images[0].alt}
-                      className="w-full h-[66.67vh] object-cover shadow-lg mx-auto"
+                      className="w-full h-[60vh] md:h-[66.67vh] object-cover shadow-lg mx-auto"
                     />
                   </div>
                 </div>
-                <h2 className="mt-8 text-xl md:text-2xl font-light text-text-primary">
+                <h2 className="mt-4 md:mt-8 text-xl md:text-2xl font-light text-text-primary">
                   {project.title}
                 </h2>
               </div>
