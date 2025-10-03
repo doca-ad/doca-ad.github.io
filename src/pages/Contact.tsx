@@ -45,38 +45,44 @@ const Contact = () => {
 
             <div className="grid md:grid-cols-3 gap-12 text-center">
               <div className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-background-subtle rounded-full flex items-center justify-center mb-4">
+                <a
+                  href="mailto:office@doca-ad.ro"
+                  className="w-12 h-12 bg-background-subtle rounded-full flex items-center justify-center mb-4 hover:bg-background-soft transition-colors duration-200"
+                >
                   <Mail className="h-5 w-5 text-accent-primary" />
-                </div>
+                </a>
                 <h3 className="text-lg font-medium text-text-primary mb-2">Email</h3>
-                <a 
-                  href="mailto:office@doca-ad.ro" 
+                <a
+                  href="mailto:office@doca-ad.ro"
                   className="text-text-secondary hover:text-accent-hover transition-colors duration-200"
                 >
                   office@doca-ad.ro
                 </a>
               </div>
-              
+
               <div className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-background-subtle rounded-full flex items-center justify-center mb-4">
+                <a
+                  href="tel:+40723340088"
+                  className="w-12 h-12 bg-background-subtle rounded-full flex items-center justify-center mb-4 hover:bg-background-soft transition-colors duration-200"
+                >
                   <Phone className="h-5 w-5 text-accent-primary" />
-                </div>
+                </a>
                 <h3 className="text-lg font-medium text-text-primary mb-2">Phone</h3>
-                <a 
-                  href="tel:+40760972231" 
+                <a
+                  href="tel:+40760972231"
                   className="text-text-secondary hover:text-accent-hover transition-colors duration-200"
                 >
                   +40 760972231
                 </a>
-                <a 
-                  href="tel:+40723340088" 
+                <a
+                  href="tel:+40723340088"
                   className="text-text-secondary hover:text-accent-hover transition-colors duration-200"
                 >
                   +40 723340088
                 </a>
 
               </div>
-              
+
               <div className="flex flex-col items-center">
                 <div className="w-12 h-12 bg-background-subtle rounded-full flex items-center justify-center mb-4">
                   <MapPin className="h-5 w-5 text-accent-primary" />
