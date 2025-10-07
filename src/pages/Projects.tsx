@@ -104,7 +104,7 @@ const Projects = () => {
         >
           <div className="px-4 pb-4 flex flex-col md:flex-row gap-4">
             {/* Carousel - full width on mobile, 2/3 width on desktop */}
-            <div className="w-full md:w-2/3 px-12">
+            <div className="w-full md:w-2/3 px-0 md:px-12">
               <Carousel className="w-full">
                 <CarouselContent>
                   {project.images.map((image, index) => (
@@ -116,7 +116,7 @@ const Projects = () => {
                         <img
                           src={image.url}
                           alt={image.alt}
-                          className="h-auto max-h-60 w-auto object-contain shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+                          className="h-auto max-h-60 w-full md:w-auto object-contain cursor-pointer"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleImageClick(project, index);
@@ -129,8 +129,8 @@ const Projects = () => {
 
                 {project.images.length > 1 && (
                   <>
-                    <CarouselPrevious className="-left-12" />
-                    <CarouselNext className="-right-12" />
+                    <CarouselPrevious className="-left-12 hidden md:flex" />
+                    <CarouselNext className="-right-12 hidden md:flex" />
                   </>
                 )}
               </Carousel>
@@ -139,9 +139,6 @@ const Projects = () => {
             {/* Description - full width on mobile, 1/3 width on desktop */}
             <div className="w-full md:w-1/3">
               <div className="h-60 bg-muted/20 flex flex-col p-6 overflow-y-auto">
-                <h3 className="text-lg font-medium text-text-primary mb-3">
-                  {project.title}
-                </h3>
                 <p className="text-sm text-text-secondary leading-relaxed">
                   {project.description}
                 </p>

@@ -137,7 +137,7 @@ const ProjectCarousel = () => {
                     <img
                       src={project.images[0].url}
                       alt={project.images[0].alt}
-                      className="w-full h-[60vh] md:h-[66.67vh] object-cover shadow-lg mx-auto"
+                      className="w-auto max-h-[60vh] md:max-h-[66.67vh] mx-auto"
                     />
                   </div>
                 </div>
@@ -150,9 +150,9 @@ const ProjectCarousel = () => {
         ))}
 
         {/* Contact Section */}
-        <div className="h-screen flex flex-col justify-center px-4 md:px-8 snap-start pt-32 pb-8">
+        <div className="h-screen flex flex-col justify-center items-center px-4 md:px-8 snap-start pt-24 md:pt-32">
           <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12 md:mb-16">
+            <div className="text-center mb-6 md:mb-16">
               <p className="text-base md:text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed mb-4">
                 We are always looking forward to meeting passionate people. Don't hesitate to contact us!
               </p>
@@ -288,7 +288,7 @@ const ProjectCarousel = () => {
                       key={currentImageIndex}
                       src={selectedProject.images[currentImageIndex]?.url}
                       alt={selectedProject.images[currentImageIndex]?.alt}
-                      className="max-w-full max-h-full object-contain transform scale-130"
+                      className="max-w-full max-h-full object-contain"
                       initial={{ opacity: 0, x: direction === "right" ? 50 : -50 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: direction === "right" ? -50 : 50 }}
