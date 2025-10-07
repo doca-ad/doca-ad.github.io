@@ -150,7 +150,7 @@ const ProjectCarousel = () => {
         ))}
 
         {/* Contact Section */}
-        <div className="h-screen flex flex-col justify-center items-center px-4 md:px-8 snap-start pt-24 md:pt-32">
+        <div className="h-screen flex flex-col justify-center items-center px-4 md:px-8 snap-start pt-24 md:pt-32 overflow-hidden">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-6 md:mb-16">
               <p className="text-base md:text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed mb-4">
@@ -178,7 +178,7 @@ const ProjectCarousel = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8 md:gap-12 text-center">
+            <div className="grid md:grid-cols-3 gap-6 md:gap-12 text-center">
               <div className="flex flex-col items-center">
                 <a
                   href="mailto:office@doca-ad.ro"
@@ -257,7 +257,7 @@ const ProjectCarousel = () => {
 
             {/* Modal box */}
             <motion.div
-              className="relative max-w-6xl w-[90vw] h-[80vh] bg-background z-10"
+              className="relative w-full h-full md:max-w-6xl md:w-[90vw] md:h-[80vh] bg-background z-10 px-4 md:px-0"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
@@ -271,7 +271,7 @@ const ProjectCarousel = () => {
               </button>
 
               {selectedProject && (
-                <div className="h-full flex items-center justify-center relative group">
+                <div className="h-full flex items-center justify-center relative group overflow-y-auto">
                   {/* Left Arrow */}
                   {selectedProject.images.length > 1 && (
                     <button

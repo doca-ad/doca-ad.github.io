@@ -91,8 +91,8 @@ const Projects = () => {
           className="grid grid-cols-2 md:grid-cols-12 gap-4 py-3 px-4 cursor-pointer hover:bg-muted/30 transition-colors"
           onClick={() => toggleExpanded(project.id)}
         >
-          <div className="font-medium text-text-primary text-sm md:col-span-6">{project.title}</div>
-          <div className="text-text-secondary text-sm md:col-span-2">{project.type}</div>
+          <div className="font-medium text-text-primary text-sm md:col-span-4">{project.title}</div>
+          <div className="text-text-secondary text-sm md:col-span-4">{project.type}</div>
           <div className="text-text-secondary text-sm hidden md:block md:col-span-2 text-center">{project.location}</div>
           <div className="text-text-secondary text-sm hidden md:block md:col-span-2 text-right">{project.year}</div>
         </div>
