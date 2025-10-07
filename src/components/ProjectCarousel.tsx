@@ -150,13 +150,13 @@ const ProjectCarousel = () => {
         ))}
 
         {/* Contact Section */}
-        <div className="h-screen flex flex-col justify-center items-center px-4 md:px-8 snap-start pt-24 md:pt-32 overflow-hidden">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-6 md:mb-16">
-              <p className="text-base md:text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed mb-4">
+        <div className="h-screen flex flex-col justify-center items-center px-4 md:px-8 snap-start py-16 md:pt-32 md:pb-16 overflow-hidden">
+          <div className="max-w-4xl mx-auto w-full">
+            <div className="text-center mb-4 md:mb-16">
+              <p className="text-sm md:text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed mb-3 md:mb-4">
                 We are always looking forward to meeting passionate people. Don't hesitate to contact us!
               </p>
-              <p className="text-base md:text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed">
+              <p className="text-sm md:text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed">
                 You can also find us on social media platforms:{" "}
                 <a
                   href="https://www.instagram.com/doca_architecture/"
@@ -178,18 +178,18 @@ const ProjectCarousel = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 md:gap-12 text-center">
+            <div className="grid md:grid-cols-3 gap-5 md:gap-12 text-center">
               <div className="flex flex-col items-center">
                 <a
                   href="mailto:office@doca-ad.ro"
-                  className="w-12 h-12 bg-background-subtle rounded-full flex items-center justify-center mb-4 hover:bg-background-soft transition-colors duration-200"
+                  className="w-10 h-10 md:w-12 md:h-12 bg-background-subtle rounded-full flex items-center justify-center mb-2 md:mb-4 hover:bg-background-soft transition-colors duration-200"
                 >
-                  <Mail className="h-5 w-5 text-accent-primary" />
+                  <Mail className="h-4 w-4 md:h-5 md:w-5 text-accent-primary" />
                 </a>
-                <h3 className="text-lg font-medium text-text-primary mb-2">Email</h3>
+                <h3 className="text-base md:text-lg font-medium text-text-primary mb-1 md:mb-2">Email</h3>
                 <a
                   href="mailto:office@doca-ad.ro"
-                  className="text-text-secondary hover:text-accent-hover transition-colors duration-200"
+                  className="text-sm md:text-base text-text-secondary hover:text-accent-hover transition-colors duration-200"
                 >
                   office@doca-ad.ro
                 </a>
@@ -198,20 +198,20 @@ const ProjectCarousel = () => {
               <div className="flex flex-col items-center">
                 <a
                   href="tel:+40723340088"
-                  className="w-12 h-12 bg-background-subtle rounded-full flex items-center justify-center mb-4 hover:bg-background-soft transition-colors duration-200"
+                  className="w-10 h-10 md:w-12 md:h-12 bg-background-subtle rounded-full flex items-center justify-center mb-2 md:mb-4 hover:bg-background-soft transition-colors duration-200"
                 >
-                  <Phone className="h-5 w-5 text-accent-primary" />
+                  <Phone className="h-4 w-4 md:h-5 md:w-5 text-accent-primary" />
                 </a>
-                <h3 className="text-lg font-medium text-text-primary mb-2">Phone</h3>
+                <h3 className="text-base md:text-lg font-medium text-text-primary mb-1 md:mb-2">Phone</h3>
                 <a
                   href="tel:+40760972231"
-                  className="text-text-secondary hover:text-accent-hover transition-colors duration-200"
+                  className="text-sm md:text-base text-text-secondary hover:text-accent-hover transition-colors duration-200"
                 >
                   +40 760972231
                 </a>
                 <a
                   href="tel:+40723340088"
-                  className="text-text-secondary hover:text-accent-hover transition-colors duration-200"
+                  className="text-sm md:text-base text-text-secondary hover:text-accent-hover transition-colors duration-200"
                 >
                   +40 723340088
                 </a>
@@ -222,12 +222,12 @@ const ProjectCarousel = () => {
                   href="https://www.google.com/maps/space/moon/@47.8248832,79.6698943,22671584m/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI1MDkzMC4wIKXMDSoASAFQAw%3D%3D"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-12 h-12 bg-background-subtle rounded-full flex items-center justify-center mb-4 hover:bg-background-soft transition-colors duration-200"
+                  className="w-10 h-10 md:w-12 md:h-12 bg-background-subtle rounded-full flex items-center justify-center mb-2 md:mb-4 hover:bg-background-soft transition-colors duration-200"
                 >
-                  <MapPin className="h-5 w-5 text-accent-primary" />
+                  <MapPin className="h-4 w-4 md:h-5 md:w-5 text-accent-primary" />
                 </a>
-                <h3 className="text-lg font-medium text-text-primary mb-2">Studio</h3>
-                <p className="text-text-secondary">
+                <h3 className="text-base md:text-lg font-medium text-text-primary mb-1 md:mb-2">Studio</h3>
+                <p className="text-sm md:text-base text-text-secondary">
                   Bucharest<br />
                   Romania
                 </p>
