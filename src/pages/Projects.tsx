@@ -18,6 +18,11 @@ const Projects = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [direction, setDirection] = useState<"left" | "right">("right");
   const listRef = useRef<HTMLDivElement>(null);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  // Minimum swipe distance (in px)
+  const minSwipeDistance = 50;
 
   // Sort projects by year (newest first)
   const sortedProjects = [...projects].sort((a, b) => b.year - a.year);
@@ -44,6 +49,30 @@ const Projects = () => {
   const handleImageClick = (project: Project, imageIndex: number) => {
     setSelectedProject(project);
     setCurrentImageIndex(imageIndex);
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      navigateImage("right");
+    }
+    if (isRightSwipe) {
+      navigateImage("left");
+    }
   };
 
   // Close expanded project when clicking outside (disabled while modal is open)
@@ -214,12 +243,17 @@ const Projects = () => {
                   <X className="h-5 w-5 text-white" />
                 </button>
 
-                <div className="h-full flex items-center justify-center relative group">
+                <div
+                  className="h-full flex items-center justify-center relative group"
+                  onTouchStart={onTouchStart}
+                  onTouchMove={onTouchMove}
+                  onTouchEnd={onTouchEnd}
+                >
                   {/* Left Arrow */}
                   {selectedProject.images.length > 1 && (
                     <button
                       onClick={() => navigateImage("left")}
-                      className="absolute left-4 z-10 bg-black hover:bg-gray-800 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105"
+                      className="absolute left-4 z-10 bg-black hover:bg-gray-800 p-3 rounded-full shadow-lg md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-105"
                     >
                       <ChevronLeft className="h-6 w-6 text-white" />
                     </button>
@@ -243,7 +277,7 @@ const Projects = () => {
                   {selectedProject.images.length > 1 && (
                     <button
                       onClick={() => navigateImage("right")}
-                      className="absolute right-4 z-10 bg-black hover:bg-gray-800 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105"
+                      className="absolute right-4 z-10 bg-black hover:bg-gray-800 p-3 rounded-full shadow-lg md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-105"
                     >
                       <ChevronRight className="h-6 w-6 text-white" />
                     </button>

@@ -14,6 +14,11 @@ const ProjectCarousel = () => {
   const currentImage = currentProject?.images[currentImageIndex];
 
   const [direction, setDirection] = useState<"left" | "right">("right");
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  // Minimum swipe distance (in px)
+  const minSwipeDistance = 50;
 
   const navigateImage = (dir: "left" | "right", project?: Project) => {
     setDirection(dir);
@@ -112,6 +117,30 @@ const ProjectCarousel = () => {
     setSelectedProject(project);
     setCurrentImageIndex(0);
     setIsModalOpen(true);
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      navigateImage("right");
+    }
+    if (isRightSwipe) {
+      navigateImage("left");
+    }
   };
 
   return (
@@ -271,12 +300,17 @@ const ProjectCarousel = () => {
               </button>
 
               {selectedProject && (
-                <div className="h-full flex items-center justify-center relative group overflow-y-auto">
+                <div
+                  className="h-full flex items-center justify-center relative group overflow-y-auto"
+                  onTouchStart={onTouchStart}
+                  onTouchMove={onTouchMove}
+                  onTouchEnd={onTouchEnd}
+                >
                   {/* Left Arrow */}
                   {selectedProject.images.length > 1 && (
                     <button
                       onClick={() => navigateImage("left")}
-                      className="absolute left-4 z-10 bg-background-subtle hover:bg-background-soft p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105"
+                      className="absolute left-4 z-10 bg-background-subtle hover:bg-background-soft p-3 rounded-full shadow-lg md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-105"
                     >
                       <ChevronLeft className="h-6 w-6 text-text-primary" />
                     </button>
@@ -300,7 +334,7 @@ const ProjectCarousel = () => {
                   {selectedProject.images.length > 1 && (
                     <button
                       onClick={() => navigateImage("right")}
-                      className="absolute right-4 z-10 bg-background-subtle hover:bg-background-soft p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105"
+                      className="absolute right-4 z-10 bg-background-subtle hover:bg-background-soft p-3 rounded-full shadow-lg md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-105"
                     >
                       <ChevronRight className="h-6 w-6 text-text-primary" />
                     </button>
