@@ -128,7 +128,7 @@ const Projects = () => {
 
         <div
           className={`transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
-            isExpanded ? "max-h-[600px] md:max-h-80 opacity-100" : "max-h-0 opacity-0"
+            isExpanded ? "max-h-[600px] md:max-h-96 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
           <div className="px-4 pb-4 flex flex-col md:flex-row gap-4">
@@ -145,7 +145,7 @@ const Projects = () => {
                         <img
                           src={image.url}
                           alt={image.alt}
-                          className="h-auto max-h-60 w-full md:w-auto object-contain cursor-pointer"
+                          className="h-auto max-h-60 md:max-h-72 w-full md:w-auto object-contain cursor-pointer"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleImageClick(project, index);
@@ -167,7 +167,7 @@ const Projects = () => {
 
             {/* Description - full width on mobile, 1/3 width on desktop */}
             <div className="w-full md:w-1/3">
-              <div className="h-60 bg-muted/20 flex flex-col p-6 overflow-y-auto">
+              <div className="h-60 md:h-72 bg-muted/20 flex flex-col p-6 overflow-y-auto">
                 <p className="text-sm text-text-secondary leading-relaxed">
                   {project.description}
                 </p>
@@ -253,7 +253,7 @@ const Projects = () => {
                   {selectedProject.images.length > 1 && (
                     <button
                       onClick={() => navigateImage("left")}
-                      className="absolute left-4 z-10 bg-black hover:bg-gray-800 p-3 rounded-full shadow-lg md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-105"
+                      className="absolute left-4 z-10 bg-black hover:bg-gray-800 p-3 rounded-full shadow-lg hidden md:flex md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-105"
                     >
                       <ChevronLeft className="h-6 w-6 text-white" />
                     </button>
@@ -277,7 +277,7 @@ const Projects = () => {
                   {selectedProject.images.length > 1 && (
                     <button
                       onClick={() => navigateImage("right")}
-                      className="absolute right-4 z-10 bg-black hover:bg-gray-800 p-3 rounded-full shadow-lg md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-105"
+                      className="absolute right-4 z-10 bg-black hover:bg-gray-800 p-3 rounded-full shadow-lg hidden md:flex md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-105"
                     >
                       <ChevronRight className="h-6 w-6 text-white" />
                     </button>

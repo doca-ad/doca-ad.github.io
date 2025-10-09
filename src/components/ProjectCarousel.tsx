@@ -310,7 +310,7 @@ const ProjectCarousel = () => {
                   {selectedProject.images.length > 1 && (
                     <button
                       onClick={() => navigateImage("left")}
-                      className="absolute left-4 z-10 bg-background-subtle hover:bg-background-soft p-3 rounded-full shadow-lg md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-105"
+                      className="absolute left-4 z-10 bg-background-subtle hover:bg-background-soft p-3 rounded-full shadow-lg hidden md:flex md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-105"
                     >
                       <ChevronLeft className="h-6 w-6 text-text-primary" />
                     </button>
@@ -334,7 +334,7 @@ const ProjectCarousel = () => {
                   {selectedProject.images.length > 1 && (
                     <button
                       onClick={() => navigateImage("right")}
-                      className="absolute right-4 z-10 bg-background-subtle hover:bg-background-soft p-3 rounded-full shadow-lg md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-105"
+                      className="absolute right-4 z-10 bg-background-subtle hover:bg-background-soft p-3 rounded-full shadow-lg hidden md:flex md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-105"
                     >
                       <ChevronRight className="h-6 w-6 text-text-primary" />
                     </button>

@@ -22,10 +22,27 @@ const Info = () => {
               <div className="max-w-3xl mx-auto">
                 <p className="text-lg text-text-secondary leading-relaxed text-justify mb-8">
                   DOCA Architecture & Design is a Romania-based architecture practice,
-                  founded in 2024 by Ștefan Diaconescu and Vlad Căpitanu.
+                  founded in 2024 by{" "}
+                  <a
+                    href="https://www.linkedin.com/in/stefandiaconescu"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-text-primary hover:text-accent-hover transition-colors duration-200 cursor-pointer"
+                  >
+                    Ștefan Diaconescu
+                  </a>
+                  {" "}and{" "}
+                  <a
+                    href="https://www.linkedin.com/in/vlad-capitanu-12850b1ab"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-text-primary hover:text-accent-hover transition-colors duration-200 cursor-pointer"
+                  >
+                    Vlad Căpitanu
+                  </a>.
                 </p>
 
-                <p className="text-lg text-text-tertiary leading-relaxed text-justify mb-8">
+                <p className="text-lg text-text-secondary leading-relaxed text-justify mb-8">
                   Our long-standing professional collaboration naturally evolved into
                   establishing DOCA, building on a series of early joint projects and
                   international competitions. From the outset, our work has engaged
@@ -33,7 +50,7 @@ const Info = () => {
                   usability, urban integration, and human-scale architecture.
                 </p>
 
-                <p className="text-lg text-text-tertiary leading-relaxed text-justify mb-8">
+                <p className="text-lg text-text-secondary leading-relaxed text-justify mb-8">
                   At the core of our philosophy lies the experience of the end-user. We
                   place the individual at the center of the architectural process,
                   designing spaces that are not only functional but also sculptural—
@@ -41,8 +58,8 @@ const Info = () => {
                 </p>
 
                 <br/>
-                
-                <div className="text-lg text-text-tertiary leading-relaxed text-justify mb-8">
+
+                <div className="text-lg text-text-secondary leading-relaxed text-justify mb-8">
                   <p className="font-semibold mb-4">
                     Selected Competitions & Projects
                   </p>
@@ -54,7 +71,7 @@ const Info = () => {
                 </div>
                 <br/>
 
-                <div className="text-lg text-text-tertiary leading-relaxed text-justify mb-8">
+                <div className="text-lg text-text-secondary leading-relaxed text-justify mb-8">
                   <p className="font-semibold mb-4">
                     Our Complementary Professional Paths
                   </p>
@@ -68,7 +85,7 @@ const Info = () => {
                     </li>
                     <li>
                       <span className="font-medium">Vlad Căpitanu</span> deepened his
-                      architectural perspective through a Master’s degree in Sustainable
+                      architectural perspective through a Master's degree in Sustainable
                       Urban Planning and Design at KTH, Sweden. His Scandinavian
                       experience—both academic and professional—shapes his design
                       philosophy, emphasizing scale, materiality, sustainability, and
@@ -77,7 +94,7 @@ const Info = () => {
                   </ul>
                 </div>
 
-                <p className="text-lg text-text-tertiary leading-relaxed text-justify">
+                <p className="text-lg text-text-secondary leading-relaxed text-justify">
                   DOCA represents the synthesis of these experiences—a balance between
                   technical precision and conceptual vision. We believe architecture
                   should be human-centered, creating spaces that respond to both
