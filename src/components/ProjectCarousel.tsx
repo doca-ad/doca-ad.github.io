@@ -10,7 +10,12 @@ const ProjectCarousel = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const currentProject = projects[currentProjectIndex];
+  // Filter and sort home projects by homeIndex
+  const homeProjects = projects
+    .filter(p => p.home)
+    .sort((a, b) => (a.homeIndex ?? 0) - (b.homeIndex ?? 0));
+
+  const currentProject = homeProjects[currentProjectIndex];
   const currentImage = currentProject?.images[currentImageIndex];
 
   const [direction, setDirection] = useState<"left" | "right">("right");
@@ -45,12 +50,12 @@ const ProjectCarousel = () => {
       const scrollTop = container.scrollTop;
       const containerHeight = container.clientHeight;
       const newIndex = Math.round(scrollTop / containerHeight);
-      setCurrentProjectIndex(Math.min(Math.max(newIndex, 0), projects.length - 1));
+      setCurrentProjectIndex(Math.min(Math.max(newIndex, 0), homeProjects.length - 1));
     };
 
     container.addEventListener('scroll', handleScroll);
     return () => container.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [homeProjects]);
 
   // Reset image index when project changes
   useEffect(() => {
@@ -67,13 +72,10 @@ const ProjectCarousel = () => {
     const resetTimer = () => {
       clearTimeout(inactivityTimer);
       inactivityTimer = setTimeout(() => {
-        const homeProjects = projects.filter(p => p.home);
-        const currentIndex = homeProjects.findIndex(p => p.id === projects[currentProjectIndex]?.id);
-        const nextIndex = (currentIndex + 1) % homeProjects.length;
-        const nextProjectIndex = projects.findIndex(p => p.id === homeProjects[nextIndex]?.id);
+        const nextIndex = (currentProjectIndex + 1) % homeProjects.length;
 
         container.scrollTo({
-          top: nextProjectIndex * container.clientHeight,
+          top: nextIndex * container.clientHeight,
           behavior: 'smooth'
         });
       }, 30000);
@@ -92,7 +94,7 @@ const ProjectCarousel = () => {
         document.removeEventListener(event, resetTimer);
       });
     };
-  }, [currentProjectIndex, isModalOpen]);
+  }, [currentProjectIndex, isModalOpen, homeProjects]);
 
   // Close modal on Escape key + navigate with arrows
   useEffect(() => {
@@ -151,7 +153,7 @@ const ProjectCarousel = () => {
         className="h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
         style={{ scrollBehavior: 'smooth' }}
       >
-        {projects.map((project) => project.home && (
+        {homeProjects.map((project) => (
           <div
             key={project.id}
             className="h-screen flex flex-col justify-center px-8 snap-start pt-24 md:pt-32 pb-16"

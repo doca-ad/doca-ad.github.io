@@ -49,6 +49,21 @@ import project7_4 from "@/assets/07/4.jpg";
 import project7_5 from "@/assets/07/5.jpg";
 import project7_6 from "@/assets/07/6.jpg";
 
+
+import project8_1 from "@/assets/08/1.jpg";
+import project8_2 from "@/assets/08/2.jpg";
+import project8_3 from "@/assets/08/3.jpg";
+import project8_4 from "@/assets/08/4.jpg";
+import project8_5 from "@/assets/08/5.jpg";
+import project8_6 from "@/assets/08/6.jpg";
+import project8_7 from "@/assets/08/7.jpg";
+import project8_8 from "@/assets/08/8.jpg";
+import project8_9 from "@/assets/08/9.jpg";
+import project8_10 from "@/assets/08/10.jpg";
+import project8_11 from "@/assets/08/11.jpg";
+import project8_12 from "@/assets/08/12.jpg";
+
+
 export interface ProjectImage {
 	id: string;
 	url: string;
@@ -59,6 +74,7 @@ export interface Project {
 	id: string;
 	title: string;
 	home: boolean;
+	homeIndex?: number;
 	location: string;
 	year: string;
 	type: string;
@@ -74,7 +90,8 @@ export const projects: Project[] = [
 		year: "2024",
 		type: "Architecture / Residential",
 		home: true,
-		description: "The project is strongly defined by its relationship to the Danube River and its deliberate southern orientation. One of the site’s most distinctive characteristics lies in its cardinal positioning, with the southern axis aligning directly with the main river view. Embracing this natural condition, the design opens itself towards the landscape, establishing expansive glazed surfaces that frame the panorama and dissolve the boundary between interior and exterior. These transparent elements not only strengthen the transversal axis—linking entrance, dwelling, courtyard, and river—but also act as delicate thresholds, blurring the line between built space and natural surroundings. Set within a rural context, the project draws inspiration from the surrounding vernacular. The presence of predominantly single-story houses informed a restrained volumetric approach. The result is a discreet silhouette: a low, elongated roof with an attic-like upper floor, ensuring the intervention integrates seamlessly into the existing urban fabric. Materiality plays a pivotal role in grounding the architecture within its context. Local textures and finishes are employed to accentuate the clarity of the geometry while anchoring the building deeply into its landscape. Through this interplay of volume, orientation, and material, the house emerges as both a continuation of its environment and a contemporary reinterpretation of place.",
+		homeIndex: 0,
+		description: "The project is strongly defined by its relationship to the Danube River and its deliberate southern orientation. One of the site's most distinctive characteristics lies in its cardinal positioning, with the southern axis aligning directly with the main river view. Embracing this natural condition, the design opens itself towards the landscape, establishing expansive glazed surfaces that frame the panorama and dissolve the boundary between interior and exterior. These transparent elements not only strengthen the transversal axis—linking entrance, dwelling, courtyard, and river—but also act as delicate thresholds, blurring the line between built space and natural surroundings. Set within a rural context, the project draws inspiration from the surrounding vernacular. The presence of predominantly single-story houses informed a restrained volumetric approach. The result is a discreet silhouette: a low, elongated roof with an attic-like upper floor, ensuring the intervention integrates seamlessly into the existing urban fabric. Materiality plays a pivotal role in grounding the architecture within its context. Local textures and finishes are employed to accentuate the clarity of the geometry while anchoring the building deeply into its landscape. Through this interplay of volume, orientation, and material, the house emerges as both a continuation of its environment and a contemporary reinterpretation of place.",
 		images: [
 			{
 				id: "arch-1",
@@ -113,6 +130,7 @@ export const projects: Project[] = [
 		location: "Sibiu, Romania",
 		year: "2025",
 		home: true,
+		homeIndex: 1,
 		type: "Interior Design / Residential",
 		title: "GREEN LOOP",
 		description: "The project redefines a generous, unused balcony by integrating it into the main living areas, creating a more open and functional layout. The core design gesture is a continuous circulation loop that connects the entry hall, the kitchen-separated by glass partitions- and the living & dining space. This spatial flow generates a central nucleus, highlighted through subtle changes in plaster texture or color on walls, furniture and ceiling. Along this new ceiling contour, black spotlights are aligned precisely to trace and emphasise the fiow, reinforcing both spatial logic and visual rhythm.",
@@ -239,6 +257,7 @@ export const projects: Project[] = [
 	{
 		id: "project-6",
 		home: true,
+		homeIndex: 3,
 		location: "Bucuresti, Romania",
 		year: "2025",
 		type: "Interior Design / Residential",
@@ -272,7 +291,7 @@ export const projects: Project[] = [
 
 		]
 	},
-		{
+	{
 		id: "project-7",
 		home: false,
 		location: "Cheia, Romania",
@@ -306,6 +325,66 @@ export const projects: Project[] = [
 				url: project7_6,
 			}
 
+		]
+	},
+	{
+		id: "project-8",
+		home: true,
+		homeIndex: 2,
+		location: "Sibiu, Romania",
+		year: "2025",
+		type: "Architecture / Residential",
+		title: "HILL'S POCKET",
+		description: "Set within a wooded hillside landscape near Sibiu, this single-family residence was designed to respond sensitively to both the steep terrain and the sweeping views toward the surrounding mountains. The site's pronounced north-south slope required a solution that would harmonize with the natural topography rather than oppose it. The house opens southward, with living spaces positioned at ground level to ensure a direct and open connection to the garden. On the northern side, the building nestles into the slope — partially sunken by nearly one meter — providing both thermal mass and a sense of rootedness in the land. At the client's request, the entire home unfolds across a single floor. This constraint guided us toward a low-profile, elongated volume with strong horizontal proportions and a calm, understated presence in the landscape. The open-plan living area benefits from a higher ceiling, lending a sense of spaciousness and light, while the private bedrooms are designed to be compact and efficient — balancing comfort with considerations of time and cost during construction. The linear configuration allows the house to maintain a minimal footprint, preserving a generous strip of southern garden that acts as a fluid transition between the home, the entrance area, and the lower orchard that stretches down toward the valley.",
+		images: [
+			{
+				id: "arch-1",
+				url: project8_1,
+			},
+			{
+				id: "arch-2",
+				url: project8_2,
+			},
+			{
+				id: "arch-3",
+				url: project8_3,
+			},
+			{
+				id: "arch-4",
+				url: project8_4,
+			},
+			{
+				id: "arch-5",
+				url: project8_5,
+			},
+			{
+				id: "arch-6",
+				url: project8_6,
+			},
+						{
+				id: "arch-7",
+				url: project8_7,
+			},
+			{
+				id: "arch-8",
+				url: project8_8,
+			},
+			{
+				id: "arch-9",
+				url: project8_9,
+			},
+			{
+				id: "arch-10",
+				url: project8_10,
+			},
+			{
+				id: "arch-11",
+				url: project8_11,
+			},
+			{
+				id: "arch-12",
+				url: project8_12,
+			}
 		]
 	}
 ];
