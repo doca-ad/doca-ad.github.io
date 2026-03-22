@@ -64,6 +64,33 @@ import project8_11 from "@/assets/08/11.jpg";
 import project8_12 from "@/assets/08/12.jpg";
 
 
+import project9_1 from "@/assets/09/01.jpg";
+import project9_2 from "@/assets/09/02.jpg";
+import project9_3 from "@/assets/09/03.jpg";
+import project9_4 from "@/assets/09/04.jpg";
+import project9_5 from "@/assets/09/05.jpg";
+import project9_6 from "@/assets/09/06.jpg";
+import project9_7 from "@/assets/09/07.jpg";
+import project9_8 from "@/assets/09/08.jpg";
+import project9_9 from "@/assets/09/09.jpg";
+import project9_10 from "@/assets/09/10.jpg";
+import project9_11 from "@/assets/09/11.jpg";
+import project9_12 from "@/assets/09/12.jpg";
+import project9_13 from "@/assets/09/13.jpg";
+import project9_14 from "@/assets/09/14.jpg";
+import project9_15 from "@/assets/09/15.jpg";
+import project9_16 from "@/assets/09/16.jpg";
+import project9_17 from "@/assets/09/17.jpg";
+import project9_18 from "@/assets/09/18.jpg";
+import project9_19 from "@/assets/09/19.jpg";
+import project9_20 from "@/assets/09/20.jpg";
+
+import project10_1 from "@/assets/10/01.jpg";
+import project10_2 from "@/assets/10/02.jpg";
+import project10_3 from "@/assets/10/03.jpg";
+import project10_4 from "@/assets/10/04.jpg";
+
+
 export interface ProjectImage {
 	id: string;
 	url: string;
@@ -90,7 +117,7 @@ export const projects: Project[] = [
 		year: "2024",
 		type: "Architecture / Residential",
 		home: true,
-		homeIndex: 0,
+		homeIndex: 1,
 		description: "The project is strongly defined by its relationship to the Danube River and its deliberate southern orientation. One of the site's most distinctive characteristics lies in its cardinal positioning, with the southern axis aligning directly with the main river view. Embracing this natural condition, the design opens itself towards the landscape, establishing expansive glazed surfaces that frame the panorama and dissolve the boundary between interior and exterior. These transparent elements not only strengthen the transversal axis—linking entrance, dwelling, courtyard, and river—but also act as delicate thresholds, blurring the line between built space and natural surroundings. Set within a rural context, the project draws inspiration from the surrounding vernacular. The presence of predominantly single-story houses informed a restrained volumetric approach. The result is a discreet silhouette: a low, elongated roof with an attic-like upper floor, ensuring the intervention integrates seamlessly into the existing urban fabric. Materiality plays a pivotal role in grounding the architecture within its context. Local textures and finishes are employed to accentuate the clarity of the geometry while anchoring the building deeply into its landscape. Through this interplay of volume, orientation, and material, the house emerges as both a continuation of its environment and a contemporary reinterpretation of place.",
 		images: [
 			{
@@ -130,7 +157,7 @@ export const projects: Project[] = [
 		location: "Sibiu, Romania",
 		year: "2025",
 		home: true,
-		homeIndex: 1,
+		homeIndex: 2,
 		type: "Interior Design / Residential",
 		title: "GREEN LOOP",
 		description: "The project redefines a generous, unused balcony by integrating it into the main living areas, creating a more open and functional layout. The core design gesture is a continuous circulation loop that connects the entry hall, the kitchen-separated by glass partitions- and the living & dining space. This spatial flow generates a central nucleus, highlighted through subtle changes in plaster texture or color on walls, furniture and ceiling. Along this new ceiling contour, black spotlights are aligned precisely to trace and emphasise the fiow, reinforcing both spatial logic and visual rhythm.",
@@ -257,7 +284,7 @@ export const projects: Project[] = [
 	{
 		id: "project-6",
 		home: true,
-		homeIndex: 3,
+		homeIndex: 4,
 		location: "Bucuresti, Romania",
 		year: "2025",
 		type: "Interior Design / Residential",
@@ -330,7 +357,7 @@ export const projects: Project[] = [
 	{
 		id: "project-8",
 		home: true,
-		homeIndex: 2,
+		homeIndex: 3,
 		location: "Sibiu, Romania",
 		year: "2025",
 		type: "Architecture / Residential",
@@ -384,6 +411,125 @@ export const projects: Project[] = [
 			{
 				id: "arch-12",
 				url: project8_12,
+			}
+		]
+	},
+	{
+	  id: "project-9",
+	  home: true,
+      homeIndex: 0,
+		location: "Cluj Napoca, Romania",
+		year: "2026",
+		type: "Architecture / Offices",
+		title: "ADR NORD-VEST",
+		description: "Our proposal for the ADR Nord-Vest headquarters acts as a mediator within a complex urban context. By stitching together disparate historical layers, the project provides a coherent framework for the city. Contextual Massing: Aligned with the \"Octavian Goga\" Library and Olimpia Center to consolidate a unified urban scale and avoid disproportionate accents. Public Realm Expansion: The volume recedes from the street front, creating an open plaza that engages in a direct dialogue with the library's forecourt. The Covered Threshold: At grade, the recessed ground floor provides a protected perimeter, acting as a fluid interface between the building and the urban fabric. Fluid Connectivity: An eastern portico ensures a seamless link between the street and the neighboring leisure areas, integrating a café terrace into the landscaped embankment. Through this calibrated sequence of spaces, the project pursues a long-term vision for public flow, urban continuity, and the vital dialogue between architecture and the public realm.",
+		images: [
+			{
+				id: "arch-1",
+				url: project9_1,
+			},
+			{
+				id: "arch-2",
+				url: project9_2,
+			},
+			{
+				id: "arch-3",
+				url: project9_3,
+			},
+			{
+				id: "arch-4",
+				url: project9_4,
+			},
+			{
+				id: "arch-5",
+				url: project9_5,
+			},
+			{
+				id: "arch-6",
+				url: project9_6,
+			},
+			{
+				id: "arch-7",
+				url: project9_7,
+			},
+			{
+				id: "arch-8",
+				url: project9_8,
+			},
+			{
+				id: "arch-9",
+				url: project9_9,
+			},
+			{
+				id: "arch-10",
+				url: project9_10,
+			},
+			{
+				id: "arch-11",
+				url: project9_11,
+			},
+			{
+				id: "arch-12",
+				url: project9_12,
+			},
+			{
+				id: "arch-13",
+				url: project9_13,
+			},
+			{
+				id: "arch-14",
+				url: project9_14,
+			},
+			{
+				id: "arch-15",
+				url: project9_15,
+			},
+			{
+				id: "arch-16",
+				url: project9_16,
+			},
+			{
+				id: "arch-17",
+				url: project9_17,
+			},
+			{
+				id: "arch-18",
+				url: project9_18,
+			},
+			{
+				id: "arch-19",
+				url: project9_19,
+			},
+			{
+				id: "arch-20",
+				url: project9_20,
+			}
+		]
+	},
+	{
+		id: "project-10",
+		home: false,
+		location: "Cluj Napoca, Romania",
+		year: "2026",
+		type: "Interior Design / Offices",
+		title: "ADR NORD-VEST",
+		description: "The working areas are organized as open and adaptable layouts, structured to ensure functional efficiency and spatial coherence. A controlled and consistent environment is defined by daylight access, clear circulation, and rationally proportioned workstations. The design supports both individual tasks and team-based activities.",
+		images: [
+			{
+				id: "arch-1",
+				url: project10_1,
+			},
+			{
+				id: "arch-2",
+				url: project10_2,
+			},
+			{
+				id: "arch-3",
+				url: project10_3,
+			},
+			{
+				id: "arch-4",
+				url: project10_4,
 			}
 		]
 	}
