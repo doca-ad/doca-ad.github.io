@@ -421,8 +421,8 @@ export const projects: Project[] = [
 		location: "Cluj Napoca, Romania",
 		year: "2026",
 		type: "Architecture / Offices",
-		title: "ADR NORD-VEST",
-		description: "Our proposal for the ADR Nord-Vest headquarters acts as a mediator within a complex urban context. By stitching together disparate historical layers, the project provides a coherent framework for the city. Contextual Massing: Aligned with the \"Octavian Goga\" Library and Olimpia Center to consolidate a unified urban scale and avoid disproportionate accents. Public Realm Expansion: The volume recedes from the street front, creating an open plaza that engages in a direct dialogue with the library's forecourt. The Covered Threshold: At grade, the recessed ground floor provides a protected perimeter, acting as a fluid interface between the building and the urban fabric. Fluid Connectivity: An eastern portico ensures a seamless link between the street and the neighboring leisure areas, integrating a café terrace into the landscaped embankment. Through this calibrated sequence of spaces, the project pursues a long-term vision for public flow, urban continuity, and the vital dialogue between architecture and the public realm.",
+		title: "ADR NORTH-WEST",
+		description: "Our proposal for the ADR North-West headquarters acts as a mediator within a complex urban context. By stitching together disparate historical layers, the project provides a coherent framework for the city. Contextual Massing: Aligned with the \"Octavian Goga\" Library and Olimpia Center to consolidate a unified urban scale and avoid disproportionate accents. Public Realm Expansion: The volume recedes from the street front, creating an open plaza that engages in a direct dialogue with the library's forecourt. The Covered Threshold: At grade, the recessed ground floor provides a protected perimeter, acting as a fluid interface between the building and the urban fabric. Fluid Connectivity: An eastern portico ensures a seamless link between the street and the neighboring leisure areas, integrating a café terrace into the landscaped embankment. Through this calibrated sequence of spaces, the project pursues a long-term vision for public flow, urban continuity, and the vital dialogue between architecture and the public realm.",
 		images: [
 			{
 				id: "arch-1",
@@ -512,7 +512,7 @@ export const projects: Project[] = [
 		location: "Cluj Napoca, Romania",
 		year: "2026",
 		type: "Interior Design / Offices",
-		title: "ADR NORD-VEST",
+		title: "ADR NORTH-WEST",
 		description: "The working areas are organized as open and adaptable layouts, structured to ensure functional efficiency and spatial coherence. A controlled and consistent environment is defined by daylight access, clear circulation, and rationally proportioned workstations. The design supports both individual tasks and team-based activities.",
 		images: [
 			{
