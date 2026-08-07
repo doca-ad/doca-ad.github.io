@@ -91,6 +91,18 @@ import project10_3 from "@/assets/10/03.jpg";
 import project10_4 from "@/assets/10/04.jpg";
 
 
+import project11_1 from "@/assets/11/1.jpg";
+import project11_2 from "@/assets/11/2.jpg";
+import project11_3 from "@/assets/11/3.jpg";
+import project11_4 from "@/assets/11/4.jpg";
+import project11_5 from "@/assets/11/5.jpg";
+import project11_6 from "@/assets/11/6.jpg";
+import project11_7 from "@/assets/11/7.jpg";
+import project11_8 from "@/assets/11/8.jpg";
+import project11_9 from "@/assets/11/9.jpg";
+import project11_10 from "@/assets/11/10.jpg";
+
+
 export interface ProjectImage {
 	id: string;
 	url: string;
@@ -156,8 +168,7 @@ export const projects: Project[] = [
 		id: "project-2",
 		location: "Sibiu, Romania",
 		year: "2025",
-		home: true,
-		homeIndex: 2,
+		home: false,
 		type: "Interior Design / Residential",
 		title: "GREEN LOOP",
 		description: "The project redefines a generous, unused balcony by integrating it into the main living areas, creating a more open and functional layout. The core design gesture is a continuous circulation loop that connects the entry hall, the kitchen-separated by glass partitions- and the living & dining space. This spatial flow generates a central nucleus, highlighted through subtle changes in plaster texture or color on walls, furniture and ceiling. Along this new ceiling contour, black spotlights are aligned precisely to trace and emphasise the fiow, reinforcing both spatial logic and visual rhythm.",
@@ -530,6 +541,58 @@ export const projects: Project[] = [
 			{
 				id: "arch-4",
 				url: project10_4,
+			}
+		]
+	},
+	{
+		id: "project-11",
+		home: true,
+		homeIndex: 2,
+		location: "Bucharest, Romania",
+		year: "2026",
+		type: "Interior Design / Residential",
+		title: "GENTLEMAN'S GRAY",
+		description: "Gentleman's Gray is a two-storey residence organized around a single architectural gesture—a deep blue volume that structures circulation, frames views, and defines the identity of the interior. Acting as the project's spatial anchor, the \"spine\" connects the common and private areas while establishing a continuous architectural language. A restrained palette of warm oak, mineral finishes, textured fabrics, and muted blue tones creates a calm and timeless atmosphere. Natural light filters through full-height curtains, softening the interiors and revealing subtle variations of colour, texture, and shadow throughout the day. Open visual connections, integrated custom furniture, and carefully composed proportions create fluid transitions between spaces, allowing the architecture to be experienced as a continuous sequence rather than a collection of rooms. Gentleman's Gray celebrates simplicity, where light, materiality, and colour become the primary tools for shaping space and everyday living.",
+		images: [
+			{
+				id: "arch-1",
+				url: project11_1,
+			},
+			{
+				id: "arch-2",
+				url: project11_2,
+			},
+			{
+				id: "arch-3",
+				url: project11_3,
+			},
+			{
+				id: "arch-4",
+				url: project11_4,
+			},
+			{
+				id: "arch-5",
+				url: project11_5,
+			},
+			{
+				id: "arch-6",
+				url: project11_6,
+			},
+			{
+				id: "arch-7",
+				url: project11_7,
+			},
+			{
+				id: "arch-8",
+				url: project11_8,
+			},
+			{
+				id: "arch-9",
+				url: project11_9,
+			},
+			{
+				id: "arch-10",
+				url: project11_10,
 			}
 		]
 	}
