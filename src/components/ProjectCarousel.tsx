@@ -250,7 +250,7 @@ const ProjectCarousel = () => {
 
               <div className="flex flex-col items-center">
                 <a
-                  href="https://www.google.com/maps/space/moon/@47.8248832,79.6698943,22671584m/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI1MDkzMC4wIKXMDSoASAFQAw%3D%3D"
+                  href="https://maps.app.goo.gl/LfxqPwfFMFvS81bP6"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 md:w-12 md:h-12 bg-background-subtle rounded-full flex items-center justify-center mb-2 md:mb-4 hover:bg-background-soft transition-colors duration-200"
