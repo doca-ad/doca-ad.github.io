@@ -17,7 +17,7 @@ const meta = META["/"][locale];
 
 <Base title={meta.title} description={meta.description}>
   <div class="min-h-screen bg-background">
-    <Navigation locale={locale} routeKey="/" client:load />
+    <Navigation intro locale={locale} routeKey="/" client:load />
     <main class="min-h-screen bg-background">
       <div class="h-screen bg-background">
         <ProjectCarousel
@@ -27,6 +27,7 @@ const meta = META["/"][locale];
           scrollLabel={t(locale, "home.scroll")}
           scrollLabelUp={t(locale, "home.scrollUp")}
           slideLabel={t(locale, "home.slide")}
+          revealDelayMs={3000}
           client:load
         />
       </div>

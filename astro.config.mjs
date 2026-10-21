@@ -28,7 +28,8 @@ globalThis.fetch = async (input, init) => {
       lastError = err;
       if (attempt === (retryable ? RETRIES : 0)) break;
       const wait = 400 * 2 ** attempt;
-      console.warn(`[fetch] ${url.slice(-48)} failed (${err.message}); retrying in ${wait}ms`);
+      const msg = err instanceof Error ? err.message : String(err);
+      console.warn(`[fetch] ${url.slice(-48)} failed (${msg}); retrying in ${wait}ms`);
       await new Promise((r) => setTimeout(r, wait));
     }
   }

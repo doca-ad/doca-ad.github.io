@@ -15,11 +15,16 @@ interface ProjectCarouselProps {
   scrollLabel?: string;
   scrollLabelUp?: string;
   slideLabel?: string;
+  /**
+   * Hold the controls back until the opening sequence has finished. They sit above the
+   * white overlay otherwise and distract from it.
+   */
+  revealDelayMs?: number;
 }
 
 type Project = ResolvedProject;
 
-const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabel, scrollLabelUp, slideLabel }: ProjectCarouselProps) => {
+const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabel, scrollLabelUp, slideLabel, revealDelayMs = 0 }: ProjectCarouselProps) => {
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,6 +41,17 @@ const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabe
   /** Landing + every project + the contact slide. Drives the cues and the dots. */
   const [slideIndex, setSlideIndex] = useState(0);
   const totalSlides = slideOffset + homeProjects.length + 1;
+  const [controlsReady, setControlsReady] = useState(revealDelayMs === 0);
+
+  useEffect(() => {
+    if (revealDelayMs === 0) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setControlsReady(true);
+      return;
+    }
+    const t = setTimeout(() => setControlsReady(true), revealDelayMs);
+    return () => clearTimeout(t);
+  }, [revealDelayMs]);
 
   const currentProject = homeProjects[currentProjectIndex];
   const currentImage = currentProject?.images[currentImageIndex];
@@ -321,7 +337,7 @@ const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabe
       {/* Up cue: hidden on the first slide, where there is nothing above. */}
       <div
         className={`pointer-events-none absolute inset-x-0 top-20 z-30 flex justify-center transition-opacity duration-300 ${
-          slideIndex === 0 ? "opacity-0 invisible" : "opacity-100"
+          slideIndex === 0 || !controlsReady ? "opacity-0 invisible" : "opacity-100"
         }`}
       >
         <ScrollCue direction="up" onClick={() => goTo(slideIndex - 1)} label={scrollLabelUp ?? "Previous"} />
@@ -330,7 +346,7 @@ const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabe
       {/* Down cue: hidden on the last slide, where nothing follows. */}
       <div
         className={`pointer-events-none absolute inset-x-0 bottom-6 z-30 flex justify-center transition-opacity duration-300 ${
-          slideIndex >= totalSlides - 1 ? "opacity-0 invisible" : "opacity-100"
+          slideIndex >= totalSlides - 1 || !controlsReady ? "opacity-0 invisible" : "opacity-100"
         }`}
       >
         <ScrollCue direction="down" onClick={() => goTo(slideIndex + 1)} label={scrollLabel ?? "Next"} />
@@ -339,7 +355,9 @@ const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabe
       {/* Position in the sequence. */}
       <nav
         aria-label={slideLabel ?? "Slides"}
-        className="absolute right-5 top-1/2 z-30 hidden -translate-y-1/2 flex-col gap-3 md:flex"
+        className={`absolute right-5 top-1/2 z-30 hidden -translate-y-1/2 flex-col gap-3 transition-opacity duration-500 md:flex ${
+          controlsReady ? "opacity-100" : "opacity-0 invisible"
+        }`}
       >
         {Array.from({ length: totalSlides }, (_, i) => (
           <button

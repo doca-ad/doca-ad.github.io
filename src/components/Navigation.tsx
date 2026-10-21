@@ -1,20 +1,46 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import Logo from "./Logo";
 import { motion, AnimatePresence } from "framer-motion";
 import { LOCALES, localePath, t, type Locale } from "@/i18n/ui";
 
 interface NavigationProps {
-	isAnimating?: boolean;
-	whiteTimer?: boolean;
+	/**
+	 * Play the opening sequence: the mark starts large and centred on white, then settles
+	 * into the top bar. Home page only — it would be tiresome on every route.
+	 */
+	intro?: boolean;
 	locale?: Locale;
 	/** Canonical route (no locale prefix), so the toggle can switch in place. */
 	routeKey?: string;
 }
 
-const Navigation = ({ isAnimating = false, whiteTimer = false, locale = "en", routeKey = "/" }: NavigationProps) => {
+const Navigation = ({ intro = false, locale = "en", routeKey = "/" }: NavigationProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // Rendered server-side in the animating state when intro is set, so there is no flash
+  // between the static HTML and hydration.
+  const [isAnimating, setIsAnimating] = useState(intro);
+  const [whiteTimer, setWhiteTimer] = useState(intro);
+
+  useEffect(() => {
+    if (!intro) return;
+
+    // Anyone who has asked for less motion gets the finished state immediately.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setIsAnimating(false);
+      setWhiteTimer(false);
+      return;
+    }
+
+    const settle = setTimeout(() => setIsAnimating(false), 2000);
+    const clear = setTimeout(() => setWhiteTimer(false), 3000);
+    return () => {
+      clearTimeout(settle);
+      clearTimeout(clear);
+    };
+  }, [intro]);
 
   const menuItems = [
     { label: t(locale, "nav.home"), href: localePath(locale, "/") },
@@ -24,6 +50,11 @@ const Navigation = ({ isAnimating = false, whiteTimer = false, locale = "en", ro
   ];
 
   return (
+    <>
+    {/* Sits below the nav (z-40) so the mark reads over it while it settles. */}
+    {whiteTimer && (
+      <div className="fixed inset-0 z-30 bg-white transition-opacity duration-1000" />
+    )}
     <nav
       className={`fixed left-0 right-0 z-40 transition-all duration-1000 ease-in-out ${
         isAnimating
@@ -134,6 +165,7 @@ const Navigation = ({ isAnimating = false, whiteTimer = false, locale = "en", ro
         )}
       </AnimatePresence>
     </nav>
+    </>
   );
 };
 
