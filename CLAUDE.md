@@ -37,7 +37,7 @@ Production promotion is a **separate, explicit decision** — ask the user first
 |-------------|---------------------|-------------------|-------------------------|------|
 | Staging     | `doca-staging`      | `staging`         | `staging.docastudio.ro` | Cloudflare Access, 3 emails |
 | Production  | `doca-ad-github-io` | `main`            | `docastudio.ro`         | public |
-| Admin (planned) | Worker          | —                 | `admin.docastudio.ro`   | Cloudflare Access |
+| Admin       | Worker `doca-admin` | —             | `admin.docastudio.ro`   | Cloudflare Access |
 
 - Cloudflare account `4619edab308cab4c20177a04b6149f84`. DNS for `docastudio.ro` is on
   Cloudflare nameservers in that same account.
@@ -123,3 +123,37 @@ Full plan, decisions and rationale:
 
 Phase 2 Astro migration (SEO, i18n, image pipeline) · Phase 3 DOCA's visual asks ·
 Phase 4 EN/RO · Phase 5 self-service admin on Cloudflare D1 + R2 + Access · Phase 6 quality pass.
+
+
+## Admin (`admin/`)
+
+A Worker backed by **D1** (`doca-content`, id `04dc6c71-051c-4af9-8daa-79374d565c5e`).
+DOCA edit project metadata and both languages; saving writes to D1 and fires a Pages deploy
+hook, so the site rebuilds fully prerendered. D1 does not sleep when idle.
+
+```bash
+cd admin && npx wrangler deploy          # deploy the Worker
+npx wrangler d1 execute doca-content --remote --command "SELECT ..."
+```
+
+**Never trust `Cf-Access-Authenticated-User-Email`.** Anything reaching the origin directly
+can set that header; trusting it would let an unauthenticated request delete every project.
+`admin/src/access.ts` verifies the signed Access JWT against the team's public keys instead.
+Verified: a spoofed header gets 401.
+
+`GET /api/content` is intentionally public — the Pages build has no Access session, and it
+serves the same content the public site already shows. Everything mutating requires Access.
+
+`src/lib/content.ts` fetches that API at build time and **falls back to the checked-in data on
+any error**. Without the fallback, a momentary admin outage during a deploy would publish an
+empty site. Keep it.
+
+### Outstanding manual steps
+1. **Enable R2** in the dashboard (a one-time account opt-in, not a token scope), create the
+   `doca-media` bucket, and uncomment the `r2_buckets` binding in `admin/wrangler.jsonc`.
+   Until then image upload returns a clear 503; everything else works.
+2. Add `admin.docastudio.ro` as a custom domain on the Worker and put an Access app in front
+   of it, then set `workers_dev: false` and repoint `CONTENT_API`. The workers.dev URL
+   currently serves the admin shell to anyone (mutations still 401).
+3. Create a Pages deploy hook and set it as the `DEPLOY_HOOK` secret
+   (`npx wrangler secret put DEPLOY_HOOK`) so saving actually republishes.
