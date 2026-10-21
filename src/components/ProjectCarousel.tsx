@@ -253,6 +253,7 @@ const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabe
               <div className="flex flex-col items-center">
                 <a
                   href="mailto:office@doca-ad.ro"
+                  aria-label="Email office@doca-ad.ro"
                   className="w-10 h-10 md:w-12 md:h-12 bg-background-subtle rounded-full flex items-center justify-center mb-2 md:mb-4 hover:bg-background-soft transition-colors duration-200"
                 >
                   <Mail className="h-4 w-4 md:h-5 md:w-5 text-accent-primary" />
@@ -269,6 +270,7 @@ const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabe
               <div className="flex flex-col items-center">
                 <a
                   href="tel:+40723340088"
+                  aria-label="Call +40 723 340 088"
                   className="w-10 h-10 md:w-12 md:h-12 bg-background-subtle rounded-full flex items-center justify-center mb-2 md:mb-4 hover:bg-background-soft transition-colors duration-200"
                 >
                   <Phone className="h-4 w-4 md:h-5 md:w-5 text-accent-primary" />
@@ -293,6 +295,7 @@ const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabe
                   href="https://maps.app.goo.gl/LfxqPwfFMFvS81bP6"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Find the studio on Google Maps"
                   className="w-10 h-10 md:w-12 md:h-12 bg-background-subtle rounded-full flex items-center justify-center mb-2 md:mb-4 hover:bg-background-soft transition-colors duration-200"
                 >
                   <MapPin className="h-4 w-4 md:h-5 md:w-5 text-accent-primary" />

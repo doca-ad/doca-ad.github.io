@@ -30,6 +30,12 @@ const formatLocation = (location: string, locale: "en" | "ro") => {
 
 const ProjectsList = ({ projects, locale = "en" }: ProjectsListProps) => {
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
+  /**
+   * Collapsed panels used to mount their carousels anyway, so opening /projects fetched
+   * all 86 images (1.3MB) for rows nobody had clicked. Mount a panel's images on first
+   * expand and keep them after, so the open/close animation stays smooth.
+   */
+  const [everExpanded, setEverExpanded] = useState<Set<string>>(new Set());
   const [selectedProject, setSelectedProject] = useState<ResolvedProject | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [direction, setDirection] = useState<"left" | "right">("right");
@@ -83,6 +89,7 @@ const ProjectsList = ({ projects, locale = "en" }: ProjectsListProps) => {
 
   const ProjectRow = ({ project }: { project: ResolvedProject }) => {
     const isExpanded = expandedProject === project.id;
+    const isMounted = everExpanded.has(project.id);
     // Index-only entries exist to show breadth of work. DOCA's brief: they must read as
     // not clickable and must not expand, and are de-emphasised against finished work.
     const isIndexOnly =
@@ -129,7 +136,12 @@ const ProjectsList = ({ projects, locale = "en" }: ProjectsListProps) => {
           type="button"
           aria-expanded={isExpanded}
           className="w-full text-left grid grid-cols-2 md:grid-cols-12 gap-4 py-3 px-4 cursor-pointer hover:bg-muted/30 transition-colors"
-          onClick={() => setExpandedProject(isExpanded ? null : project.id)}
+          onClick={() => {
+            setExpandedProject(isExpanded ? null : project.id);
+            if (!isExpanded) {
+              setEverExpanded((prev) => new Set(prev).add(project.id));
+            }
+          }}
         >
           {cells}
         </button>
@@ -139,6 +151,7 @@ const ProjectsList = ({ projects, locale = "en" }: ProjectsListProps) => {
             isExpanded ? "max-h-[600px] md:max-h-96 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
+          {isMounted && (
           <div className="px-4 pb-4 flex flex-col md:flex-row gap-4">
             <div className="w-full md:w-2/3 px-0 md:px-12">
               <Carousel className="w-full">
@@ -179,6 +192,7 @@ const ProjectsList = ({ projects, locale = "en" }: ProjectsListProps) => {
               </div>
             </div>
           </div>
+          )}
         </div>
       </div>
     );

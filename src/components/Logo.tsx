@@ -46,7 +46,9 @@ const Logo = ({ isAnimated = false, size = "large", className = "" }: LogoProps)
       >
         <img
           src={logoImage}
-          alt="Company Logo"
+          alt="DOCA"
+      width={44}
+      height={44}
           className={`
             transition-transform duration-1000 ease-in-out
             ${isAnimating ? 'translate-y-[-46vh] scale-[0.275]' : 'translate-y-0 scale-100'}
@@ -64,7 +66,9 @@ const Logo = ({ isAnimated = false, size = "large", className = "" }: LogoProps)
   return ( 
     <img
       src={logoImage}
-      alt="Company Logo"
+      alt="DOCA"
+      width={44}
+      height={44}
       className={`${logoSizes[size]} logo-nav ${className}`}
     />
   );
