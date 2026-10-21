@@ -15,7 +15,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['"Arial Narrow"', ...defaultTheme.fontFamily.sans],
+        sans: ['"Archivo Narrow Variable"', '"Arial Narrow"', ...defaultTheme.fontFamily.sans],
       },
       colors: {
         border: "hsl(var(--border))",

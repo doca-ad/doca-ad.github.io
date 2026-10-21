@@ -2,8 +2,15 @@ import { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight, X, Mail, Phone, MapPin } from "lucide-react";
 import { projects, Project } from "@/data/projects";
 import { motion, AnimatePresence } from "framer-motion";
+import Landing, { LandingVariant } from "./Landing";
+import ScrollCue from "./ScrollCue";
 
-const ProjectCarousel = () => {
+interface ProjectCarouselProps {
+  /** When set, a landing slide is prepended to the sequence. */
+  landing?: LandingVariant;
+}
+
+const ProjectCarousel = ({ landing }: ProjectCarouselProps = {}) => {
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,6 +21,9 @@ const ProjectCarousel = () => {
   const homeProjects = projects
     .filter(p => p.home)
     .sort((a, b) => (a.homeIndex ?? 0) - (b.homeIndex ?? 0));
+
+  // Landing occupies slide 0 when present; project N therefore sits at slide N + offset.
+  const slideOffset = landing ? 1 : 0;
 
   const currentProject = homeProjects[currentProjectIndex];
   const currentImage = currentProject?.images[currentImageIndex];
@@ -49,13 +59,21 @@ const ProjectCarousel = () => {
     const handleScroll = () => {
       const scrollTop = container.scrollTop;
       const containerHeight = container.clientHeight;
-      const newIndex = Math.round(scrollTop / containerHeight);
+      const newIndex = Math.round(scrollTop / containerHeight) - slideOffset;
       setCurrentProjectIndex(Math.min(Math.max(newIndex, 0), homeProjects.length - 1));
     };
 
     container.addEventListener('scroll', handleScroll);
     return () => container.removeEventListener('scroll', handleScroll);
-  }, [homeProjects]);
+  }, [homeProjects, slideOffset]);
+
+  /** Advance one slide. Used by the scroll cue and by the inactivity timer. */
+  const advance = () => {
+    const container = containerRef.current;
+    if (!container) return;
+    const h = container.clientHeight;
+    container.scrollTo({ top: Math.round(container.scrollTop / h) * h + h, behavior: 'smooth' });
+  };
 
   // Reset image index when project changes
   useEffect(() => {
@@ -75,7 +93,7 @@ const ProjectCarousel = () => {
         const nextIndex = (currentProjectIndex + 1) % homeProjects.length;
 
         container.scrollTo({
-          top: nextIndex * container.clientHeight,
+          top: (nextIndex + slideOffset) * container.clientHeight,
           behavior: 'smooth'
         });
       }, 30000);
@@ -94,7 +112,7 @@ const ProjectCarousel = () => {
         document.removeEventListener(event, resetTimer);
       });
     };
-  }, [currentProjectIndex, isModalOpen, homeProjects]);
+  }, [currentProjectIndex, isModalOpen, homeProjects, slideOffset]);
 
   // Close modal on Escape key + navigate with arrows
   useEffect(() => {
@@ -153,10 +171,12 @@ const ProjectCarousel = () => {
         className="h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
         style={{ scrollBehavior: 'smooth' }}
       >
+        {landing && <Landing variant={landing} onAdvance={advance} />}
+
         {homeProjects.map((project) => (
           <div
             key={project.id}
-            className="h-screen flex flex-col justify-center px-8 snap-start pt-24 md:pt-32 pb-16"
+            className="relative h-screen flex flex-col justify-center px-8 snap-start pt-24 md:pt-32 pb-16"
           >
             <div className="relative max-w-4xl mx-auto w-full">
               <div className="text-center">
@@ -176,6 +196,11 @@ const ProjectCarousel = () => {
                   {project.title}
                 </h2>
               </div>
+            </div>
+
+            {/* Nothing follows the contact slide, so the cue stops there. */}
+            <div className="absolute inset-x-0 bottom-6 flex justify-center">
+              <ScrollCue onClick={advance} />
             </div>
           </div>
         ))}
