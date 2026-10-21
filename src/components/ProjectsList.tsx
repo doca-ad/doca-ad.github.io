@@ -5,23 +5,30 @@ import {
   Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious,
 } from "@/components/ui/carousel";
 import { INDEX_ONLY_STATUSES, STATUS_LABELS } from "@/data/status";
+import { translateType } from "@/i18n/ui";
 import type { ResolvedProject } from "@/lib/images";
 
 interface ProjectsListProps {
   projects: ResolvedProject[];
+  locale?: "en" | "ro";
 }
 
 const COUNTRY_CODES: Record<string, string> = { Romania: "RO" };
+/** Only cities whose Romanian form differs from the English one need an entry. */
+const CITY_RO: Record<string, string> = { Bucharest: "București" };
 
 /** "Cluj Napoca, Romania" -> "Cluj Napoca, RO" (DOCA asked for country abbreviations). */
-const formatLocation = (location: string) => {
+const formatLocation = (location: string, locale: "en" | "ro") => {
   const parts = location.split(",").map((p) => p.trim());
   if (parts.length < 2) return location;
   const country = parts[parts.length - 1];
-  return [...parts.slice(0, -1), COUNTRY_CODES[country] ?? country].join(", ");
+  const cities = parts
+    .slice(0, -1)
+    .map((c) => (locale === "ro" ? CITY_RO[c] ?? c : c));
+  return [...cities, COUNTRY_CODES[country] ?? country].join(", ");
 };
 
-const ProjectsList = ({ projects }: ProjectsListProps) => {
+const ProjectsList = ({ projects, locale = "en" }: ProjectsListProps) => {
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
   const [selectedProject, setSelectedProject] = useState<ResolvedProject | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -90,12 +97,12 @@ const ProjectsList = ({ projects }: ProjectsListProps) => {
         >
           {project.title}
         </div>
-        <div className="text-text-secondary text-sm md:col-span-3">{project.type}</div>
+        <div className="text-text-secondary text-sm md:col-span-3">{translateType(project.type, locale)}</div>
         <div className="text-text-secondary text-sm hidden md:block md:col-span-2 text-center">
-          {STATUS_LABELS[project.status].en}
+          {STATUS_LABELS[project.status][locale]}
         </div>
         <div className="text-text-secondary text-sm hidden md:block md:col-span-2 text-center">
-          {formatLocation(project.location)}
+          {formatLocation(project.location, locale)}
         </div>
         <div className="text-text-secondary text-sm hidden md:block md:col-span-2 text-right">
           {project.year}

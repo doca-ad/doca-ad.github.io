@@ -1,0 +1,73 @@
+---
+import Base from "@/layouts/Base.astro";
+import Navigation from "@/components/Navigation";
+import { STATUS_LABELS } from "@/data/status";
+import { PROJECT_DESCRIPTIONS_RO } from "@/data/translations.ro";
+import { t, localePath, translateType, type Locale } from "@/i18n/ui";
+import type { ResolvedProject } from "@/lib/images";
+
+interface Props { locale: Locale; project: ResolvedProject }
+const { locale, project } = Astro.props;
+
+const description =
+  locale === "ro" ? PROJECT_DESCRIPTIONS_RO[project.id] ?? project.description : project.description;
+const [hero, ...rest] = project.images;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  name: project.title,
+  description,
+  inLanguage: locale,
+  creator: { "@id": "https://docastudio.ro/#organization" },
+  dateCreated: project.year,
+  locationCreated: { "@type": "Place", name: project.location },
+  image: new URL(hero.src, Astro.site).href,
+};
+---
+
+<Base title={project.title} description={description.slice(0, 160)} breadcrumb={project.title} image={hero.src}>
+  <div class="min-h-screen bg-background">
+    <Navigation locale={locale} routeKey={`/projects/${project.slug}`} client:load />
+    <main class="pt-32 pb-24">
+      <div class="max-w-5xl mx-auto px-8">
+        <header class="mb-12 text-center">
+          <h1 class="text-3xl md:text-4xl font-light text-text-primary">{project.title}</h1>
+          <p class="mt-4 text-sm md:text-base text-text-secondary">
+            {translateType(project.type, locale)} &nbsp;·&nbsp; {locale === "ro" ? project.location.replace("Bucharest", "București").replace("Romania", "România") : project.location} &nbsp;·&nbsp; {project.year}
+            &nbsp;·&nbsp; {STATUS_LABELS[project.status][locale]}
+          </p>
+        </header>
+
+        <img
+          src={hero.src} srcset={hero.srcSet} sizes="(max-width: 768px) 100vw, 1024px"
+          width={hero.width} height={hero.height} alt={hero.alt}
+          fetchpriority="high" decoding="async" class="w-full h-auto mb-12"
+        />
+
+        {description && (
+          <p class="max-w-3xl mx-auto text-base md:text-lg text-text-secondary leading-relaxed text-justify mb-16">
+            {description}
+          </p>
+        )}
+
+        <div class="grid gap-8">
+          {rest.map((image) => (
+            <img
+              src={image.src} srcset={image.srcSet} sizes="(max-width: 768px) 100vw, 1024px"
+              width={image.width} height={image.height} alt={image.alt}
+              loading="lazy" decoding="async" class="w-full h-auto"
+            />
+          ))}
+        </div>
+
+        <nav class="mt-16 text-center">
+          <a href={localePath(locale, "/projects")}
+             class="text-sm text-text-secondary hover:text-accent-hover transition-colors">
+            ← {t(locale, "projects.allProjects")}
+          </a>
+        </nav>
+      </div>
+    </main>
+  </div>
+</Base>

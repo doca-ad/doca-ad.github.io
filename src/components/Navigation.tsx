@@ -1,22 +1,26 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import Logo from "./Logo";
 import { motion, AnimatePresence } from "framer-motion";
+import { LOCALES, localePath, t, type Locale } from "@/i18n/ui";
 
 interface NavigationProps {
 	isAnimating?: boolean;
 	whiteTimer?: boolean;
+	locale?: Locale;
+	/** Canonical route (no locale prefix), so the toggle can switch in place. */
+	routeKey?: string;
 }
 
-const Navigation = ({ isAnimating = false, whiteTimer = false}: NavigationProps) => {
+const Navigation = ({ isAnimating = false, whiteTimer = false, locale = "en", routeKey = "/" }: NavigationProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const menuItems = [
-    { label: "Home", href: "/" },
-    { label: "Projects", href: "/projects" },
-    { label: "Info", href: "/info" },
-    { label: "Contact", href: "/contact" }
+    { label: t(locale, "nav.home"), href: localePath(locale, "/") },
+    { label: t(locale, "nav.projects"), href: localePath(locale, "/projects") },
+    { label: t(locale, "nav.info"), href: localePath(locale, "/info") },
+    { label: t(locale, "nav.contact"), href: localePath(locale, "/contact") }
   ];
 
   return (
@@ -32,9 +36,9 @@ const Navigation = ({ isAnimating = false, whiteTimer = false}: NavigationProps)
 
           {/* Text - Left */}
           <div className={`flex-none transition-opacity duration-700 ${whiteTimer ? 'opacity-0 invisible' : 'opacity-100 visible'}`}>
-            <a href="/" className="hover:opacity-80 transition-opacity duration-200 text-lg">
+            <a href={localePath(locale, "/")} className="hover:opacity-80 transition-opacity duration-200 text-lg">
               <span className="md:hidden">DOCA</span>
-              <span className="hidden md:inline">DOCA &nbsp; | &nbsp; Architecture & Design</span>
+              <span className="hidden md:inline">DOCA &nbsp; | &nbsp; {t(locale, "nav.tagline")}</span>
             </a>
           </div>
 
@@ -42,7 +46,7 @@ const Navigation = ({ isAnimating = false, whiteTimer = false}: NavigationProps)
           <div className={`absolute left-1/2 transform -translate-x-1/2 transition-all duration-1000 ease-in-out ${
             isAnimating ? 'scale-[2.9] md:scale-[3.6]' : 'scale-100'
           }`}>
-            <a href="/" className={`hover:opacity-80 transition-opacity duration-200 ${isAnimating ? 'pointer-events-none' : ''}`}>
+            <a href={localePath(locale, "/")} className={`hover:opacity-80 transition-opacity duration-200 ${isAnimating ? 'pointer-events-none' : ''}`}>
               <Logo size="small" />
             </a>
           </div>
@@ -51,9 +55,31 @@ const Navigation = ({ isAnimating = false, whiteTimer = false}: NavigationProps)
           <div className="flex-1" />
 
           {/* Menu Button - Right */}
-          <div className={`relative flex-none transition-opacity duration-700 ${whiteTimer ? 'opacity-0 invisible' : 'opacity-100 visible'}`}>
+          <div className={`relative flex-none flex items-center gap-4 transition-opacity duration-700 ${whiteTimer ? 'opacity-0 invisible' : 'opacity-100 visible'}`}>
+            <div className="flex items-center text-sm tracking-wide">
+              {LOCALES.map((l, i) => (
+                <span key={l} className="flex items-center">
+                  {i > 0 && <span className="px-1.5 text-text-tertiary" aria-hidden="true">/</span>}
+                  <a
+                    href={localePath(l, routeKey)}
+                    hrefLang={l}
+                    aria-current={l === locale ? "true" : undefined}
+                    className={
+                      l === locale
+                        ? "text-text-primary"
+                        : "text-text-tertiary hover:text-text-primary transition-colors duration-200"
+                    }
+                  >
+                    {l.toUpperCase()}
+                  </a>
+                </span>
+              ))}
+            </div>
+
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label={t(locale, "nav.menu")}
+              aria-expanded={isMenuOpen}
               className="flex items-center gap-2 text-text-primary hover:text-accent-hover transition-colors duration-200"
             >
               <Menu className="h-6 w-6" />
@@ -80,6 +106,7 @@ const Navigation = ({ isAnimating = false, whiteTimer = false}: NavigationProps)
               <div className="flex justify-end p-6 bg-white">
                 <button
                   onClick={() => setIsMenuOpen(false)}
+                  aria-label={t(locale, "nav.close")}
                   className="text-black hover:text-gray-600 transition-colors duration-200"
                 >
                   <X className="h-6 w-6" />

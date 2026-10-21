@@ -15,6 +15,10 @@ export interface ResolvedImage {
 
 export interface ResolvedProject extends Omit<Project, "images"> {
   images: ResolvedImage[];
+  /** Stable URL slug; also used by the language toggle to switch in place. */
+  slug: string;
+  /** Localised link target, set by the page that renders the list. */
+  href?: string;
 }
 
 /**
@@ -49,6 +53,7 @@ export async function resolveImage(image: ProjectImage, fallbackAlt: string): Pr
 export async function resolveProject(project: Project): Promise<ResolvedProject> {
   return {
     ...project,
+    slug: slugify(project),
     images: await Promise.all(
       project.images.map((img) => resolveImage(img, `${project.title} — ${project.type}`))
     ),

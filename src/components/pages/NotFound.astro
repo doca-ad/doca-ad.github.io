@@ -1,0 +1,21 @@
+---
+import Base from "@/layouts/Base.astro";
+import Navigation from "@/components/Navigation";
+import { t, localePath, type Locale } from "@/i18n/ui";
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+---
+
+<Base title={t(locale, "404.title")} description={t(locale, "404.body")}>
+  <div class="min-h-screen bg-background">
+    <Navigation locale={locale} routeKey="/" client:load />
+    <main class="min-h-screen flex flex-col items-center justify-center px-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-light text-text-primary mb-4">{t(locale, "404.title")}</h1>
+      <p class="text-text-secondary mb-8">{t(locale, "404.body")}</p>
+      <a href={localePath(locale, "/")} class="text-accent-primary hover:text-accent-hover transition-colors">
+        ← {t(locale, "404.back")}
+      </a>
+    </main>
+  </div>
+</Base>

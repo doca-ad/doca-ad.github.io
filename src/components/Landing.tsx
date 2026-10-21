@@ -12,17 +12,13 @@ interface LandingProps {
   variant: LandingVariant;
   /** Required by the "material" variant; optimised at build time by the .astro page. */
   hero?: ResolvedImage;
+  /** Localised copy, passed in so the component stays language-agnostic. */
+  statement: { lead: string; body: string };
+  scrollLabel?: string;
   onAdvance?: () => void;
 }
 
-/** Drawn from DOCA's own About copy, so the voice is theirs rather than invented. */
-const STATEMENT = {
-  lead: "Architecture at the scale of a person.",
-  body:
-    "We place the individual at the centre of the process — designing spaces that are not only functional, but sculptural.",
-};
-
-const Landing = ({ variant, hero, onAdvance }: LandingProps) => {
+const Landing = ({ variant, hero, statement, scrollLabel, onAdvance }: LandingProps) => {
   if (variant === "material" && hero) {
     return (
       <section
@@ -48,7 +44,7 @@ const Landing = ({ variant, hero, onAdvance }: LandingProps) => {
         {/* Only enough scrim to keep the cue legible. */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/35 to-transparent" />
         <div className="absolute inset-x-0 bottom-10 flex justify-center">
-          <ScrollCue variant="light" onClick={onAdvance} label="Scroll to projects" />
+          <ScrollCue variant="light" onClick={onAdvance} label={scrollLabel} />
         </div>
       </section>
     );
@@ -61,14 +57,14 @@ const Landing = ({ variant, hero, onAdvance }: LandingProps) => {
     >
       <div className="mx-auto w-full max-w-3xl">
         <h1 className="text-balance text-3xl font-light leading-[1.25] tracking-tight text-text-primary md:text-5xl md:leading-[1.2]">
-          {STATEMENT.lead}
+          {statement.lead}
         </h1>
         <p className="mt-6 max-w-xl text-pretty text-base font-light leading-relaxed text-text-secondary md:mt-8 md:text-lg">
-          {STATEMENT.body}
+          {statement.body}
         </p>
       </div>
       <div className="absolute inset-x-0 bottom-10 flex justify-center">
-        <ScrollCue onClick={onAdvance} label="Scroll to projects" />
+        <ScrollCue onClick={onAdvance} label={scrollLabel} />
       </div>
     </section>
   );

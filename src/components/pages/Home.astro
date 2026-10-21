@@ -1,0 +1,33 @@
+---
+import Base from "@/layouts/Base.astro";
+import Navigation from "@/components/Navigation";
+import ProjectCarousel from "@/components/ProjectCarousel";
+import { projects } from "@/data/projects";
+import { resolveProjects } from "@/lib/images";
+import { META, t, type Locale } from "@/i18n/ui";
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+
+const homeProjects = await resolveProjects(
+  projects.filter((p) => p.home).sort((a, b) => (a.homeIndex ?? 0) - (b.homeIndex ?? 0))
+);
+const meta = META["/"][locale];
+---
+
+<Base title={meta.title} description={meta.description}>
+  <div class="min-h-screen bg-background">
+    <Navigation locale={locale} routeKey="/" client:load />
+    <main class="min-h-screen bg-background">
+      <div class="h-screen bg-background">
+        <ProjectCarousel
+          projects={homeProjects}
+          landing="statement"
+          statement={{ lead: t(locale, "home.statement.lead"), body: t(locale, "home.statement.body") }}
+          scrollLabel={t(locale, "home.scroll")}
+          client:load
+        />
+      </div>
+    </main>
+  </div>
+</Base>

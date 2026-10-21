@@ -1,0 +1,25 @@
+---
+import ProjectDetail from "@/components/pages/ProjectDetail.astro";
+import { projects } from "@/data/projects";
+import { INDEX_ONLY_STATUSES } from "@/data/status";
+import { resolveProject, slugify } from "@/lib/images";
+
+/**
+ * A real page per project; the SPA had none, leaving Google a single route with no
+ * indexable content. Index-only entries are excluded: they have no content to show.
+ */
+export async function getStaticPaths() {
+  const publishable = projects.filter(
+    (p) => !INDEX_ONLY_STATUSES.includes(p.status) && p.images.length > 0
+  );
+  return Promise.all(
+    publishable.map(async (project) => ({
+      params: { slug: slugify(project) },
+      props: { project: await resolveProject(project) },
+    }))
+  );
+}
+
+const { project } = Astro.props;
+---
+<ProjectDetail locale="ro" project={project} />

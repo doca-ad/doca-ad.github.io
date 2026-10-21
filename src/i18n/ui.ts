@@ -151,3 +151,28 @@ export const META: Record<string, Record<Locale, { title: string; description: s
     },
   },
 };
+
+/**
+ * Project types are composed as "Discipline / Programme" (e.g. "Interior Design / Offices").
+ * Translating per segment avoids having to enumerate every combination, and keeps working
+ * if DOCA add a new programme through the admin.
+ */
+const TYPE_SEGMENTS: Record<string, string> = {
+  "Architecture": "Arhitectură",
+  "Interior Design": "Design interior",
+  "Offices": "Birouri",
+  "Residential": "Rezidențial",
+  "Healthcare": "Medical",
+  "Mixed-use": "Funcțiuni mixte",
+};
+
+export function translateType(type: string, locale: Locale): string {
+  if (locale === DEFAULT_LOCALE) return type;
+  return type
+    .split("/")
+    .map((part) => {
+      const key = part.trim();
+      return TYPE_SEGMENTS[key] ?? key;
+    })
+    .join(" / ");
+}

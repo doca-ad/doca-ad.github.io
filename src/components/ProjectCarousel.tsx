@@ -11,11 +11,13 @@ interface ProjectCarouselProps {
   /** When set, a landing slide is prepended to the sequence. */
   landing?: LandingVariant;
   landingHero?: ResolvedImage;
+  statement?: { lead: string; body: string };
+  scrollLabel?: string;
 }
 
 type Project = ResolvedProject;
 
-const ProjectCarousel = ({ projects, landing, landingHero }: ProjectCarouselProps) => {
+const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabel }: ProjectCarouselProps) => {
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -176,7 +178,9 @@ const ProjectCarousel = ({ projects, landing, landingHero }: ProjectCarouselProp
         className="h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
         style={{ scrollBehavior: 'smooth' }}
       >
-        {landing && <Landing variant={landing} hero={landingHero} onAdvance={advance} />}
+        {landing && statement && (
+          <Landing variant={landing} hero={landingHero} statement={statement} scrollLabel={scrollLabel} onAdvance={advance} />
+        )}
 
         {homeProjects.map((project) => (
           <div
@@ -211,7 +215,7 @@ const ProjectCarousel = ({ projects, landing, landingHero }: ProjectCarouselProp
 
             {/* Nothing follows the contact slide, so the cue stops there. */}
             <div className="absolute inset-x-0 bottom-6 flex justify-center">
-              <ScrollCue onClick={advance} />
+              <ScrollCue onClick={advance} label={scrollLabel} />
             </div>
           </div>
         ))}
