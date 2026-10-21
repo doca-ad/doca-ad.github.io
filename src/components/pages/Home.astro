@@ -2,7 +2,7 @@
 import Base from "@/layouts/Base.astro";
 import Navigation from "@/components/Navigation";
 import ProjectCarousel from "@/components/ProjectCarousel";
-import { projects } from "@/data/projects";
+import { loadProjects } from "@/lib/content";
 import { resolveProjects } from "@/lib/images";
 import { META, t, type Locale } from "@/i18n/ui";
 
@@ -10,7 +10,7 @@ interface Props { locale: Locale }
 const { locale } = Astro.props;
 
 const homeProjects = await resolveProjects(
-  projects.filter((p) => p.home).sort((a, b) => (a.homeIndex ?? 0) - (b.homeIndex ?? 0))
+  (await loadProjects()).filter((p) => p.home).sort((a, b) => (a.homeIndex ?? 0) - (b.homeIndex ?? 0))
 );
 const meta = META["/"][locale];
 ---

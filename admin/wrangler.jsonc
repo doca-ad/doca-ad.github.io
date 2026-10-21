@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "doca-admin",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-19",
+  "observability": { "enabled": true },
+
+  "assets": { "directory": "./public", "binding": "ASSETS" },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "doca-content",
+      "database_id": "04dc6c71-051c-4af9-8daa-79374d565c5e"
+    }
+  ],
+
+  // R2 must be enabled on the account before this binding can be created.
+  // Until then image upload returns a clear error and everything else works.
+  // "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "doca-media" }],
+
+  "vars": {
+    // Cloudflare Access team domain, used to verify the signed JWT.
+    "ACCESS_TEAM_DOMAIN": "rapid-fog-f675.cloudflareaccess.com"
+  }
+}

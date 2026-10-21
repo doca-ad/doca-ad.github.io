@@ -2,7 +2,7 @@
 import Base from "@/layouts/Base.astro";
 import Navigation from "@/components/Navigation";
 import ProjectsList from "@/components/ProjectsList";
-import { projects } from "@/data/projects";
+import { loadProjects } from "@/lib/content";
 import { resolveProjects, slugify } from "@/lib/images";
 import { PROJECT_DESCRIPTIONS_RO } from "@/data/translations.ro";
 import { META, t, localePath, type Locale } from "@/i18n/ui";
@@ -11,7 +11,7 @@ interface Props { locale: Locale }
 const { locale } = Astro.props;
 
 const resolved = await resolveProjects(
-  [...projects].sort((a, b) => Number(b.year) - Number(a.year))
+  [...(await loadProjects())].sort((a, b) => Number(b.year) - Number(a.year))
 );
 // Swap in the Romanian description and localise the link target for each row.
 const localised = resolved.map((p) => ({

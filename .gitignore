@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# admin worker
+admin/node_modules
+admin/.wrangler
