@@ -1,0 +1,106 @@
+---
+import "@fontsource-variable/archivo-narrow";
+import "@/index.css";
+
+import { LOCALES, DEFAULT_LOCALE, localePath, stripLocale, localeFromPath, type Locale } from "@/i18n/ui";
+
+export interface Props {
+  title: string;
+  description: string;
+  /** Omit on the home page, which is the root of the trail. */
+  breadcrumb?: string;
+  /** Absolute URL of a representative image, if the page has one. */
+  image?: string;
+}
+
+const { title, description, breadcrumb, image } = Astro.props;
+
+const locale: Locale = localeFromPath(Astro.url.pathname);
+const routeKey = stripLocale(Astro.url.pathname);
+
+const SUFFIX = locale === "ro" ? "DOCA Arhitectură & Design" : "DOCA Architecture & Design";
+const fullTitle = title.startsWith("DOCA") ? title : `${title} — ${SUFFIX}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href.replace(/\/$/, "") || Astro.site.href;
+const ogImage = new URL(image ?? "/og-image.png", Astro.site).href;
+
+const organization = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": "https://docastudio.ro/#organization",
+  name: "DOCA Architecture & Design",
+  alternateName: "DOCA",
+  url: "https://docastudio.ro/",
+  logo: "https://docastudio.ro/logo-square-1200.png",
+  image: "https://docastudio.ro/og-image.png",
+  description: "Bucharest-based architecture and interior design studio founded in 2024.",
+  foundingDate: "2024",
+  email: "office@doca-ad.ro",
+  telephone: "+40723340088",
+  address: { "@type": "PostalAddress", addressLocality: "Bucharest", addressCountry: "RO" },
+  founder: [
+    { "@type": "Person", name: "Ștefan Diaconescu" },
+    { "@type": "Person", name: "Vlad Căpitanu" },
+  ],
+  sameAs: [
+    "https://www.instagram.com/doca_architecture/",
+    "https://www.linkedin.com/company/doca-architecture-design/",
+  ],
+};
+
+const breadcrumbs = breadcrumb && {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://docastudio.ro/" },
+    { "@type": "ListItem", position: 2, name: breadcrumb, item: canonical },
+  ],
+};
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="DOCA Architecture & Design" />
+    <link rel="canonical" href={canonical} />
+
+    {/* hreflang alternates. x-default points at the EN root, which is what an unmatched
+        visitor should get. These route the right audience; they do not boost ranking. */}
+    {LOCALES.map((l) => (
+      <link
+        rel="alternate"
+        hreflang={l}
+        href={new URL(localePath(l, routeKey), Astro.site).href.replace(/\/$/, "") || Astro.site.href}
+      />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={new URL(localePath(DEFAULT_LOCALE, routeKey), Astro.site).href.replace(/\/$/, "") || Astro.site.href} />
+
+    {/* The mark is black on transparent, so every raster variant is baked onto a solid
+        background: iOS composites alpha on black, and Google rendered the transparent
+        PNG unreadably. */}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:site_name" content="DOCA Architecture & Design" />
+    <meta property="og:locale" content={locale === "ro" ? "ro_RO" : "en_GB"} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(organization)} />
+    {breadcrumbs && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />}
+  </head>
+
+  <body>
+    <slot />
+  </body>
+</html>

@@ -1,16 +1,21 @@
 import { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight, X, Mail, Phone, MapPin } from "lucide-react";
-import { projects, Project } from "@/data/projects";
 import { motion, AnimatePresence } from "framer-motion";
-import Landing, { LandingVariant } from "./Landing";
+import Landing, { type LandingVariant } from "./Landing";
 import ScrollCue from "./ScrollCue";
+import type { ResolvedImage, ResolvedProject } from "@/lib/images";
 
 interface ProjectCarouselProps {
+  /** Already optimised at build time; islands cannot use Astro's <Image>. */
+  projects: ResolvedProject[];
   /** When set, a landing slide is prepended to the sequence. */
   landing?: LandingVariant;
+  landingHero?: ResolvedImage;
 }
 
-const ProjectCarousel = ({ landing }: ProjectCarouselProps = {}) => {
+type Project = ResolvedProject;
+
+const ProjectCarousel = ({ projects, landing, landingHero }: ProjectCarouselProps) => {
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -171,7 +176,7 @@ const ProjectCarousel = ({ landing }: ProjectCarouselProps = {}) => {
         className="h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
         style={{ scrollBehavior: 'smooth' }}
       >
-        {landing && <Landing variant={landing} onAdvance={advance} />}
+        {landing && <Landing variant={landing} hero={landingHero} onAdvance={advance} />}
 
         {homeProjects.map((project) => (
           <div
@@ -186,8 +191,14 @@ const ProjectCarousel = ({ landing }: ProjectCarouselProps = {}) => {
                     onClick={() => handleImageClick(project)}
                   >
                     <img
-                      src={project.images[0].url}
+                      src={project.images[0].src}
+                      srcSet={project.images[0].srcSet}
+                      sizes="(max-width: 768px) 100vw, 1024px"
+                      width={project.images[0].width}
+                      height={project.images[0].height}
                       alt={project.images[0].alt}
+                      loading={project.homeIndex === 0 ? "eager" : "lazy"}
+                      decoding="async"
                       className="w-auto max-h-[60vh] md:max-h-[66.67vh] mx-auto"
                     />
                   </div>
@@ -347,7 +358,9 @@ const ProjectCarousel = ({ landing }: ProjectCarouselProps = {}) => {
                   <AnimatePresence mode="wait">
                     <motion.img
                       key={currentImageIndex}
-                      src={selectedProject.images[currentImageIndex]?.url}
+                      src={selectedProject.images[currentImageIndex]?.src}
+                      srcSet={selectedProject.images[currentImageIndex]?.srcSet}
+                      sizes="100vw"
                       alt={selectedProject.images[currentImageIndex]?.alt}
                       className="max-w-full max-h-full object-contain"
                       initial={{ opacity: 0, x: direction === "right" ? 50 : -50 }}

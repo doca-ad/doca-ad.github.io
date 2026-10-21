@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import logoImage from "@/assets/logo.png";
+import logoImage from "@/assets/doca-logo.svg?url";
 
 interface LogoProps {
   isAnimated?: boolean;

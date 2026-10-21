@@ -3,7 +3,9 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  // .astro MUST be here: pages and layouts are Astro files now, and any class used only
+  // there is otherwise never generated. mdx/html kept for safety.
+  content: ["./src/**/*.{astro,ts,tsx,js,jsx,md,mdx,html}"],
   prefix: "",
   theme: {
     container: {

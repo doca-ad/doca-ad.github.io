@@ -1,10 +1,10 @@
 # DOCA Architecture & Design — site
 
-Portfolio site for DOCA Architecture & Design (Bucharest). Vite 5 + React 18 + TypeScript +
-Tailwind 3 + shadcn/ui + framer-motion. Client-side SPA, react-router v6.
+Portfolio site for DOCA Architecture & Design (Bucharest). **Astro 7** (static output) with
+React 18 islands, TypeScript, Tailwind 3, shadcn/ui, framer-motion.
 
-> An Astro migration is planned (see "Roadmap"). Until it lands, treat the SPA constraints
-> below as real: metadata, routing and images all have workarounds that Astro will remove.
+Astro renders every route to real HTML at build time and hydrates only the interactive parts.
+Islands are server-rendered too, so their markup is in the HTML for crawlers.
 
 ## Deploying — ALWAYS STAGING FIRST
 
@@ -61,36 +61,48 @@ correct page* — invisible in a browser, fatal for indexing. Routing relies on
 pointed at a preview branch. That is why staging is its own Pages project rather than a branch
 of the production one.
 
-**React 18 does not hoist metadata.** Writing `<title>`/`<meta>` inside page JSX renders dead
-elements into `<body>` and every route silently shares `index.html`'s title. This was live for
-months and kept the site out of Google. Always use `src/components/Seo.tsx`
-(`react-helmet-async`). Do not put a static `<link rel="canonical">` in `index.html` — it
-shadows Helmet's and makes every page canonical to `/`.
+**Metadata belongs to `src/layouts/Base.astro`, never to a React component.** The pre-Astro
+site wrote `<title>`/`<meta>` inside page JSX, which relies on React 19 metadata hoisting; on
+React 18 those render into `<body>` and are ignored, so every route silently shared one title.
+That was live for months and kept the site out of Google. Pass `title`/`description`/
+`breadcrumb` as props to `Base`.
+
+**Tailwind 3 is wired through `postcss.config.js`, which Astro picks up automatically.**
+Do not add `@astrojs/tailwind` — it peers only up to Astro 5.
+
+**Astro's `<Image>` does not work inside React islands.** Optimise in the `.astro` page with
+`getImage()` via `src/lib/images.ts` and pass plain `src`/`srcSet` strings down as props.
 
 **`wrangler pages project create` needs `--force`** once per project, because wrangler now
 delegates to the unified Workers platform and that path fails. Never pass `--force` to
 anything else.
 
-**Images are unoptimized.** 85 JPEGs, ~75MB, largest 6.8MB, no WebP/AVIF, no `srcset`. This is
-the biggest outstanding quality problem; the Astro image pipeline is the planned fix.
+**Source images are large** (85 JPEGs, ~75MB, largest 6.8MB) but are no longer shipped as-is:
+`src/lib/images.ts` emits AVIF at several widths with a `srcSet`. Never reference a raw file
+from `src/assets/` in markup — always go through `resolveProject`/`resolveImage`.
 
 ## Layout
 
 ```
 src/
-  components/
-    Seo.tsx              per-page metadata (see gotcha above)
-    Landing.tsx          home landing slide; "statement" is live, "material" is kept unused
+  layouts/Base.astro     html shell, head, SEO, Organization + BreadcrumbList JSON-LD
+  pages/
+    index.astro          home: landing slide + project sequence
+    projects/index.astro project table
+    projects/[slug].astro one real page per publishable project
+    info.astro contact.astro 404.astro
+  components/            React islands
+    Landing.tsx          "statement" is live; "material" kept, needs a higher-res source
     ScrollCue.tsx        down chevron — MUST match the hamburger: h-6 w-6, strokeWidth 2
-    ProjectCarousel.tsx  home vertical scroll-snap sequence; `landing` prop prepends slide 0
+    ProjectCarousel.tsx  home vertical scroll-snap sequence
+    ProjectsList.tsx     project table: status column, RO codes, index-only rows
     Navigation.tsx       fixed header, centred logo, slide-out menu
-  data/projects.ts       ALL content lives here, hardcoded, with static image imports
-  pages/                 Index / Projects / Info / Contact / NotFound
-scripts/gen-sitemap.mjs  builds dist/sitemap.xml from the route table — keep ROUTES in sync
-public/_redirects        SPA rewrite — do not delete
+  lib/images.ts          build-time AVIF/srcSet + slugify for project URLs
+  data/projects.ts       ALL content, hardcoded. status is an enum (translatable), not free text
 ```
 
-Adding a route means touching `src/App.tsx` **and** `scripts/gen-sitemap.mjs`.
+Routes are files, and `@astrojs/sitemap` generates the sitemap — adding a page needs no
+registration anywhere.
 
 ## Conventions
 

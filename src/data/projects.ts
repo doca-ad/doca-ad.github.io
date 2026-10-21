@@ -103,9 +103,14 @@ import project11_9 from "@/assets/11/9.jpg";
 import project11_10 from "@/assets/11/10.jpg";
 
 
+import type { ProjectStatus } from "./status";
+export type { ProjectStatus } from "./status";
+export { INDEX_ONLY_STATUSES, STATUS_LABELS } from "./status";
+
 export interface ProjectImage {
 	id: string;
-	url: string;
+	/** Importing an image under src/ yields Astro's ImageMetadata, not a URL string. */
+	url: ImageMetadata;
 	alt?: string;
 }
 
@@ -118,14 +123,18 @@ export interface Project {
 	year: string;
 	type: string;
 	description: string;
+	/** Build/publication state. Index-only entries are not clickable on the projects page. */
+	status: ProjectStatus;
 	images: ProjectImage[];
 }
+
 
 export const projects: Project[] = [
 	{
 		id: "project-1",
+		status: "completed",
 		title: "HOUSE BY DANUBE",
-		location: "Fetesti, Romania",
+		location: "Fetești, Romania",
 		year: "2024",
 		type: "Architecture / Residential",
 		home: true,
@@ -166,6 +175,7 @@ export const projects: Project[] = [
 	},
 	{
 		id: "project-2",
+		status: "completed",
 		location: "Sibiu, Romania",
 		year: "2025",
 		home: false,
@@ -204,6 +214,7 @@ export const projects: Project[] = [
 	},
 	{
 		id: "project-3",
+		status: "completed",
 		home: false,
 		location: "Fetești, Romania",
 		year: "2024",
@@ -235,6 +246,7 @@ export const projects: Project[] = [
 	},
 	{
 		id: "project-4",
+		status: "completed",
 		home: false,
 		location: "Bucharest, Romania",
 		year: "2024",
@@ -258,8 +270,9 @@ export const projects: Project[] = [
 	},
 	{
 		id: "project-5",
+		status: "completed",
 		home: false,
-		location: "Sibiu Romania",
+		location: "Sibiu, Romania",
 		year: "2025",
 		type: "Interior Design / Residential",
 		title: "THE LINE",
@@ -294,6 +307,7 @@ export const projects: Project[] = [
 	},
 	{
 		id: "project-6",
+		status: "completed",
 		home: true,
 		homeIndex: 4,
 		location: "Bucharest, Romania",
@@ -331,6 +345,7 @@ export const projects: Project[] = [
 	},
 	{
 		id: "project-7",
+		status: "completed",
 		home: false,
 		location: "Cheia, Romania",
 		year: "2024",
@@ -367,6 +382,7 @@ export const projects: Project[] = [
 	},
 	{
 		id: "project-8",
+		status: "completed",
 		home: true,
 		homeIndex: 3,
 		location: "Sibiu, Romania",
@@ -426,9 +442,10 @@ export const projects: Project[] = [
 		]
 	},
 	{
-	  id: "project-9",
-	  home: true,
-      homeIndex: 0,
+		id: "project-9",
+		status: "completed",
+		home: true,
+		homeIndex: 0,
 		location: "Cluj Napoca, Romania",
 		year: "2026",
 		type: "Architecture / Offices",
@@ -519,6 +536,7 @@ export const projects: Project[] = [
 	},
 	{
 		id: "project-10",
+		status: "completed",
 		home: false,
 		location: "Cluj Napoca, Romania",
 		year: "2026",
@@ -546,6 +564,7 @@ export const projects: Project[] = [
 	},
 	{
 		id: "project-11",
+		status: "completed",
 		home: true,
 		homeIndex: 2,
 		location: "Bucharest, Romania",
@@ -595,5 +614,27 @@ export const projects: Project[] = [
 				url: project11_10,
 			}
 		]
-	}
+	},
+	{
+		id: "project-12",
+		status: "in_progress",
+		home: false,
+		location: "Brașov, Romania",
+		year: "2026",
+		type: "Architecture / Residential",
+		title: "PLACEHOLDER — IN PROGRESS",
+		description: "",
+		images: []
+	},
+	{
+		id: "project-13",
+		status: "feasibility_study",
+		home: false,
+		location: "Constanța, Romania",
+		year: "2026",
+		type: "Architecture / Mixed-use",
+		title: "PLACEHOLDER — FEASIBILITY STUDY",
+		description: "",
+		images: []
+	},
 ];

@@ -1,0 +1,29 @@
+---
+import Base from "@/layouts/Base.astro";
+import Navigation from "@/components/Navigation";
+import ProjectsList from "@/components/ProjectsList";
+import { projects } from "@/data/projects";
+import { resolveProjects } from "@/lib/images";
+
+const sorted = await resolveProjects(
+  [...projects].sort((a, b) => Number(b.year) - Number(a.year))
+);
+---
+
+<Base
+  title="Projects"
+  description="Architecture and interior design projects by DOCA — residential, offices and healthcare across Romania, from 2024 onward."
+  breadcrumb="Projects"
+>
+  <div class="min-h-screen bg-background">
+    <Navigation client:load />
+    <main class="pt-32 pb-16">
+      <div class="max-w-7xl mx-auto px-8">
+        <h1 class="text-4xl md:text-5xl font-light text-text-primary text-center mb-16">
+          Our Projects
+        </h1>
+        <ProjectsList projects={sorted} client:load />
+      </div>
+    </main>
+  </div>
+</Base>

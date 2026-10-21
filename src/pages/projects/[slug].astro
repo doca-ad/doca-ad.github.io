@@ -1,0 +1,102 @@
+---
+import Base from "@/layouts/Base.astro";
+import Navigation from "@/components/Navigation";
+import { projects } from "@/data/projects";
+import { resolveProject, slugify, type ResolvedProject } from "@/lib/images";
+import { STATUS_LABELS, INDEX_ONLY_STATUSES } from "@/data/status";
+
+/**
+ * A real page per project. The old SPA had none, which left Google a single route with no
+ * indexable content - and per-project URLs are the precondition for ever earning sitelinks.
+ * Index-only entries are skipped: they have no content to show.
+ */
+export async function getStaticPaths() {
+  const publishable = projects.filter(
+    (p) => !INDEX_ONLY_STATUSES.includes(p.status) && p.images.length > 0
+  );
+  return Promise.all(
+    publishable.map(async (project) => ({
+      params: { slug: slugify(project) },
+      props: { project: await resolveProject(project) },
+    }))
+  );
+}
+
+const { project } = Astro.props as { project: ResolvedProject };
+const [hero, ...rest] = project.images;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  name: project.title,
+  description: project.description,
+  creator: { "@id": "https://docastudio.ro/#organization" },
+  dateCreated: project.year,
+  locationCreated: { "@type": "Place", name: project.location },
+  image: new URL(hero.src, Astro.site).href,
+};
+---
+
+<Base
+  title={project.title}
+  description={project.description.slice(0, 160)}
+  breadcrumb={project.title}
+  image={hero.src}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
+
+  <div class="min-h-screen bg-background">
+    <Navigation client:load />
+    <main class="pt-32 pb-24">
+      <div class="max-w-5xl mx-auto px-8">
+        <header class="mb-12 text-center">
+          <h1 class="text-3xl md:text-4xl font-light text-text-primary">{project.title}</h1>
+          <p class="mt-4 text-sm md:text-base text-text-secondary">
+            {project.type} &nbsp;·&nbsp; {project.location} &nbsp;·&nbsp; {project.year}
+            &nbsp;·&nbsp; {STATUS_LABELS[project.status].en}
+          </p>
+        </header>
+
+        <img
+          src={hero.src}
+          srcset={hero.srcSet}
+          sizes="(max-width: 768px) 100vw, 1024px"
+          width={hero.width}
+          height={hero.height}
+          alt={hero.alt}
+          fetchpriority="high"
+          decoding="async"
+          class="w-full h-auto mb-12"
+        />
+
+        {project.description && (
+          <p class="max-w-3xl mx-auto text-base md:text-lg text-text-secondary leading-relaxed text-justify mb-16">
+            {project.description}
+          </p>
+        )}
+
+        <div class="grid gap-8">
+          {rest.map((image) => (
+            <img
+              src={image.src}
+              srcset={image.srcSet}
+              sizes="(max-width: 768px) 100vw, 1024px"
+              width={image.width}
+              height={image.height}
+              alt={image.alt}
+              loading="lazy"
+              decoding="async"
+              class="w-full h-auto"
+            />
+          ))}
+        </div>
+
+        <nav class="mt-16 text-center">
+          <a href="/projects" class="text-sm text-text-secondary hover:text-accent-hover transition-colors">
+            ← All projects
+          </a>
+        </nav>
+      </div>
+    </main>
+  </div>
+</Base>

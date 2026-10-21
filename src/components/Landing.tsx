@@ -1,5 +1,5 @@
-import heroMaterial from "@/assets/08/3.jpg";
 import ScrollCue from "./ScrollCue";
+import type { ResolvedImage } from "@/lib/images";
 
 /**
  * "statement" is the direction DOCA chose (2026-10-21).
@@ -10,6 +10,8 @@ export type LandingVariant = "statement" | "material";
 
 interface LandingProps {
   variant: LandingVariant;
+  /** Required by the "material" variant; optimised at build time by the .astro page. */
+  hero?: ResolvedImage;
   onAdvance?: () => void;
 }
 
@@ -20,8 +22,8 @@ const STATEMENT = {
     "We place the individual at the centre of the process — designing spaces that are not only functional, but sculptural.",
 };
 
-const Landing = ({ variant, onAdvance }: LandingProps) => {
-  if (variant === "material") {
+const Landing = ({ variant, hero, onAdvance }: LandingProps) => {
+  if (variant === "material" && hero) {
     return (
       <section
         className="relative h-screen w-full snap-start overflow-hidden"
@@ -34,8 +36,10 @@ const Landing = ({ variant, onAdvance }: LandingProps) => {
             material. CAVEAT: the source is only 1920x1080, so this 2.1x crop is soft
             on a 2x display — ask DOCA for a higher-resolution original before launch. */}
         <img
-          src={heroMaterial}
-          alt="Vertical timber cladding and a recessed entrance door, Hill's Pocket"
+          src={hero.src}
+          srcSet={hero.srcSet}
+          sizes="100vw"
+          alt={hero.alt}
           className="absolute inset-0 h-full w-full object-cover"
           style={{ transform: "scale(2.1)", transformOrigin: "88% 50%" }}
           // React 18 does not map fetchPriority; pass the raw attribute. LCP hint.
