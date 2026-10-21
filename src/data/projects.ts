@@ -109,8 +109,11 @@ export { INDEX_ONLY_STATUSES, STATUS_LABELS } from "./status";
 
 export interface ProjectImage {
 	id: string;
-	/** Importing an image under src/ yields Astro's ImageMetadata, not a URL string. */
-	url: ImageMetadata;
+	/**
+	 * Repo assets import as Astro's ImageMetadata. Images uploaded through the admin live
+	 * in R2 and arrive as an absolute URL string instead.
+	 */
+	url: ImageMetadata | string;
 	alt?: string;
 }
 

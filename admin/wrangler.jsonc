@@ -15,9 +15,7 @@
     }
   ],
 
-  // R2 must be enabled on the account before this binding can be created.
-  // Until then image upload returns a clear error and everything else works.
-  // "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "doca-media" }],
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "doca-media" }],
 
   "vars": {
     // Cloudflare Access team domain, used to verify the signed JWT.

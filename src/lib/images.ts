@@ -29,23 +29,32 @@ export interface ResolvedProject extends Omit<Project, "images"> {
  * the browser fetches a fraction of that.
  */
 export async function resolveImage(image: ProjectImage, fallbackAlt: string): Promise<ResolvedImage> {
-  const widths = WIDTHS.filter((w) => w <= image.url.width);
-  if (widths.length === 0) widths.push(image.url.width);
+  // Repo assets arrive as ImageMetadata; images uploaded through the admin arrive as a URL
+  // string served from R2, where the dimensions are not known until Astro fetches it.
+  const isRemote = typeof image.url === "string";
+  const intrinsic = isRemote ? null : (image.url as ImageMetadata);
+
+  const widths = intrinsic
+    ? (WIDTHS.filter((w) => w <= intrinsic.width).length
+        ? WIDTHS.filter((w) => w <= intrinsic.width)
+        : [intrinsic.width])
+    : WIDTHS;
 
   const optimized = await getImage({
-    src: image.url,
+    src: image.url as never,
     format: "avif",
     widths,
     // Full-bleed on small screens, capped by the layout above that.
     sizes: "(max-width: 768px) 100vw, 1024px",
+    ...(isRemote ? { inferSize: true } : {}),
   });
 
   return {
     id: image.id,
     src: optimized.src,
     srcSet: optimized.srcSet.attribute,
-    width: image.url.width,
-    height: image.url.height,
+    width: intrinsic?.width ?? Number(optimized.attributes?.width ?? 0) ?? 0,
+    height: intrinsic?.height ?? Number(optimized.attributes?.height ?? 0) ?? 0,
     alt: image.alt ?? fallbackAlt,
   };
 }

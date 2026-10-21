@@ -73,6 +73,26 @@ export default {
       return json(await readContent(env), 200);
     }
 
+    // Public media. The build fetches these to generate AVIF derivatives, and they are the
+    // same photographs the public site already shows, so there is nothing to gate. Served
+    // from the Worker rather than a public bucket domain to keep one hostname and let us
+    // set our own cache policy.
+    if (pathname.startsWith("/media/") && (request.method === "GET" || request.method === "HEAD")) {
+      if (!env.MEDIA) return new Response("R2 not configured", { status: 503 });
+      const key = decodeURIComponent(pathname.slice("/media/".length));
+      if (!key || key.includes("..")) return new Response("Bad key", { status: 400 });
+
+      const object = await env.MEDIA.get(key);
+      if (!object) return new Response("Not found", { status: 404 });
+
+      const headers = new Headers();
+      object.writeHttpMetadata(headers);
+      headers.set("etag", object.httpEtag);
+      // Keys are content-addressed (uuid in the name), so a hit can be cached hard.
+      headers.set("cache-control", "public, max-age=31536000, immutable");
+      return new Response(request.method === "HEAD" ? null : object.body, { headers });
+    }
+
     if (!pathname.startsWith("/api/")) {
       return env.ASSETS.fetch(request);
     }

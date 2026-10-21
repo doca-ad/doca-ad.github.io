@@ -9,6 +9,11 @@ import path from "node:path";
 export default defineConfig({
   site: "https://docastudio.ro",
   integrations: [react(), sitemap()],
+  image: {
+    // Photos uploaded through the admin live in R2 and are served by the admin Worker.
+    // Astro only optimises remote images from hosts listed here.
+    remotePatterns: [{ protocol: "https", hostname: "doca-admin.calincapitanu.workers.dev" }],
+  },
   // Clean extensionless URLs that match the canonicals and sitemap entries.
   trailingSlash: "never",
   vite: {

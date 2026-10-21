@@ -148,11 +148,16 @@ serves the same content the public site already shows. Everything mutating requi
 any error**. Without the fallback, a momentary admin outage during a deploy would publish an
 empty site. Keep it.
 
+### Images
+Uploads go to R2 (`doca-media`) and are served by the Worker at `/media/<key>` with an
+immutable cache policy. The build FETCHES them and emits local AVIF derivatives, so nothing
+is hotlinked and R2-hosted photos perform exactly like repo ones. `astro.config.mjs`
+`image.remotePatterns` must list the admin origin or Astro refuses to optimise them.
+Rows whose `r2_key` starts with `repo:` still resolve from `src/assets`; everything else is
+an R2 key. Verified end to end.
+
 ### Outstanding manual steps
-1. **Enable R2** in the dashboard (a one-time account opt-in, not a token scope), create the
-   `doca-media` bucket, and uncomment the `r2_buckets` binding in `admin/wrangler.jsonc`.
-   Until then image upload returns a clear 503; everything else works.
-2. Add `admin.docastudio.ro` as a custom domain on the Worker and put an Access app in front
+1. Add `admin.docastudio.ro` as a custom domain on the Worker and put an Access app in front
    of it, then set `workers_dev: false` and repoint `CONTENT_API`. The workers.dev URL
    currently serves the admin shell to anyone (mutations still 401).
 3. Create a Pages deploy hook and set it as the `DEPLOY_HOOK` secret

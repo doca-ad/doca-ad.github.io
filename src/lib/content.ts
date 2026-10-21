@@ -2,8 +2,9 @@ import { projects as localProjects, type Project } from "@/data/projects";
 import { PROJECT_DESCRIPTIONS_RO } from "@/data/translations.ro";
 import type { ProjectStatus } from "@/data/status";
 
-const CONTENT_API =
-  import.meta.env.CONTENT_API ?? "https://doca-admin.calincapitanu.workers.dev/api/content";
+const ADMIN_ORIGIN =
+  import.meta.env.ADMIN_ORIGIN ?? "https://doca-admin.calincapitanu.workers.dev";
+const CONTENT_API = import.meta.env.CONTENT_API ?? `${ADMIN_ORIGIN}/api/content`;
 
 /**
  * Every image under src/assets, keyed by path, so D1 rows can point at repo assets.
@@ -54,9 +55,17 @@ export async function loadProjects(): Promise<Project[]> {
       homeIndex: p.home_index ?? undefined,
       images: p.images
         .map((img) => {
-          const path = img.r2_key.startsWith("repo:") ? img.r2_key.slice(5) : null;
-          const url = path ? assetFor(path) : null;
-          return url ? { id: img.id, url, alt: img.alt_en || undefined } : null;
+          // "repo:<path>" still resolves from src/assets; anything else is an R2 key
+          // served by the admin Worker.
+          if (img.r2_key.startsWith("repo:")) {
+            const url = assetFor(img.r2_key.slice(5));
+            return url ? { id: img.id, url, alt: img.alt_en || undefined } : null;
+          }
+          return {
+            id: img.id,
+            url: `${ADMIN_ORIGIN}/media/${img.r2_key.split("/").map(encodeURIComponent).join("/")}`,
+            alt: img.alt_en || undefined,
+          };
         })
         .filter((i): i is NonNullable<typeof i> => i !== null),
     }));
