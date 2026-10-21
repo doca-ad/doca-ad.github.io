@@ -19,9 +19,12 @@ const assetFor = (path: string): ImageMetadata | null =>
 
 interface ApiImage { id: string; r2_key: string; alt_en: string; alt_ro: string; position: number }
 interface ApiProject {
-  id: string; slug: string; title: string; status: ProjectStatus; type: string;
-  location: string; year: string; description_en: string; description_ro: string;
-  home: boolean; home_index: number | null; images: ApiImage[];
+  id: string; slug: string; title: string; title_ro: string; status: ProjectStatus;
+  status_en: string; status_ro: string;
+  type: string; type_en: string; type_ro: string;
+  location: string; location_en: string; location_ro: string;
+  year: string; description_en: string; description_ro: string;
+  home: boolean; home_index: number | null; index_only: boolean; images: ApiImage[];
 }
 
 /** Local data, shaped like the API result, used when the admin is unreachable. */
@@ -46,9 +49,17 @@ export async function loadProjects(): Promise<Project[]> {
     const mapped: Project[] = data.projects.map((p) => ({
       id: p.id,
       title: p.title,
+      title_ro: p.title_ro || undefined,
       status: p.status,
-      type: p.type,
-      location: p.location,
+      status_en: p.status_en || undefined,
+      status_ro: p.status_ro || undefined,
+      type: p.type_en || p.type,
+      type_en: p.type_en || undefined,
+      type_ro: p.type_ro || undefined,
+      location: p.location_en || p.location,
+      location_en: p.location_en || undefined,
+      location_ro: p.location_ro || undefined,
+      index_only: Boolean(p.index_only),
       year: p.year,
       description: p.description_en,
       home: p.home,

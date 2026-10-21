@@ -126,8 +126,22 @@ export interface Project {
 	year: string;
 	type: string;
 	description: string;
-	/** Build/publication state. Index-only entries are not clickable on the projects page. */
+	/** Build/publication state. Kept for the checked-in fallback data. */
 	status: ProjectStatus;
+	/**
+	 * Per-language fields, authored in the admin. Everything DOCA type exists in both
+	 * languages; the checked-in fallback leaves them undefined and the English column plus
+	 * the lookup maps stand in.
+	 */
+	title_ro?: string;
+	status_en?: string;
+	status_ro?: string;
+	type_en?: string;
+	type_ro?: string;
+	location_en?: string;
+	location_ro?: string;
+	/** Listed for breadth only: not clickable, not expandable, de-emphasised. */
+	index_only?: boolean;
 	images: ProjectImage[];
 }
 

@@ -1,4 +1,3 @@
-import ScrollCue from "./ScrollCue";
 import type { ResolvedImage } from "@/lib/images";
 
 /**
@@ -14,11 +13,9 @@ interface LandingProps {
   hero?: ResolvedImage;
   /** Localised copy, passed in so the component stays language-agnostic. */
   statement: { lead: string; body: string };
-  scrollLabel?: string;
-  onAdvance?: () => void;
 }
 
-const Landing = ({ variant, hero, statement, scrollLabel, onAdvance }: LandingProps) => {
+const Landing = ({ variant, hero, statement }: LandingProps) => {
   if (variant === "material" && hero) {
     return (
       <section
@@ -43,9 +40,6 @@ const Landing = ({ variant, hero, statement, scrollLabel, onAdvance }: LandingPr
         />
         {/* Only enough scrim to keep the cue legible. */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/35 to-transparent" />
-        <div className="absolute inset-x-0 bottom-10 flex justify-center">
-          <ScrollCue variant="light" onClick={onAdvance} label={scrollLabel} />
-        </div>
       </section>
     );
   }
@@ -55,16 +49,15 @@ const Landing = ({ variant, hero, statement, scrollLabel, onAdvance }: LandingPr
       className="relative flex h-screen snap-start flex-col justify-center px-8 pt-24 md:pt-32"
       aria-label="DOCA Architecture & Design"
     >
-      <div className="mx-auto w-full max-w-3xl">
-        <h1 className="text-balance text-3xl font-light leading-[1.25] tracking-tight text-text-primary md:text-5xl md:leading-[1.2]">
+      <div className="mx-auto w-full max-w-3xl text-center">
+        {/* The lead runs longer than a single clause now, so it steps down a size at the
+            large breakpoint to stay on two lines rather than three. */}
+        <h1 className="text-balance text-2xl font-light leading-[1.3] tracking-tight text-text-primary md:text-4xl md:leading-[1.25]">
           {statement.lead}
         </h1>
-        <p className="mt-6 max-w-xl text-pretty text-base font-light leading-relaxed text-text-secondary md:mt-8 md:text-lg">
+        <p className="mx-auto mt-6 max-w-2xl text-pretty text-base font-light leading-relaxed text-text-secondary md:mt-8 md:text-lg">
           {statement.body}
         </p>
-      </div>
-      <div className="absolute inset-x-0 bottom-10 flex justify-center">
-        <ScrollCue onClick={onAdvance} label={scrollLabel} />
       </div>
     </section>
   );

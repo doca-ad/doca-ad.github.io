@@ -56,11 +56,35 @@
            opacity:0; pointer-events:none; transition:opacity .2s }
   .toast.show { opacity:1 }
   .empty { color:var(--muted); padding:40px 0; text-align:center }
-  .publish { display:flex; align-items:center; gap:18px; border:1px solid var(--line);
-             padding:16px 18px; margin:0 0 26px; background:var(--soft) }
+  .publish { display:flex; align-items:center; gap:14px; border:1px solid var(--line);
+             padding:16px 18px; margin:0 0 26px; background:var(--soft); flex-wrap:wrap }
   .publish strong { display:block; font-weight:500; font-size:14px }
   .publish a { color:var(--muted); font-size:13.5px }
-  .publish button { margin-left:auto; white-space:nowrap }
+  .publish .spacer { margin-left:auto }
+  .dot { display:inline-block; width:7px; height:7px; border-radius:50%;
+         background:#c9cdd4; margin-right:7px; vertical-align:middle }
+  .dot.stale { background:#c58b2f }
+  .state { font-size:13px; color:var(--muted); margin-top:3px }
+  dialog { width:min(980px,96vw) }
+  .pair { display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; align-items:start }
+  .lang { font-size:11px; letter-spacing:.08em; color:var(--faint); text-transform:uppercase;
+          margin-bottom:4px }
+  fieldset { border:none; padding:0; margin:0 0 16px }
+  legend { font-size:12.5px; color:var(--muted); text-transform:uppercase;
+           letter-spacing:.05em; padding:0; margin-bottom:7px }
+  .flags { display:flex; gap:22px; align-items:center; flex-wrap:wrap; margin:4px 0 18px }
+  .flag { display:flex; align-items:center; gap:8px; font-size:14px; color:var(--ink) }
+  .flag input { width:auto }
+  .flag .hint { color:var(--muted); font-size:12.5px }
+  .imgs { display:grid; grid-template-columns:repeat(auto-fill,minmax(116px,1fr)); gap:10px }
+  .img { position:relative; border:1px solid var(--line); background:var(--soft) }
+  .img img { display:block; width:100%; height:84px; object-fit:cover }
+  .img .ctl { display:flex; justify-content:space-between; padding:3px }
+  .img .ctl button { padding:2px 7px; font-size:12px; border:none; background:transparent }
+  .img .ctl button:hover { background:var(--line) }
+  .drop { border:1px dashed var(--faint); padding:16px; text-align:center; color:var(--muted);
+          font-size:13.5px; margin-top:10px; cursor:pointer }
+  .drop.over { background:var(--soft); border-color:var(--ink); color:var(--ink) }
 </style>
 </head>
 <body>
@@ -71,16 +95,26 @@
 
 <main>
   <p class="note" id="note">
-    Saving updates <strong>staging</strong> automatically — it takes a minute or two.
-    The public site only changes when you press <strong>Publish to the live site</strong>.
+    Saving only stores your changes. Nothing is published until you press one of the buttons
+    below, so you can edit as much as you like first.
+    <strong>Update preview</strong> to check your work, then <strong>Publish to the live
+    site</strong> when you are happy.
   </p>
 
   <div class="publish">
     <div>
-      <strong>Preview your changes</strong>
+      <strong><span class="dot" id="dot-staging"></span>Preview site</strong>
       <a href="https://staging.docastudio.ro" target="_blank" rel="noopener">staging.docastudio.ro</a>
+      <div class="state" id="state-staging">—</div>
     </div>
-    <button id="publish" class="primary">Publish to the live site</button>
+    <button id="deploy-staging">Update preview</button>
+    <span class="spacer"></span>
+    <div>
+      <strong><span class="dot" id="dot-production"></span>Live site</strong>
+      <a href="https://docastudio.ro" target="_blank" rel="noopener">docastudio.ro</a>
+      <div class="state" id="state-production">—</div>
+    </div>
+    <button id="deploy-production" class="primary">Publish to the live site</button>
   </div>
 
   <div class="bar">
@@ -100,29 +134,90 @@
 <dialog id="dlg">
   <form class="editor" method="dialog">
     <h3 id="dlgTitle">Edit project</h3>
-    <div class="grid">
-      <div><label for="f-title">Title</label><input id="f-title" required /></div>
-      <div><label for="f-status">Status</label>
-        <select id="f-status">
-          <option value="completed">Completed / Finalizat</option>
-          <option value="in_progress">In progress / În curs</option>
-          <option value="feasibility_study">Feasibility study / Studiu de fezabilitate</option>
-          <option value="competition">Competition entry / Concurs</option>
-          <option value="unbuilt">Unbuilt / Neconstruit</option>
-          <option value="study">Study / Studiu</option>
-        </select>
+
+    <fieldset>
+      <legend>Name</legend>
+      <div class="pair">
+        <div><div class="lang">English</div><input id="f-title" required /></div>
+        <div><div class="lang">Română</div><input id="f-title_ro" /></div>
       </div>
-      <div><label for="f-type">Type</label><input id="f-type" placeholder="Architecture / Residential" required /></div>
-      <div><label for="f-location">Location</label><input id="f-location" placeholder="Bucharest, Romania" /></div>
-      <div><label for="f-year">Year</label><input id="f-year" placeholder="2026" /></div>
-      <div><label for="f-home">Featured on home</label>
-        <select id="f-home"><option value="0">No</option><option value="1">Yes</option></select>
+    </fieldset>
+
+    <fieldset>
+      <legend>Status</legend>
+      <div class="pair">
+        <div><div class="lang">English</div>
+          <input id="f-status_en" list="status-en" placeholder="Completed" /></div>
+        <div><div class="lang">Română</div>
+          <input id="f-status_ro" list="status-ro" placeholder="Finalizat" /></div>
       </div>
-      <div class="full"><label for="f-en">Description — English</label><textarea id="f-en"></textarea></div>
-      <div class="full"><label for="f-ro">Description — Română</label><textarea id="f-ro"></textarea></div>
-    </div>
+      <datalist id="status-en">
+        <option>Completed</option><option>In progress</option><option>Feasibility study</option>
+        <option>Competition entry</option><option>Unbuilt</option><option>Study</option>
+      </datalist>
+      <datalist id="status-ro">
+        <option>Finalizat</option><option>În curs</option><option>Studiu de fezabilitate</option>
+        <option>Concurs</option><option>Neconstruit</option><option>Studiu</option>
+      </datalist>
+    </fieldset>
+
+    <fieldset>
+      <legend>Type</legend>
+      <div class="pair">
+        <div><div class="lang">English</div>
+          <input id="f-type_en" placeholder="Architecture / Residential" required /></div>
+        <div><div class="lang">Română</div>
+          <input id="f-type_ro" placeholder="Arhitectură / Rezidențial" /></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Location</legend>
+      <div class="pair">
+        <div><div class="lang">English</div>
+          <input id="f-location_en" placeholder="Bucharest, Romania" /></div>
+        <div><div class="lang">Română</div>
+          <input id="f-location_ro" placeholder="București, România" /></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Year</legend>
+      <div class="pair"><div><input id="f-year" placeholder="2026" /></div><div></div></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Description</legend>
+      <div class="pair">
+        <div><div class="lang">English</div><textarea id="f-description_en"></textarea></div>
+        <div><div class="lang">Română</div><textarea id="f-description_ro"></textarea></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Display</legend>
+      <div class="flags">
+        <label class="flag"><input type="checkbox" id="f-index_only" />
+          Greyed out <span class="hint">— listed only, not clickable</span></label>
+        <label class="flag"><input type="checkbox" id="f-home" />
+          Show on home page</label>
+        <label class="flag">Home order
+          <input id="f-home_index" type="number" min="0" step="1" style="width:5rem" />
+          <span class="hint">— lower shows first</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset id="photos-set">
+      <legend>Photos <span class="hint" id="photo-count"></span></legend>
+      <div class="imgs" id="imgs"></div>
+      <div class="drop" id="drop">
+        Drop photos here, or click to choose. The first one is used as the cover.
+      </div>
+      <input type="file" id="file" accept="image/*" multiple hidden />
+    </fieldset>
+
     <div class="actions">
-      <button type="button" class="danger" id="del">Delete</button>
+      <button type="button" class="danger" id="del">Delete project</button>
       <span class="spacer"></span>
       <button type="button" id="cancel">Cancel</button>
       <button type="button" class="primary" id="save">Save</button>
@@ -134,143 +229,251 @@
 
 <script type="module">
 const $ = (s) => document.querySelector(s);
-const STATUS = {
-  completed:"Completed", in_progress:"In progress", feasibility_study:"Feasibility study",
-  competition:"Competition entry", unbuilt:"Unbuilt", study:"Study",
-};
-const INDEX_ONLY = ["in_progress","feasibility_study"];
-let projects = [], editing = null;
+let projects = [], editing = null, pendingFiles = [];
 
-const toast = (msg) => {
+const toast = (msg, ms = 2800) => {
   const t = $("#toast"); t.textContent = msg; t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 2600);
+  setTimeout(() => t.classList.remove("show"), ms);
 };
 
 async function api(path, opts) {
-  const res = await fetch(path, { credentials:"same-origin", ...opts });
+  const res = await fetch(path, { credentials: "same-origin", ...opts });
   if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? `HTTP ${res.status}`);
-  return res.json();
+  return res.status === 204 ? null : res.json();
 }
 
+const FIELDS = ["title","title_ro","status_en","status_ro","type_en","type_ro",
+                "location_en","location_ro","year","description_en","description_ro"];
+
+/* ---------- list ---------- */
 function render() {
   const tbody = $("#rows"); tbody.innerHTML = "";
   $("#count").textContent = `${projects.length} projects`;
   $("#empty").hidden = projects.length > 0;
   for (const p of projects) {
     const tr = document.createElement("tr");
-    if (INDEX_ONLY.includes(p.status)) tr.className = "index-only";
-    tr.innerHTML = `
-      <td class="title"></td><td></td><td></td><td></td><td></td>
-      <td class="row-actions"><button data-id="${p.id}">Edit</button></td>`;
+    if (p.index_only) tr.className = "index-only";
+    tr.innerHTML = `<td class="title"></td><td></td><td></td><td></td><td></td>
+                    <td class="row-actions"><button>Edit</button></td>`;
     const td = tr.querySelectorAll("td");
     td[0].textContent = p.title;
-    td[1].textContent = p.type;
-    td[2].textContent = STATUS[p.status] ?? p.status;
-    td[3].textContent = p.location;
+    td[1].textContent = p.type_en || p.type || "";
+    td[2].textContent = p.status_en || "";
+    td[3].textContent = p.location_en || p.location || "";
     td[4].textContent = p.year;
     tr.querySelector("button").onclick = () => open(p);
     tbody.appendChild(tr);
   }
 }
 
+/* ---------- editor ---------- */
 function open(p) {
-  editing = p;
+  editing = p; pendingFiles = [];
   $("#dlgTitle").textContent = p ? "Edit project" : "New project";
   $("#del").hidden = !p;
-  $("#f-title").value = p?.title ?? "";
-  $("#f-status").value = p?.status ?? "completed";
-  $("#f-type").value = p?.type ?? "";
-  $("#f-location").value = p?.location ?? "";
-  $("#f-year").value = p?.year ?? String(new Date().getFullYear());
-  $("#f-home").value = p?.home ? "1" : "0";
-  $("#f-en").value = p?.description_en ?? "";
-  $("#f-ro").value = p?.description_ro ?? "";
+  for (const f of FIELDS) $(`#f-${f}`).value = p?.[f] ?? "";
+  if (!p) $("#f-year").value = String(new Date().getFullYear());
+  $("#f-index_only").checked = Boolean(p?.index_only);
+  $("#f-home").checked = Boolean(p?.home);
+  $("#f-home_index").value = p?.home_index ?? "";
+  $("#photos-set").hidden = !p;   // a project must exist before photos can attach to it
+  renderImages();
   $("#dlg").showModal();
 }
 
+function renderImages() {
+  const wrap = $("#imgs"); wrap.innerHTML = "";
+  const imgs = editing?.images ?? [];
+  $("#photo-count").textContent = imgs.length ? `— ${imgs.length}` : "";
+  imgs.forEach((img, i) => {
+    const el = document.createElement("div");
+    el.className = "img";
+    const src = img.r2_key.startsWith("repo:")
+      ? "" : `/media/${img.r2_key.split("/").map(encodeURIComponent).join("/")}`;
+    el.innerHTML = src
+      ? `<img loading="lazy" alt="">`
+      : `<div style="height:84px;display:grid;place-items:center;color:#aab0bb;font-size:12px">in repo</div>`;
+    if (src) el.querySelector("img").src = src;
+    const ctl = document.createElement("div");
+    ctl.className = "ctl";
+    ctl.innerHTML = `<button title="Move left" ${i === 0 ? "disabled" : ""}>←</button>
+                     <button title="Remove">✕</button>
+                     <button title="Move right" ${i === imgs.length - 1 ? "disabled" : ""}>→</button>`;
+    const [left, rm, right] = ctl.querySelectorAll("button");
+    left.onclick = () => moveImage(i, -1);
+    right.onclick = () => moveImage(i, 1);
+    rm.onclick = () => removeImage(img);
+    el.appendChild(ctl);
+    wrap.appendChild(el);
+  });
+}
+
+async function moveImage(i, dir) {
+  const imgs = editing.images;
+  const j = i + dir;
+  if (j < 0 || j >= imgs.length) return;
+  [imgs[i], imgs[j]] = [imgs[j], imgs[i]];
+  renderImages();
+  try {
+    await api("/api/images/order", {
+      method: "PUT", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ ids: imgs.map((x) => x.id) }),
+    });
+  } catch (e) { toast(e.message); }
+}
+
+async function removeImage(img) {
+  if (!confirm("Remove this photo?")) return;
+  try {
+    await api(`/api/images/${img.id}`, { method: "DELETE" });
+    editing.images = editing.images.filter((x) => x.id !== img.id);
+    renderImages();
+    toast("Photo removed");
+  } catch (e) { toast(e.message); }
+}
+
+async function uploadFiles(files) {
+  if (!editing) return toast("Save the project first, then add photos");
+  const list = [...files].filter((f) => f.type.startsWith("image/"));
+  if (!list.length) return;
+  $("#drop").textContent = `Uploading 0/${list.length}…`;
+  let done = 0;
+  for (const file of list) {
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("project_id", editing.id);
+    try {
+      await api("/api/images", { method: "POST", body: fd });
+      done++;
+      $("#drop").textContent = `Uploading ${done}/${list.length}…`;
+    } catch (e) { toast(`${file.name}: ${e.message}`, 4000); }
+  }
+  $("#drop").textContent = "Drop photos here, or click to choose. The first one is used as the cover.";
+  await load();
+  editing = projects.find((p) => p.id === editing.id) ?? editing;
+  renderImages();
+  if (done) toast(`${done} photo${done > 1 ? "s" : ""} added`);
+}
+
+const drop = $("#drop");
+drop.onclick = () => $("#file").click();
+$("#file").onchange = (e) => { uploadFiles(e.target.files); e.target.value = ""; };
+drop.ondragover = (e) => { e.preventDefault(); drop.classList.add("over"); };
+drop.ondragleave = () => drop.classList.remove("over");
+drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove("over"); uploadFiles(e.dataTransfer.files); };
+
 const slugify = (title, type) =>
   `${title.toLowerCase().replace(/['’]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}` +
-  `-${type.split("/")[0].trim().toLowerCase().replace(/\s+/g,"-")}`;
-
-$("#publish").onclick = async () => {
-  // Deliberately a two-step action: this is the one button that changes what the public sees.
-  if (!confirm(
-    "Publish to docastudio.ro?\n\n" +
-    "This makes your latest changes visible to everyone. " +
-    "Check staging.docastudio.ro first if you have not already."
-  )) return;
-  const btn = $("#publish");
-  btn.disabled = true; btn.textContent = "Publishing…";
-  try {
-    await api("/api/publish", {
-      method:"POST", headers:{"content-type":"application/json"},
-      body: JSON.stringify({ target:"production" }),
-    });
-    toast("Publishing — the live site updates in a minute or two");
-  } catch (e) {
-    toast(e.message);
-  } finally {
-    btn.disabled = false; btn.textContent = "Publish to the live site";
-  }
-};
+  `-${(type || "").split("/")[0].trim().toLowerCase().replace(/\s+/g,"-")}`.replace(/-$/,"");
 
 $("#new").onclick = () => open(null);
 $("#cancel").onclick = () => $("#dlg").close();
 
 $("#save").onclick = async () => {
-  const body = {
-    title: $("#f-title").value.trim(),
-    status: $("#f-status").value,
-    type: $("#f-type").value.trim(),
-    location: $("#f-location").value.trim(),
-    year: $("#f-year").value.trim(),
-    home: $("#f-home").value === "1",
-    description_en: $("#f-en").value,
-    description_ro: $("#f-ro").value,
-  };
-  if (!body.title || !body.type) return toast("Title and type are required");
-  body.slug = slugify(body.title, body.type);
+  const body = {};
+  for (const f of FIELDS) body[f] = $(`#f-${f}`).value.trim();
+  if (!body.title || !body.type_en) return toast("Name and type (English) are required");
+  body.index_only = $("#f-index_only").checked;
+  body.home = $("#f-home").checked;
+  const hi = $("#f-home_index").value.trim();
+  body.home_index = hi === "" ? null : Number(hi);
+  body.slug = slugify(body.title, body.type_en);
+
   try {
     if (editing) {
       await api(`/api/projects/${editing.id}`, {
-        method:"PUT", headers:{"content-type":"application/json"}, body:JSON.stringify(body),
+        method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify(body),
       });
     } else {
       body.id = `project-${Date.now()}`;
       await api("/api/projects", {
-        method:"POST", headers:{"content-type":"application/json"}, body:JSON.stringify(body),
+        method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body),
       });
     }
-    $("#dlg").close();
     await load();
-    toast("Saved — the site is rebuilding");
+    // Saving does not publish, so keep the dialog open for a new project: photos can only
+    // attach once the project exists.
+    if (!editing) {
+      editing = projects.find((p) => p.id === body.id) ?? null;
+      $("#dlgTitle").textContent = "Edit project";
+      $("#del").hidden = false;
+      $("#photos-set").hidden = false;
+      renderImages();
+      toast("Saved — you can add photos now");
+    } else {
+      $("#dlg").close();
+      toast("Saved — not published yet");
+    }
   } catch (e) { toast(e.message); }
 };
 
 $("#del").onclick = async () => {
   if (!editing) return;
-  if (!confirm(`Delete “${editing.title}”? This cannot be undone.`)) return;
+  if (!confirm(`Delete “${editing.title}”? This also removes its photos and cannot be undone.`)) return;
   try {
-    await api(`/api/projects/${editing.id}`, { method:"DELETE" });
+    await api(`/api/projects/${editing.id}`, { method: "DELETE" });
     $("#dlg").close();
     await load();
-    toast("Deleted — the site is rebuilding");
+    toast("Deleted — not published yet");
   } catch (e) { toast(e.message); }
 };
 
+/* ---------- publishing ---------- */
+async function deploy(target) {
+  const btn = $(`#deploy-${target}`);
+  const label = btn.textContent;
+  if (target === "production" && !confirm(
+    "Publish to docastudio.ro?\n\nThis makes your changes visible to everyone. " +
+    "Check the preview site first if you have not already."
+  )) return;
+  btn.disabled = true; btn.textContent = "Publishing…";
+  try {
+    await api("/api/publish", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ target }),
+    });
+    toast(target === "production"
+      ? "Publishing to the live site — it updates in a minute or two"
+      : "Updating the preview — it refreshes in a minute or two");
+    await loadState();
+  } catch (e) { toast(e.message, 5000); }
+  finally { btn.disabled = false; btn.textContent = label; }
+}
+$("#deploy-staging").onclick = () => deploy("staging");
+$("#deploy-production").onclick = () => deploy("production");
+
+const when = (iso) => {
+  if (!iso) return "never published";
+  const d = new Date(iso.replace(" ", "T") + "Z");
+  const mins = Math.round((Date.now() - d.getTime()) / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins} min ago`;
+  if (mins < 1440) return `${Math.round(mins / 60)} h ago`;
+  return d.toLocaleDateString();
+};
+
+async function loadState() {
+  try {
+    const st = await api("/api/state");
+    for (const t of ["staging", "production"]) {
+      const s = st[t] ?? {};
+      $(`#state-${t}`).textContent = s.stale
+        ? `unpublished changes · last ${when(s.at)}`
+        : `up to date · ${when(s.at)}`;
+      $(`#dot-${t}`).className = "dot" + (s.stale ? " stale" : "");
+    }
+  } catch { /* non-fatal */ }
+}
+
 async function load() {
-  const data = await api("/api/content");
-  projects = data.projects;
+  projects = (await api("/api/content")).projects;
   render();
+  await loadState();
 }
 
 (async () => {
-  try {
-    const me = await api("/api/me");
-    $("#who").textContent = me.email;
-  } catch {
-    $("#who").textContent = "not signed in";
-  }
+  try { $("#who").textContent = (await api("/api/me")).email; }
+  catch { $("#who").textContent = "not signed in"; }
   try { await load(); } catch (e) { toast(e.message); }
 })();
 </script>

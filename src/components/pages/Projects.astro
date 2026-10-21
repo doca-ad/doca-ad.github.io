@@ -3,9 +3,10 @@ import Base from "@/layouts/Base.astro";
 import Navigation from "@/components/Navigation";
 import ProjectsList from "@/components/ProjectsList";
 import { loadProjects } from "@/lib/content";
-import { resolveProjects, slugify } from "@/lib/images";
+import { resolveProjects } from "@/lib/images";
+import { localizeProject } from "@/lib/localize";
 import { PROJECT_DESCRIPTIONS_RO } from "@/data/translations.ro";
-import { META, t, localePath, type Locale } from "@/i18n/ui";
+import { META, t, type Locale } from "@/i18n/ui";
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
@@ -13,12 +14,8 @@ const { locale } = Astro.props;
 const resolved = await resolveProjects(
   [...(await loadProjects())].sort((a, b) => Number(b.year) - Number(a.year))
 );
-// Swap in the Romanian description and localise the link target for each row.
-const localised = resolved.map((p) => ({
-  ...p,
-  description: locale === "ro" ? PROJECT_DESCRIPTIONS_RO[p.id] ?? p.description : p.description,
-  href: localePath(locale, `/projects/${slugify(p)}`),
-}));
+// Flatten each project to one language once, here, so the island stays language-agnostic.
+const localised = resolved.map((p) => localizeProject(p, locale, PROJECT_DESCRIPTIONS_RO[p.id]));
 const meta = META["/projects"][locale];
 ---
 
@@ -30,7 +27,7 @@ const meta = META["/projects"][locale];
         <h1 class="text-4xl md:text-5xl font-light text-text-primary text-center mb-16">
           {t(locale, "projects.title")}
         </h1>
-        <ProjectsList projects={localised} locale={locale} client:load />
+        <ProjectsList projects={localised} client:load />
       </div>
     </main>
   </div>

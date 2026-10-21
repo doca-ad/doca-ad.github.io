@@ -37,6 +37,19 @@ jobs:
 
       - run: npm ci
 
+      # Astro caches generated AVIFs here. Without this every build re-downloads all 86
+      # originals from R2 and re-encodes them: minutes of build time, and R2 reads that
+      # are free but needn't be spent. Keyed on the content API's generation stamp so a
+      # content change invalidates it.
+      - name: Cache optimised images
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.astro/assets
+          key: astro-assets-${{ hashFiles('src/assets/**') }}-${{ github.sha }}
+          restore-keys: |
+            astro-assets-${{ hashFiles('src/assets/**') }}-
+            astro-assets-
+
       - name: Resolve target
         id: t
         run: |

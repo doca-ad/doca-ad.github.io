@@ -13,11 +13,13 @@ interface ProjectCarouselProps {
   landingHero?: ResolvedImage;
   statement?: { lead: string; body: string };
   scrollLabel?: string;
+  scrollLabelUp?: string;
+  slideLabel?: string;
 }
 
 type Project = ResolvedProject;
 
-const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabel }: ProjectCarouselProps) => {
+const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabel, scrollLabelUp, slideLabel }: ProjectCarouselProps) => {
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,6 +33,9 @@ const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabe
 
   // Landing occupies slide 0 when present; project N therefore sits at slide N + offset.
   const slideOffset = landing ? 1 : 0;
+  /** Landing + every project + the contact slide. Drives the cues and the dots. */
+  const [slideIndex, setSlideIndex] = useState(0);
+  const totalSlides = slideOffset + homeProjects.length + 1;
 
   const currentProject = homeProjects[currentProjectIndex];
   const currentImage = currentProject?.images[currentImageIndex];
@@ -66,7 +71,9 @@ const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabe
     const handleScroll = () => {
       const scrollTop = container.scrollTop;
       const containerHeight = container.clientHeight;
-      const newIndex = Math.round(scrollTop / containerHeight) - slideOffset;
+      const raw = Math.round(scrollTop / containerHeight);
+      setSlideIndex(raw);
+      const newIndex = raw - slideOffset;
       setCurrentProjectIndex(Math.min(Math.max(newIndex, 0), homeProjects.length - 1));
     };
 
@@ -74,13 +81,17 @@ const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabe
     return () => container.removeEventListener('scroll', handleScroll);
   }, [homeProjects, slideOffset]);
 
-  /** Advance one slide. Used by the scroll cue and by the inactivity timer. */
-  const advance = () => {
+  /** Scroll to an absolute slide. Used by the cues, the dots and the inactivity timer. */
+  const goTo = (index: number) => {
     const container = containerRef.current;
     if (!container) return;
     const h = container.clientHeight;
-    container.scrollTo({ top: Math.round(container.scrollTop / h) * h + h, behavior: 'smooth' });
+    const clamped = Math.min(Math.max(index, 0), totalSlides - 1);
+    container.scrollTo({ top: clamped * h, behavior: 'smooth' });
   };
+
+  const advance = () => goTo(Math.round((containerRef.current?.scrollTop ?? 0) /
+    (containerRef.current?.clientHeight || 1)) + 1);
 
   // Reset image index when project changes
   useEffect(() => {
@@ -172,14 +183,15 @@ const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabe
 
   return (
     <>
-      {/* Vertical Scroll Container */}
+      {/* The controls live outside the scroller so they stay put while slides move past. */}
+      <div className="relative h-screen">
       <div
         ref={containerRef}
         className="h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
         style={{ scrollBehavior: 'smooth' }}
       >
         {landing && statement && (
-          <Landing variant={landing} hero={landingHero} statement={statement} scrollLabel={scrollLabel} onAdvance={advance} />
+          <Landing variant={landing} hero={landingHero} statement={statement} />
         )}
 
         {homeProjects.map((project) => (
@@ -211,11 +223,6 @@ const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabe
                   {project.title}
                 </h2>
               </div>
-            </div>
-
-            {/* Nothing follows the contact slide, so the cue stops there. */}
-            <div className="absolute inset-x-0 bottom-6 flex justify-center">
-              <ScrollCue onClick={advance} label={scrollLabel} />
             </div>
           </div>
         ))}
@@ -309,6 +316,44 @@ const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabe
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Up cue: hidden on the first slide, where there is nothing above. */}
+      <div
+        className={`pointer-events-none absolute inset-x-0 top-20 z-30 flex justify-center transition-opacity duration-300 ${
+          slideIndex === 0 ? "opacity-0 invisible" : "opacity-100"
+        }`}
+      >
+        <ScrollCue direction="up" onClick={() => goTo(slideIndex - 1)} label={scrollLabelUp ?? "Previous"} />
+      </div>
+
+      {/* Down cue: hidden on the last slide, where nothing follows. */}
+      <div
+        className={`pointer-events-none absolute inset-x-0 bottom-6 z-30 flex justify-center transition-opacity duration-300 ${
+          slideIndex >= totalSlides - 1 ? "opacity-0 invisible" : "opacity-100"
+        }`}
+      >
+        <ScrollCue direction="down" onClick={() => goTo(slideIndex + 1)} label={scrollLabel ?? "Next"} />
+      </div>
+
+      {/* Position in the sequence. */}
+      <nav
+        aria-label={slideLabel ?? "Slides"}
+        className="absolute right-5 top-1/2 z-30 hidden -translate-y-1/2 flex-col gap-3 md:flex"
+      >
+        {Array.from({ length: totalSlides }, (_, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => goTo(i)}
+            aria-label={`${slideLabel ?? "Slide"} ${i + 1}`}
+            aria-current={i === slideIndex ? "true" : undefined}
+            className={`h-1.5 w-1.5 rounded-full transition-all duration-300 hover:scale-150 ${
+              i === slideIndex ? "scale-150 bg-text-primary" : "bg-text-tertiary/50"
+            }`}
+          />
+        ))}
+      </nav>
       </div>
 
       {/* Modal for Horizontal Carousel */}

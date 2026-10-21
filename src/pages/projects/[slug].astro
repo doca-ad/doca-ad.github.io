@@ -1,7 +1,7 @@
 ---
 import ProjectDetail from "@/components/pages/ProjectDetail.astro";
 import { loadProjects } from "@/lib/content";
-import { INDEX_ONLY_STATUSES } from "@/data/status";
+
 import { resolveProject, slugify } from "@/lib/images";
 
 /**
@@ -9,8 +9,9 @@ import { resolveProject, slugify } from "@/lib/images";
  * indexable content. Index-only entries are excluded: they have no content to show.
  */
 export async function getStaticPaths() {
+  // Index-only entries have nothing to show, so they get no page of their own.
   const publishable = (await loadProjects()).filter(
-    (p) => !INDEX_ONLY_STATUSES.includes(p.status) && p.images.length > 0
+    (p) => !p.index_only && p.images.length > 0
   );
   return Promise.all(
     publishable.map(async (project) => ({

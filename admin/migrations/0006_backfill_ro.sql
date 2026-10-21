@@ -1,0 +1,13 @@
+UPDATE projects SET type_ro='Arhitectură / Rezidențial', location_ro='Fetești, România' WHERE id='project-1';
+UPDATE projects SET type_ro='Design interior / Rezidențial', location_ro='Sibiu, România' WHERE id='project-2';
+UPDATE projects SET type_ro='Design interior / Medical', location_ro='Fetești, România' WHERE id='project-3';
+UPDATE projects SET type_ro='Design interior / Rezidențial', location_ro='București, România' WHERE id='project-4';
+UPDATE projects SET type_ro='Design interior / Rezidențial', location_ro='Sibiu, România' WHERE id='project-5';
+UPDATE projects SET type_ro='Design interior / Rezidențial', location_ro='București, România' WHERE id='project-6';
+UPDATE projects SET type_ro='Arhitectură / Rezidențial', location_ro='Cheia, România' WHERE id='project-7';
+UPDATE projects SET type_ro='Arhitectură / Rezidențial', location_ro='Sibiu, România' WHERE id='project-8';
+UPDATE projects SET type_ro='Arhitectură / Birouri', location_ro='Cluj Napoca, România' WHERE id='project-9';
+UPDATE projects SET type_ro='Design interior / Birouri', location_ro='Cluj Napoca, România' WHERE id='project-10';
+UPDATE projects SET type_ro='Design interior / Rezidențial', location_ro='București, România' WHERE id='project-11';
+UPDATE projects SET type_ro='Arhitectură / Rezidențial', location_ro='Brașov, România' WHERE id='project-12';
+UPDATE projects SET type_ro='Arhitectură / Funcțiuni mixte', location_ro='Constanța, România' WHERE id='project-13';

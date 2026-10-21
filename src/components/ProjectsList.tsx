@@ -4,31 +4,14 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import {
   Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious,
 } from "@/components/ui/carousel";
-import { INDEX_ONLY_STATUSES, STATUS_LABELS } from "@/data/status";
-import { translateType } from "@/i18n/ui";
-import type { ResolvedProject } from "@/lib/images";
+import type { LocalizedProject } from "@/lib/localize";
 
 interface ProjectsListProps {
-  projects: ResolvedProject[];
-  locale?: "en" | "ro";
+  /** Already flattened to one language at build time. */
+  projects: LocalizedProject[];
 }
 
-const COUNTRY_CODES: Record<string, string> = { Romania: "RO" };
-/** Only cities whose Romanian form differs from the English one need an entry. */
-const CITY_RO: Record<string, string> = { Bucharest: "București" };
-
-/** "Cluj Napoca, Romania" -> "Cluj Napoca, RO" (DOCA asked for country abbreviations). */
-const formatLocation = (location: string, locale: "en" | "ro") => {
-  const parts = location.split(",").map((p) => p.trim());
-  if (parts.length < 2) return location;
-  const country = parts[parts.length - 1];
-  const cities = parts
-    .slice(0, -1)
-    .map((c) => (locale === "ro" ? CITY_RO[c] ?? c : c));
-  return [...cities, COUNTRY_CODES[country] ?? country].join(", ");
-};
-
-const ProjectsList = ({ projects, locale = "en" }: ProjectsListProps) => {
+const ProjectsList = ({ projects }: ProjectsListProps) => {
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
   /**
    * Collapsed panels used to mount their carousels anyway, so opening /projects fetched
@@ -36,7 +19,7 @@ const ProjectsList = ({ projects, locale = "en" }: ProjectsListProps) => {
    * expand and keep them after, so the open/close animation stays smooth.
    */
   const [everExpanded, setEverExpanded] = useState<Set<string>>(new Set());
-  const [selectedProject, setSelectedProject] = useState<ResolvedProject | null>(null);
+  const [selectedProject, setSelectedProject] = useState<LocalizedProject | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [direction, setDirection] = useState<"left" | "right">("right");
   const listRef = useRef<HTMLDivElement>(null);
@@ -87,13 +70,12 @@ const ProjectsList = ({ projects, locale = "en" }: ProjectsListProps) => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [selectedProject]);
 
-  const ProjectRow = ({ project }: { project: ResolvedProject }) => {
+  const ProjectRow = ({ project }: { project: LocalizedProject }) => {
     const isExpanded = expandedProject === project.id;
     const isMounted = everExpanded.has(project.id);
-    // Index-only entries exist to show breadth of work. DOCA's brief: they must read as
-    // not clickable and must not expand, and are de-emphasised against finished work.
-    const isIndexOnly =
-      INDEX_ONLY_STATUSES.includes(project.status) || project.images.length === 0;
+    // Index-only is an explicit flag DOCA toggle per project. Such rows must read as not
+    // clickable and must not expand, and are de-emphasised against finished work.
+    const isIndexOnly = project.indexOnly || project.images.length === 0;
 
     const cells = (
       <>
@@ -104,12 +86,12 @@ const ProjectsList = ({ projects, locale = "en" }: ProjectsListProps) => {
         >
           {project.title}
         </div>
-        <div className="text-text-secondary text-sm md:col-span-3">{translateType(project.type, locale)}</div>
+        <div className="text-text-secondary text-sm md:col-span-3">{project.type}</div>
         <div className="text-text-secondary text-sm hidden md:block md:col-span-2 text-center">
-          {STATUS_LABELS[project.status][locale]}
+          {project.location}
         </div>
         <div className="text-text-secondary text-sm hidden md:block md:col-span-2 text-center">
-          {formatLocation(project.location, locale)}
+          {project.status}
         </div>
         <div className="text-text-secondary text-sm hidden md:block md:col-span-2 text-right">
           {project.year}

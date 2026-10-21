@@ -31,10 +31,12 @@ export const UI = {
     "nav.menu": "Menu",
     "nav.close": "Close menu",
 
-    "home.statement.lead": "Architecture at the scale of a person.",
+    "home.statement.lead": "We work across architecture, interiors and urban design.",
     "home.statement.body":
-      "We place the individual at the centre of the process — designing spaces that are not only functional, but sculptural.",
-    "home.scroll": "Scroll to next",
+      "Founded by Ștefan Diaconescu and Vlad Căpitanu, the practice approaches each project through a close reading of what is there and what is needed.",
+    "home.scroll": "Next",
+    "home.scrollUp": "Previous",
+    "home.slide": "Slide",
 
     "projects.title": "Our Projects",
     "projects.allProjects": "All projects",
@@ -66,10 +68,12 @@ export const UI = {
     "nav.menu": "Meniu",
     "nav.close": "Închide meniul",
 
-    "home.statement.lead": "Arhitectură la scara omului.",
+    "home.statement.lead": "Lucrăm în arhitectură, design interior și urbanism.",
     "home.statement.body":
-      "Așezăm omul în centrul procesului — proiectăm spații care nu sunt doar funcționale, ci și sculpturale.",
-    "home.scroll": "Derulează mai departe",
+      "Fondat de Ștefan Diaconescu și Vlad Căpitanu, biroul abordează fiecare proiect printr-o citire atentă a ceea ce există și a ceea ce este necesar.",
+    "home.scroll": "Următorul",
+    "home.scrollUp": "Anteriorul",
+    "home.slide": "Secțiunea",
 
     "projects.title": "Proiectele noastre",
     "projects.allProjects": "Toate proiectele",
