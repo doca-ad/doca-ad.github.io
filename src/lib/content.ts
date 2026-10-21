@@ -78,9 +78,23 @@ export async function loadProjects(): Promise<Project[]> {
     console.log(`[content] ${mapped.length} projects from the admin API`);
     return mapped;
   } catch (err) {
-    console.warn(
-      `[content] falling back to checked-in data: ${err instanceof Error ? err.message : err}`
-    );
+    const reason = err instanceof Error ? err.message : String(err);
+
+    /**
+     * Locally, falling back keeps `npm run build` working offline.
+     *
+     * In CI it must NOT: a silent fallback would publish whatever is checked in, which
+     * could be months stale, and the build would go green. A failed build is visible;
+     * silently reverting DOCA's edits is not. Fail loudly instead.
+     */
+    if (import.meta.env.CI || process.env.CI) {
+      throw new Error(
+        `[content] the admin API is unreachable (${reason}). Refusing to publish ` +
+          `possibly stale checked-in content. Check ${CONTENT_API} and retry.`
+      );
+    }
+
+    console.warn(`[content] falling back to checked-in data: ${reason}`);
     return fromLocal();
   }
 }

@@ -144,9 +144,17 @@ Verified: a spoofed header gets 401.
 `GET /api/content` is intentionally public — the Pages build has no Access session, and it
 serves the same content the public site already shows. Everything mutating requires Access.
 
-`src/lib/content.ts` fetches that API at build time and **falls back to the checked-in data on
-any error**. Without the fallback, a momentary admin outage during a deploy would publish an
-empty site. Keep it.
+`src/lib/content.ts` fetches that API at build time. Locally it falls back to the checked-in
+data so `npm run build` works offline. **In CI it fails the build instead** — a silent
+fallback there would publish months-old checked-in content over DOCA's edits, with a green
+build and nobody any the wiser. A failed build is visible; a silent revert is not.
+
+**The build reads from the `workers.dev` origin, not `admin.docastudio.ro`.** Access gates the
+custom domain for everything including `/api/content` and `/media/*`, which the build needs
+unauthenticated. So: humans use `admin.docastudio.ro` behind Access; the build uses
+`doca-admin.calincapitanu.workers.dev`, where the Worker's own check still 401s the UI but
+those two read routes stay public. **Do not set `workers_dev: false`** without first adding
+Access Bypass policies for those two paths and repointing `ADMIN_ORIGIN`.
 
 ### Images
 Uploads go to R2 (`doca-media`) and are served by the Worker at `/media/<key>` with an
