@@ -5,7 +5,41 @@ export interface Env {
   ASSETS: Fetcher;
   ACCESS_TEAM_DOMAIN: string;
   MEDIA?: R2Bucket;
-  DEPLOY_HOOK?: string;
+  /** Fine-grained PAT, repo-scoped, with Actions: write. Never leaves the Worker. */
+  GITHUB_TOKEN?: string;
+  GITHUB_REPO?: string;
+  SITE_REF?: string;
+}
+
+type Target = "staging" | "production";
+
+/**
+ * Publishing means rebuilding the site, and a Worker cannot build Astro. GitHub Actions
+ * does the build and the Pages upload; this just asks it to start.
+ *
+ * Cloudflare deploy hooks would be simpler but only exist for Git-connected Pages projects,
+ * and both of ours are direct-upload.
+ */
+async function dispatchBuild(env: Env, target: Target): Promise<{ ok: boolean; error?: string }> {
+  if (!env.GITHUB_TOKEN) return { ok: false, error: "GITHUB_TOKEN is not configured" };
+  const repo = env.GITHUB_REPO ?? "doca-ad/doca-ad.github.io";
+
+  const res = await fetch(`https://api.github.com/repos/${repo}/dispatches`, {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${env.GITHUB_TOKEN}`,
+      accept: "application/vnd.github+json",
+      "content-type": "application/json",
+      "user-agent": "doca-admin",
+    },
+    body: JSON.stringify({
+      event_type: "publish",
+      client_payload: { target, ref: env.SITE_REF ?? "staging" },
+    }),
+  });
+
+  if (res.status === 204) return { ok: true };
+  return { ok: false, error: `GitHub returned ${res.status}: ${(await res.text()).slice(0, 200)}` };
 }
 
 const json = (data: unknown, status = 200) =>
@@ -57,10 +91,12 @@ async function audit(env: Env, actor: string, action: string, entity: string, id
   ).bind(actor, action, entity, id ?? null, detail ?? null).run();
 }
 
-/** Saving should publish. Fire-and-forget so a slow hook never blocks the editor. */
-async function triggerRebuild(env: Env, ctx: ExecutionContext) {
-  if (!env.DEPLOY_HOOK) return;
-  ctx.waitUntil(fetch(env.DEPLOY_HOOK, { method: "POST" }).catch(() => {}));
+/**
+ * Saving refreshes STAGING only. Production is a deliberate click, so DOCA always see a
+ * change on staging before the public site moves.
+ */
+function triggerRebuild(env: Env, ctx: ExecutionContext) {
+  ctx.waitUntil(dispatchBuild(env, "staging").catch(() => {}));
 }
 
 export default {
@@ -93,11 +129,29 @@ export default {
       return new Response(request.method === "HEAD" ? null : object.body, { headers });
     }
 
+    // Everything below here requires a valid Access session.
+    //
+    // The UI shell is gated too, rather than relying on an Access application being
+    // correctly bound to the hostname. Defence in depth: if that binding is missing or
+    // misconfigured the admin simply does not render, instead of being quietly public.
+    const identity = await verifyAccess(request, env.ACCESS_TEAM_DOMAIN);
+
     if (!pathname.startsWith("/api/")) {
+      if (!identity) {
+        return new Response(
+          `<!doctype html><meta charset="utf-8"><title>Sign in required</title>` +
+            `<style>body{font:15px/1.6 system-ui;margin:0;display:grid;place-items:center;` +
+            `height:100vh;color:#282c34}div{max-width:30rem;padding:0 1.5rem;text-align:center}` +
+            `p{color:#6b7280}</style>` +
+            `<div><h1>Sign in required</h1><p>This page is only available through ` +
+            `Cloudflare Access. If you reached it directly, open ` +
+            `<a href="https://admin.docastudio.ro/">admin.docastudio.ro</a> instead.</p></div>`,
+          { status: 401, headers: { "content-type": "text/html; charset=utf-8" } }
+        );
+      }
       return env.ASSETS.fetch(request);
     }
 
-    const identity = await verifyAccess(request, env.ACCESS_TEAM_DOMAIN);
     if (!identity) {
       return json({ error: "Not authenticated. Reach this through Cloudflare Access." }, 401);
     }
@@ -186,6 +240,16 @@ export default {
       await audit(env, identity.email, "upload", "image", projectId, key);
       await triggerRebuild(env, ctx);
       return json({ ok: true, key }, 201);
+    }
+
+    if (pathname === "/api/publish" && request.method === "POST") {
+      const body = (await request.json().catch(() => ({}))) as { target?: string };
+      const target: Target = body.target === "production" ? "production" : "staging";
+
+      const result = await dispatchBuild(env, target);
+      await audit(env, identity.email, "publish", "site", target, result.ok ? "ok" : result.error);
+      if (!result.ok) return json({ error: result.error }, 502);
+      return json({ ok: true, target });
     }
 
     if (pathname === "/api/audit" && request.method === "GET") {

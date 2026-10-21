@@ -5,7 +5,14 @@
   "compatibility_date": "2026-10-19",
   "observability": { "enabled": true },
 
-  "assets": { "directory": "./public", "binding": "ASSETS" },
+  // run_worker_first is essential: without it Cloudflare serves a matching static asset
+  // BEFORE invoking the script, so the admin UI would bypass the Access check entirely
+  // and be served to anyone. Verified: it was.
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
 
   "d1_databases": [
     {

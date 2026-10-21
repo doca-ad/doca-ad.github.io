@@ -162,3 +162,19 @@ an R2 key. Verified end to end.
    currently serves the admin shell to anyone (mutations still 401).
 3. Create a Pages deploy hook and set it as the `DEPLOY_HOOK` secret
    (`npx wrangler secret put DEPLOY_HOOK`) so saving actually republishes.
+
+### Secrets required for publishing
+Two, in different places:
+
+1. **Worker → GitHub.** A fine-grained PAT on `doca-ad/doca-ad.github.io` with
+   *Actions: read and write* and *Contents: read*. It never leaves the Worker and is never
+   exposed to DOCA.
+   ```bash
+   cd admin && npx wrangler secret put GITHUB_TOKEN
+   ```
+2. **GitHub → Cloudflare.** Repo secrets `CLOUDFLARE_API_TOKEN` (Account → Cloudflare Pages:
+   Edit) and `CLOUDFLARE_ACCOUNT_ID` (`4619edab308cab4c20177a04b6149f84`), so the workflow
+   can upload the build.
+
+Until both exist, saving still writes to D1 but nothing republishes, and the Publish button
+returns a clear error rather than failing silently.

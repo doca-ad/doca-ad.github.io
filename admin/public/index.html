@@ -56,6 +56,11 @@
            opacity:0; pointer-events:none; transition:opacity .2s }
   .toast.show { opacity:1 }
   .empty { color:var(--muted); padding:40px 0; text-align:center }
+  .publish { display:flex; align-items:center; gap:18px; border:1px solid var(--line);
+             padding:16px 18px; margin:0 0 26px; background:var(--soft) }
+  .publish strong { display:block; font-weight:500; font-size:14px }
+  .publish a { color:var(--muted); font-size:13.5px }
+  .publish button { margin-left:auto; white-space:nowrap }
 </style>
 </head>
 <body>
@@ -66,8 +71,17 @@
 
 <main>
   <p class="note" id="note">
-    Changes publish automatically: saving rebuilds the site, which takes a minute or two.
+    Saving updates <strong>staging</strong> automatically — it takes a minute or two.
+    The public site only changes when you press <strong>Publish to the live site</strong>.
   </p>
+
+  <div class="publish">
+    <div>
+      <strong>Preview your changes</strong>
+      <a href="https://staging.docastudio.ro" target="_blank" rel="noopener">staging.docastudio.ro</a>
+    </div>
+    <button id="publish" class="primary">Publish to the live site</button>
+  </div>
 
   <div class="bar">
     <h2 id="count">Projects</h2>
@@ -177,6 +191,28 @@ function open(p) {
 const slugify = (title, type) =>
   `${title.toLowerCase().replace(/['’]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}` +
   `-${type.split("/")[0].trim().toLowerCase().replace(/\s+/g,"-")}`;
+
+$("#publish").onclick = async () => {
+  // Deliberately a two-step action: this is the one button that changes what the public sees.
+  if (!confirm(
+    "Publish to docastudio.ro?\n\n" +
+    "This makes your latest changes visible to everyone. " +
+    "Check staging.docastudio.ro first if you have not already."
+  )) return;
+  const btn = $("#publish");
+  btn.disabled = true; btn.textContent = "Publishing…";
+  try {
+    await api("/api/publish", {
+      method:"POST", headers:{"content-type":"application/json"},
+      body: JSON.stringify({ target:"production" }),
+    });
+    toast("Publishing — the live site updates in a minute or two");
+  } catch (e) {
+    toast(e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = "Publish to the live site";
+  }
+};
 
 $("#new").onclick = () => open(null);
 $("#cancel").onclick = () => $("#dlg").close();

@@ -1,0 +1,68 @@
+name: Deploy
+
+# Two ways in:
+#  - pushing the staging branch republishes staging
+#  - the admin panel fires a repository_dispatch so DOCA can publish without a developer
+on:
+  push:
+    branches: [staging]
+  repository_dispatch:
+    types: [publish]
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Which environment to publish
+        type: choice
+        options: [staging, production]
+        default: staging
+
+concurrency:
+  group: deploy-${{ github.event.client_payload.target || inputs.target || 'staging' }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # repository_dispatch checks out the default branch, which is not where the
+          # site lives yet. Publish whatever ref the caller asked for.
+          ref: ${{ github.event.client_payload.ref || github.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Resolve target
+        id: t
+        run: |
+          TARGET="${{ github.event.client_payload.target || inputs.target || 'staging' }}"
+          if [ "$TARGET" = "production" ]; then
+            echo "project=doca-prod"    >> "$GITHUB_OUTPUT"
+            echo "branch=main"          >> "$GITHUB_OUTPUT"
+            echo "script=build"         >> "$GITHUB_OUTPUT"
+          else
+            echo "project=doca-staging" >> "$GITHUB_OUTPUT"
+            echo "branch=staging"       >> "$GITHUB_OUTPUT"
+            # staging must never be indexable: robots Disallow + X-Robots-Tag noindex
+            echo "script=build:staging" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build
+        run: npm run ${{ steps.t.outputs.script }}
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=${{ steps.t.outputs.project }} --branch=${{ steps.t.outputs.branch }}
+
+      - name: Summary
+        run: |
+          echo "### Published to ${{ steps.t.outputs.project }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Ref: \`${{ github.event.client_payload.ref || github.ref_name }}\`" >> "$GITHUB_STEP_SUMMARY"
