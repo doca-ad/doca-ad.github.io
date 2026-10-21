@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import ProjectCarousel from "@/components/ProjectCarousel";
+import Seo from "@/components/Seo";
 
 const Index = () => {
     const [isAnimating, setIsAnimating] = useState(true);
@@ -25,9 +26,11 @@ const Index = () => {
 
     return (
         <>
-            {/* SEO Optimization */}
-            <title>DOCA - Architecture & Design</title>
-            <meta name="description" content="Discover our premium portfolio of architectural projects, brand identity design, and digital experiences. Minimalist design meets sophisticated creativity." />
+            <Seo
+                title="DOCA Architecture & Design — Architecture studio in Bucharest"
+                description="Bucharest-based architecture and interior design studio founded in 2024 by Ștefan Diaconescu and Vlad Căpitanu. Space efficiency, usability, urban integration and human-scale architecture."
+                path="/"
+            />
 
             {/* White Background Overlay During Animation */}
             {showWhite && (
@@ -42,7 +45,7 @@ const Index = () => {
                 {/* Main Content Area - Ensures 65%+ white background coverage */}
                 <main className="min-h-screen bg-background">
                     <div className="h-screen bg-background px-4 md:px-8">
-                        <ProjectCarousel />
+                        <ProjectCarousel landing="statement" />
                     </div>
                 </main>
             </div>

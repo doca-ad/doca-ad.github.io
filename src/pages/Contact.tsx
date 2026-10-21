@@ -1,10 +1,16 @@
 import Navigation from "@/components/Navigation";
 import { Mail, Phone, MapPin } from "lucide-react";
+import Seo from "@/components/Seo";
 
 const Contact = () => {
   return (
     <>
-      <title>Contact</title>
+      <Seo
+        title="Contact"
+        description="Get in touch with DOCA Architecture & Design in Bucharest — office@doca-ad.ro, +40 723 340 088."
+        path="/contact"
+        breadcrumb="Contact"
+      />
       
       <div className="min-h-screen bg-background">
         <Navigation />

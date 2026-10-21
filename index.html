@@ -3,28 +3,66 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DOCA</title>
-    <meta name="author" content="DOCA Architecture & Design" />
 
-    <meta property="og:title" content="DOCA" />
+    <title>DOCA Architecture &amp; Design — Architecture studio in Bucharest</title>
+    <meta
+      name="description"
+      content="DOCA Architecture &amp; Design is a Bucharest-based architecture and interior design studio founded in 2024 by Ștefan Diaconescu and Vlad Căpitanu."
+    />
+    <meta name="author" content="DOCA Architecture &amp; Design" />
+
+    <!-- Icons. The mark is black on transparent, so every raster variant is baked onto a
+         solid background: iOS composites alpha on black, and Google was rendering the
+         transparent PNG unreadably. -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:site_name" content="DOCA Architecture &amp; Design" />
+    <meta property="og:title" content="DOCA Architecture &amp; Design" />
     <meta property="og:type" content="website" />
-    <link rel="icon" type="image/x-icon" href="/public/favicon.ico">
-
+    <meta property="og:url" content="https://docastudio.ro/" />
+    <meta
+      property="og:description"
+      content="A Bucharest-based architecture and interior design studio. Space efficiency, usability, urban integration and human-scale architecture."
+    />
+    <meta property="og:image" content="https://docastudio.ro/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "@id": "https://docastudio.ro/#organization",
+        "name": "DOCA Architecture & Design",
+        "alternateName": "DOCA",
+        "url": "https://docastudio.ro/",
+        "logo": "https://docastudio.ro/logo-square-1200.png",
+        "image": "https://docastudio.ro/og-image.png",
+        "description": "Bucharest-based architecture and interior design studio founded in 2024.",
+        "foundingDate": "2024",
+        "email": "office@doca-ad.ro",
+        "telephone": "+40723340088",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Bucharest",
+          "addressCountry": "RO"
+        },
+        "founder": [
+          { "@type": "Person", "name": "Ștefan Diaconescu" },
+          { "@type": "Person", "name": "Vlad Căpitanu" }
+        ],
+        "sameAs": [
+          "https://www.instagram.com/doca_architecture/",
+          "https://www.linkedin.com/company/doca-architecture-design/"
+        ]
+      }
+    </script>
   </head>
 
   <body>
     <div id="root"></div>
-    <link rel="icon" type="image/svg+xml" href="./vite.svg" />
     <script type="module" src="./src/main.tsx"></script>
-    <script>
-      (() => {
-        const redirect = sessionStorage.redirect;
-        delete sessionStorage.redirect;
-        if (redirect && redirect !== location.href) {
-          history.replaceState(null, null, redirect);
-        }
-      })();
-    </script>
   </body>
 </html>

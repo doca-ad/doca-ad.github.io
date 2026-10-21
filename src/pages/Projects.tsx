@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { projects } from "@/data/projects";
+import Seo from "@/components/Seo";
 import { Project } from "@/data/projects";
 import {
   Carousel,
@@ -25,7 +26,7 @@ const Projects = () => {
   const minSwipeDistance = 50;
 
   // Sort projects by year (newest first)
-  const sortedProjects = [...projects].sort((a, b) => b.year - a.year);
+  const sortedProjects = [...projects].sort((a, b) => Number(b.year) - Number(a.year));
 
   const toggleExpanded = (projectId: string) => {
     setExpandedProject(expandedProject === projectId ? null : projectId);
@@ -181,10 +182,11 @@ const Projects = () => {
 
   return (
     <>
-      <title>Projects</title>
-      <meta
-        name="description"
-        content="Explore our complete portfolio of architectural, branding, and digital design projects."
+      <Seo
+        title="Projects"
+        description="Architecture and interior design projects by DOCA — residential, offices and healthcare across Romania, from 2024 onward."
+        path="/projects"
+        breadcrumb="Projects"
       />
 
       <div className="min-h-screen bg-background">

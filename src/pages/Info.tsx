@@ -1,12 +1,14 @@
 import Navigation from "@/components/Navigation";
+import Seo from "@/components/Seo";
 
 const Info = () => {
   return (
     <>
-      <title>Info - Premium Creative Studio</title>
-      <meta
-        name="description"
-        content="Learn about our creative studio's philosophy, approach, and commitment to exceptional design."
+      <Seo
+        title="About the studio"
+        description="DOCA Architecture & Design was founded in 2024 by Ștefan Diaconescu and Vlad Căpitanu, combining BIM and project management with Scandinavian urban design practice."
+        path="/info"
+        breadcrumb="About"
       />
 
       <div className="min-h-screen bg-background">
