@@ -52,13 +52,6 @@ const a = ABOUT[locale];
             <p class="text-lg text-text-secondary leading-relaxed text-justify">{para}</p>
           ))}
 
-          <section class="text-lg text-text-secondary leading-relaxed">
-            <h2 class="font-semibold mb-4 text-text-primary">{t(locale, "info.competitions")}</h2>
-            <ul class="space-y-1">
-              {a.competitions.map((c) => <li>{c}</li>)}
-            </ul>
-          </section>
-
           <section class="text-lg text-text-secondary leading-relaxed text-justify">
             <h2 class="font-semibold mb-4 text-text-primary">{t(locale, "info.paths")}</h2>
             <ul class="space-y-4">

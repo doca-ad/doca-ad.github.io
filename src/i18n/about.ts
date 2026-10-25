@@ -3,7 +3,6 @@ import type { Locale } from "./ui";
 interface AboutContent {
   intro: { before: string; and: string; after: string };
   paragraphs: string[];
-  competitions: string[];
   paths: { name: string; text: string }[];
   closing: string;
 }
@@ -18,12 +17,6 @@ export const ABOUT: Record<Locale, AboutContent> = {
     paragraphs: [
       "Our long-standing professional collaboration naturally evolved into establishing DOCA, building on a series of early joint projects and international competitions. From the outset, our work has engaged with diverse scales, with a strong emphasis on space efficiency, usability, urban integration, and human-scale architecture.",
       "At the core of our philosophy lies the experience of the end-user. We place the individual at the center of the architectural process, designing spaces that are not only functional but also sculptural— living environments shaped to enrich daily life.",
-    ],
-    competitions: [
-      "Central Park Book Studio – New York, 2019",
-      "Weave – Sustainable Fashion Hub – Milan, 2019",
-      "City Link – Copenhagen, 2020",
-      "Roots – MilanCall – Milan, 2020 (2nd Prize)",
     ],
     paths: [
       {
@@ -45,14 +38,8 @@ export const ABOUT: Record<Locale, AboutContent> = {
       after: ".",
     },
     paragraphs: [
-      "Colaborarea noastră profesională de lungă durată a condus firesc la înființarea DOCA, pornind de la o serie de proiecte comune timpurii și de la concursuri internaționale. De la bun început, activitatea noastră a abordat scări diverse, cu accent puternic pe eficiența spațiului, utilitate, integrare urbană și arhitectură la scara omului.",
+      "DOCA a luat naștere ca o continuare firească a unei colaborări profesionale îndelungate, dezvoltate prin proiecte comune și participări la concursuri internaționale de arhitectură. Încă de la început, activitatea noastră a explorat diferite scări de intervenție, având ca principii fundamentale eficiența spațială, funcționalitatea, integrarea în contextul urban și raportarea arhitecturii la scara umană.",
       "În centrul filosofiei noastre stă experiența utilizatorului final. Așezăm omul în mijlocul procesului de proiectare, creând spații care nu sunt doar funcționale, ci și sculpturale — medii de locuire modelate pentru a îmbogăți viața de zi cu zi.",
-    ],
-    competitions: [
-      "Central Park Book Studio – New York, 2019",
-      "Weave – Sustainable Fashion Hub – Milano, 2019",
-      "City Link – Copenhaga, 2020",
-      "Roots – MilanCall – Milano, 2020 (Premiul al II-lea)",
     ],
     paths: [
       {
@@ -65,6 +52,6 @@ export const ABOUT: Record<Locale, AboutContent> = {
       },
     ],
     closing:
-      "DOCA reprezintă sinteza acestor experiențe — un echilibru între precizia tehnică și viziunea conceptuală. Credem că arhitectura trebuie să fie centrată pe om, creând spații care răspund deopotrivă nevoilor individuale și colective și care se integrează firesc în contextul lor cultural și urban.",
+      "DOCA reunește aceste experiențe într-o abordare care îmbină rigoarea tehnică cu viziunea conceptuală. Considerăm că arhitectura trebuie să pornească de la nevoile oamenilor, prin crearea unor spații care răspund atât cerințelor individuale, cât și celor colective și care se integrează armonios în contextul cultural și urban.",
   },
 };

@@ -42,7 +42,6 @@ export const UI = {
 
     "info.title": "About Our Studio",
     "info.founders": "Vlad Căpitanu and Ștefan Diaconescu",
-    "info.competitions": "Selected Competitions & Projects",
     "info.paths": "Our Complementary Professional Paths",
 
     "contact.title": "Contact",
@@ -76,19 +75,18 @@ export const UI = {
       "O selecție a lucrărilor noastre din arhitectură, design interior și urbanism, de la locuințe private la proiecte publice și cu funcțiuni mixte.",
     "projects.allProjects": "Toate proiectele",
 
-    "info.title": "Despre studio",
+    "info.title": "Despre noi",
     "info.founders": "Vlad Căpitanu și Ștefan Diaconescu",
-    "info.competitions": "Concursuri și proiecte selectate",
     "info.paths": "Parcursurile noastre profesionale complementare",
 
     "contact.title": "Contact",
     "contact.invitation":
-      "Ne bucurăm mereu să cunoaștem oameni pasionați. Nu ezitați să ne scrieți!",
+      "Suntem mereu deschiși să cunoaștem oameni pasionați. Nu ezitați să ne contactați!",
     "contact.social": "Ne puteți găsi și pe rețelele de socializare:",
     "contact.and": " și ",
-    "contact.email": "E-mail",
+    "contact.email": "Email",
     "contact.phone": "Telefon",
-    "contact.studio": "Birou",
+    "contact.studio": "Locație",
 
     "404.title": "Pagina nu a fost găsită",
     "404.body": "Pagina pe care o căutați nu există.",
@@ -135,7 +133,7 @@ export const META: Record<string, Record<Locale, { title: string; description: s
         "DOCA Architecture & Design was founded in 2024 by Ștefan Diaconescu and Vlad Căpitanu, combining BIM and project management with Scandinavian urban design practice.",
     },
     ro: {
-      title: "Despre studio",
+      title: "Despre noi",
       description:
         "DOCA Architecture & Design a fost fondat în 2024 de Ștefan Diaconescu și Vlad Căpitanu, îmbinând managementul BIM și de proiect cu experiența scandinavă în urbanism și design.",
     },
