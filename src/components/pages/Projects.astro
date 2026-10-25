@@ -24,9 +24,12 @@ const meta = META["/projects"][locale];
     <Navigation locale={locale} routeKey="/projects" client:load />
     <main class="pt-32 pb-16">
       <div class="max-w-7xl mx-auto px-8">
-        <h1 class="text-4xl md:text-5xl font-light text-text-primary text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-light text-text-primary text-center mb-5">
           {t(locale, "projects.title")}
         </h1>
+        <p class="mx-auto mb-16 max-w-2xl text-pretty text-center text-base md:text-lg font-light leading-relaxed text-text-secondary">
+          {t(locale, "projects.intro")}
+        </p>
         <ProjectsList projects={localised} client:load />
       </div>
     </main>

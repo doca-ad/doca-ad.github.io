@@ -36,6 +36,8 @@ export const UI = {
     "home.slide": "Slide",
 
     "projects.title": "Our Projects",
+    "projects.intro":
+      "A selection of our work across architecture, interiors and urban design, from private homes to public and mixed-use projects.",
     "projects.allProjects": "All projects",
 
     "info.title": "About Our Studio",
@@ -70,6 +72,8 @@ export const UI = {
     "home.slide": "Secțiunea",
 
     "projects.title": "Proiectele noastre",
+    "projects.intro":
+      "O selecție a lucrărilor noastre din arhitectură, design interior și urbanism, de la locuințe private la proiecte publice și cu funcțiuni mixte.",
     "projects.allProjects": "Toate proiectele",
 
     "info.title": "Despre studio",
