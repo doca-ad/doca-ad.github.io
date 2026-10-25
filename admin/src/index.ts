@@ -33,6 +33,25 @@ const FIELDS = [
 const BOOLS = new Set(["home", "index_only"]);
 
 /**
+ * The original schema's `type`, `location` and `status` columns are NOT NULL with no
+ * default, and predate the per-language columns. The bilingual editor only sends the _en
+ * variants, so an INSERT omitting them failed with a NOT NULL constraint — editing worked,
+ * adding did not.
+ *
+ * They are now derived from the English values on every write rather than being separately
+ * editable, so they cannot drift. They remain only as a fallback for readers that predate
+ * the bilingual columns.
+ */
+function withLegacyColumns(b: Record<string, unknown>): Record<string, unknown> {
+  const out = { ...b };
+  if ("type_en" in b) out.type = b.type_en ?? "";
+  if ("location_en" in b) out.location = b.location_en ?? "";
+  return out;
+}
+
+const WRITABLE = [...FIELDS, "type", "location"] as const;
+
+/**
  * Publishing means rebuilding the site, and a Worker cannot build Astro. GitHub Actions
  * does the build and the Pages upload; this just asks it to start.
  *
@@ -176,10 +195,11 @@ export default {
 
     // --- projects -------------------------------------------------------------------
     if (pathname === "/api/projects" && request.method === "POST") {
-      const b = (await request.json()) as Record<string, unknown>;
-      if (!b.id || !b.title) return json({ error: "id and title are required" }, 400);
+      const raw = (await request.json()) as Record<string, unknown>;
+      if (!raw.id || !raw.title) return json({ error: "id and title are required" }, 400);
+      const b = withLegacyColumns(raw);
 
-      const cols = FIELDS.filter((f) => f in b);
+      const cols = WRITABLE.filter((f) => f in b);
       await env.DB.prepare(
         `INSERT INTO projects (id, ${cols.join(",")}) VALUES (?${",?".repeat(cols.length)})`
       ).bind(b.id, ...cols.map((f) => (BOOLS.has(f) ? (b[f] ? 1 : 0) : (b[f] as never)))).run();
@@ -193,8 +213,8 @@ export default {
       const id = projectMatch[1];
 
       if (request.method === "PUT") {
-        const b = (await request.json()) as Record<string, unknown>;
-        const cols = FIELDS.filter((f) => f in b);
+        const b = withLegacyColumns((await request.json()) as Record<string, unknown>);
+        const cols = WRITABLE.filter((f) => f in b);
         if (!cols.length) return json({ error: "nothing to update" }, 400);
 
         await env.DB.prepare(

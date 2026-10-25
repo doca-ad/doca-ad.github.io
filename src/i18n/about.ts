@@ -40,7 +40,7 @@ export const ABOUT: Record<Locale, AboutContent> = {
   },
   ro: {
     intro: {
-      before: "DOCA Arhitectură & Design este un birou de arhitectură din România, fondat în 2024 de ",
+      before: "DOCA Architecture & Design este un birou de arhitectură din România, fondat în 2024 de ",
       and: " și ",
       after: ".",
     },

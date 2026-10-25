@@ -1,17 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight, X, Mail, Phone, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import Landing, { type LandingVariant } from "./Landing";
 import ScrollCue from "./ScrollCue";
-import type { ResolvedImage, ResolvedProject } from "@/lib/images";
+import type { ResolvedProject } from "@/lib/images";
 
 interface ProjectCarouselProps {
   /** Already optimised at build time; islands cannot use Astro's <Image>. */
   projects: ResolvedProject[];
-  /** When set, a landing slide is prepended to the sequence. */
-  landing?: LandingVariant;
-  landingHero?: ResolvedImage;
-  statement?: { lead: string; body: string };
   scrollLabel?: string;
   scrollLabelUp?: string;
   slideLabel?: string;
@@ -24,7 +19,7 @@ interface ProjectCarouselProps {
 
 type Project = ResolvedProject;
 
-const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabel, scrollLabelUp, slideLabel, revealDelayMs = 0 }: ProjectCarouselProps) => {
+const ProjectCarousel = ({ projects, scrollLabel, scrollLabelUp, slideLabel, revealDelayMs = 0 }: ProjectCarouselProps) => {
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,9 +31,9 @@ const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabe
     .filter(p => p.home)
     .sort((a, b) => (a.homeIndex ?? 0) - (b.homeIndex ?? 0));
 
-  // Landing occupies slide 0 when present; project N therefore sits at slide N + offset.
-  const slideOffset = landing ? 1 : 0;
-  /** Landing + every project + the contact slide. Drives the cues and the dots. */
+  // The sequence opens on the first project; only the contact slide follows the list.
+  const slideOffset = 0;
+  /** Every project plus the contact slide. Drives the cues and the dots. */
   const [slideIndex, setSlideIndex] = useState(0);
   const totalSlides = slideOffset + homeProjects.length + 1;
   const [controlsReady, setControlsReady] = useState(revealDelayMs === 0);
@@ -206,10 +201,6 @@ const ProjectCarousel = ({ projects, landing, landingHero, statement, scrollLabe
         className="h-screen overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
         style={{ scrollBehavior: 'smooth' }}
       >
-        {landing && statement && (
-          <Landing variant={landing} hero={landingHero} statement={statement} />
-        )}
-
         {homeProjects.map((project) => (
           <div
             key={project.id}

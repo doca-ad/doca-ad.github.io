@@ -31,9 +31,6 @@ export const UI = {
     "nav.menu": "Menu",
     "nav.close": "Close menu",
 
-    "home.statement.lead": "We work across architecture, interiors and urban design.",
-    "home.statement.body":
-      "Founded by Ștefan Diaconescu and Vlad Căpitanu, the practice approaches each project through a close reading of what is there and what is needed.",
     "home.scroll": "Next",
     "home.scrollUp": "Previous",
     "home.slide": "Slide",
@@ -64,13 +61,10 @@ export const UI = {
     "nav.projects": "Proiecte",
     "nav.info": "Despre",
     "nav.contact": "Contact",
-    "nav.tagline": "Arhitectură & Design",
+    "nav.tagline": "Architecture & Design",
     "nav.menu": "Meniu",
     "nav.close": "Închide meniul",
 
-    "home.statement.lead": "Lucrăm în arhitectură, design interior și urbanism.",
-    "home.statement.body":
-      "Fondat de Ștefan Diaconescu și Vlad Căpitanu, biroul abordează fiecare proiect printr-o citire atentă a ceea ce există și a ceea ce este necesar.",
     "home.scroll": "Următorul",
     "home.scrollUp": "Anteriorul",
     "home.slide": "Secțiunea",
@@ -113,7 +107,7 @@ export const META: Record<string, Record<Locale, { title: string; description: s
         "Bucharest-based architecture and interior design studio founded in 2024 by Ștefan Diaconescu and Vlad Căpitanu. Space efficiency, usability, urban integration and human-scale architecture.",
     },
     ro: {
-      title: "DOCA Arhitectură & Design",
+      title: "DOCA Architecture & Design",
       description:
         "Birou de arhitectură și design interior din București, fondat în 2024 de Ștefan Diaconescu și Vlad Căpitanu. Eficiența spațiului, utilitate, integrare urbană și arhitectură la scara omului.",
     },
@@ -139,7 +133,7 @@ export const META: Record<string, Record<Locale, { title: string; description: s
     ro: {
       title: "Despre studio",
       description:
-        "DOCA Arhitectură & Design a fost fondat în 2024 de Ștefan Diaconescu și Vlad Căpitanu, îmbinând managementul BIM și de proiect cu experiența scandinavă în urbanism și design.",
+        "DOCA Architecture & Design a fost fondat în 2024 de Ștefan Diaconescu și Vlad Căpitanu, îmbinând managementul BIM și de proiect cu experiența scandinavă în urbanism și design.",
     },
   },
   "/contact": {
@@ -151,7 +145,7 @@ export const META: Record<string, Record<Locale, { title: string; description: s
     ro: {
       title: "Contact",
       description:
-        "Contactați DOCA Arhitectură & Design din București — office@doca-ad.ro, +40 723 340 088.",
+        "Contactați DOCA Architecture & Design din București — office@doca-ad.ro, +40 723 340 088.",
     },
   },
 };
