@@ -1,7 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4722 4722" role="img" aria-label="DOCA">
   <title>DOCA</title>
+  <rect width="100%" height="100%" fill="#ffffff"/>
   <g transform="translate(0.50 0.00)">
-    <g transform="translate(0.000000,4722.000000) scale(0.100000,-0.100000)" fill="currentColor">
+    <g transform="translate(0.000000,4722.000000) scale(0.100000,-0.100000)" fill="#282c34">
       <path d="M0 35660 l0 -11560 6038 3 c4550 2 6075 6 6192 15 806 62 1336 140
 1990 294 1709 401 3339 1212 4695 2337 371 308 822 736 1140 1081 2276 2475
 3356 5776 2984 9125 -252 2266 -1175 4409 -2658 6165 -399 473 -949 1019
