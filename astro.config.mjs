@@ -46,8 +46,13 @@ export default defineConfig({
     // Astro only optimises remote images from hosts listed here.
     remotePatterns: [{ protocol: "https", hostname: "doca-admin.calincapitanu.workers.dev" }],
   },
-  // Clean extensionless URLs that match the canonicals and sitemap entries.
+  // Both of these are needed together. `trailingSlash: never` makes links and canonicals
+  // omit the slash; without `format: "file"` Astro emits projects/index.html, which
+  // Cloudflare Pages serves at /projects/ and 308-redirects /projects to it — so every
+  // canonical and every sitemap entry would redirect. "file" emits projects.html, which
+  // Pages serves at /projects directly.
   trailingSlash: "never",
+  build: { format: "file" },
   vite: {
     resolve: {
       alias: { "@": path.resolve(process.cwd(), "./src") },

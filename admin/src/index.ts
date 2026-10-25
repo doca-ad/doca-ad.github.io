@@ -72,12 +72,46 @@ async function dispatchBuild(env: Env, target: Target): Promise<{ ok: boolean; e
     },
     body: JSON.stringify({
       event_type: "publish",
-      client_payload: { target, ref: env.SITE_REF ?? "staging" },
+      client_payload: { target, ref: env.SITE_REF ?? "main" },
     }),
   });
 
-  if (res.status === 204) return { ok: true };
-  return { ok: false, error: `GitHub returned ${res.status}: ${(await res.text()).slice(0, 200)}` };
+  if (res.status !== 204) {
+    return { ok: false, error: `GitHub returned ${res.status}: ${(await res.text()).slice(0, 200)}` };
+  }
+
+  /**
+   * A dispatch returns 204 even when nothing runs.
+   *
+   * repository_dispatch only triggers workflows defined on the DEFAULT branch — if the
+   * workflow is missing there, GitHub accepts the request and silently does nothing. That
+   * once made the Publish button report success while doing nothing at all, which is worse
+   * than failing. Confirm a run actually started.
+   */
+  await new Promise((r) => setTimeout(r, 3000));
+  const since = new Date(Date.now() - 120_000).toISOString();
+  const runs = await fetch(
+    `https://api.github.com/repos/${repo}/actions/runs?event=repository_dispatch&created=>${since}&per_page=1`,
+    {
+      headers: {
+        authorization: `Bearer ${env.GITHUB_TOKEN}`,
+        accept: "application/vnd.github+json",
+        "user-agent": "doca-admin",
+      },
+    }
+  );
+  if (runs.ok) {
+    const body = (await runs.json()) as { total_count?: number };
+    if (!body.total_count) {
+      return {
+        ok: false,
+        error:
+          "GitHub accepted the request but no build started. The deploy workflow must exist " +
+          "on the repository's default branch for this to work.",
+      };
+    }
+  }
+  return { ok: true };
 }
 
 async function audit(env: Env, actor: string, action: string, entity: string, id?: string, detail?: string) {
