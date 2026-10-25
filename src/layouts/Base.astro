@@ -15,12 +15,26 @@ export interface Props {
 
 const { title, description, breadcrumb, image } = Astro.props;
 
-const locale: Locale = localeFromPath(Astro.url.pathname);
-const routeKey = stripLocale(Astro.url.pathname);
+/**
+ * build.format "file" puts the extension in Astro.url.pathname, so /projects renders as
+ * /projects.html. Canonicals, hreflang and the language toggle must all use the URL the
+ * site is actually served at, not the filename.
+ */
+function normalizePath(pathname: string): string {
+  const p = pathname.replace(/\.html$/, "").replace(/\/index$/, "");
+  return p === "" ? "/" : p;
+}
 
-const SUFFIX = locale === "ro" ? "DOCA Arhitectură & Design" : "DOCA Architecture & Design";
+const path = normalizePath(Astro.url.pathname);
+const locale: Locale = localeFromPath(path);
+const routeKey = stripLocale(path);
+
+const SUFFIX = "DOCA Architecture & Design";
 const fullTitle = title.startsWith("DOCA") ? title : `${title} — ${SUFFIX}`;
-const canonical = new URL(Astro.url.pathname, Astro.site).href.replace(/\/$/, "") || Astro.site.href;
+// The root keeps its slash (https://example.com/); every other path drops it.
+const absolute = (p: string) =>
+  p === "/" ? Astro.site.href : new URL(p, Astro.site).href.replace(/\/$/, "");
+const canonical = absolute(path);
 const ogImage = new URL(image ?? "/og-image.png", Astro.site).href;
 
 const organization = {
@@ -74,10 +88,10 @@ const breadcrumbs = breadcrumb && {
       <link
         rel="alternate"
         hreflang={l}
-        href={new URL(localePath(l, routeKey), Astro.site).href.replace(/\/$/, "") || Astro.site.href}
+        href={absolute(localePath(l, routeKey))}
       />
     ))}
-    <link rel="alternate" hreflang="x-default" href={new URL(localePath(DEFAULT_LOCALE, routeKey), Astro.site).href.replace(/\/$/, "") || Astro.site.href} />
+    <link rel="alternate" hreflang="x-default" href={absolute(localePath(DEFAULT_LOCALE, routeKey))} />
 
     {/* The mark is black on transparent, so every raster variant is baked onto a solid
         background: iOS composites alpha on black, and Google rendered the transparent
