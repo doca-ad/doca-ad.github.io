@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://docastudio.ro/sitemap.xml
+# @astrojs/sitemap emits sitemap-index.xml (which points at sitemap-0.xml);
+# there is no /sitemap.xml, so advertising that would hand Google a 404.
+Sitemap: https://docastudio.ro/sitemap-index.xml
