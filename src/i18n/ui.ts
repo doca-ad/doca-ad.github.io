@@ -72,7 +72,7 @@ export const UI = {
 
     "projects.title": "Proiectele noastre",
     "projects.intro":
-      "O selecție a lucrărilor noastre din arhitectură, design interior și urbanism, de la locuințe private la proiecte publice și cu funcțiuni mixte.",
+      "O selecție a lucrărilor noastre: arhitectură, design interior și urbanism, de la locuințe private la proiecte publice și funcțiuni mixte.",
     "projects.allProjects": "Toate proiectele",
 
     "info.title": "Despre noi",
