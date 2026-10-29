@@ -1,7 +1,12 @@
 ---
 import Base from "@/layouts/Base.astro";
 import Navigation from "@/components/Navigation";
+import ContactForm from "@/components/ContactForm";
 import { META, t, type Locale } from "@/i18n/ui";
+
+const ADMIN_ORIGIN =
+  import.meta.env.ADMIN_ORIGIN ?? "https://doca-admin.calincapitanu.workers.dev";
+const TURNSTILE_KEY = import.meta.env.PUBLIC_TURNSTILE_KEY as string | undefined;
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
@@ -34,6 +39,28 @@ const meta = META["/contact"][locale];
           </p>
         </div>
 
+        <section class="mb-16 md:mb-20">
+          <h2 class="mb-8 text-center text-lg font-medium text-text-primary">
+            {t(locale, "contact.formTitle")}
+          </h2>
+          <ContactForm
+            client:visible
+            locale={locale}
+            endpoint={`${ADMIN_ORIGIN}/api/contact`}
+            turnstileKey={TURNSTILE_KEY}
+            strings={{
+              name: t(locale, "contact.name"),
+              email: t(locale, "contact.emailField"),
+              message: t(locale, "contact.messageField"),
+              send: t(locale, "contact.send"),
+              sending: t(locale, "contact.sending"),
+              sent: t(locale, "contact.sent"),
+              error: t(locale, "contact.errorGeneric"),
+              required: t(locale, "contact.requiredFields"),
+            }}
+          />
+        </section>
+
         <div class="grid md:grid-cols-3 gap-8 md:gap-12 text-center">
           <div class="flex flex-col items-center">
             <h2 class="text-lg font-medium text-text-primary mb-2">{t(locale, "contact.email")}</h2>
@@ -60,4 +87,7 @@ const meta = META["/contact"][locale];
       </div>
     </main>
   </div>
+  {TURNSTILE_KEY && (
+    <script is:inline async defer src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
+  )}
 </Base>

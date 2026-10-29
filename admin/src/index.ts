@@ -1,4 +1,5 @@
 import { verifyAccess } from "./access";
+import { handleContact } from "./contact";
 
 export interface Env {
   DB: D1Database;
@@ -7,6 +8,11 @@ export interface Env {
   MEDIA?: R2Bucket;
   /** Fine-grained PAT, repo-scoped, with Actions: write. Never leaves the Worker. */
   GITHUB_TOKEN?: string;
+  /** Contact form. Without these the form still stores enquiries; it just does not email. */
+  TURNSTILE_SECRET?: string;
+  RESEND_API_KEY?: string;
+  CONTACT_TO?: string;
+  CONTACT_FROM?: string;
   GITHUB_REPO?: string;
   SITE_REF?: string;
 }
@@ -175,6 +181,26 @@ export default {
     // Public: the Pages build fetches this and has no Access session.
     if (pathname === "/api/content" && request.method === "GET") {
       return json(await readContent(env));
+    }
+
+    // Public: the contact form posts here from the website, which is a different origin.
+    if (pathname === "/api/contact") {
+      const origin = request.headers.get("origin") ?? "";
+      const allowed = ["https://docastudio.ro", "https://staging.docastudio.ro"];
+      const cors: Record<string, string> = {
+        "access-control-allow-origin": allowed.includes(origin) ? origin : allowed[0],
+        "access-control-allow-methods": "POST, OPTIONS",
+        "access-control-allow-headers": "content-type",
+        "vary": "origin",
+      };
+      if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
+      if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
+
+      const result = await handleContact(request, env);
+      return new Response(JSON.stringify(result.body), {
+        status: result.status,
+        headers: { ...cors, "content-type": "application/json; charset=utf-8" },
+      });
     }
 
     // Public media. The build fetches these to generate AVIF derivatives, and they are the
@@ -348,6 +374,29 @@ export default {
         `UPDATE publish_state SET last_at = datetime('now'), last_actor = ? WHERE target = ?`
       ).bind(identity.email, target).run();
       return json({ ok: true, target });
+    }
+
+    if (pathname === "/api/enquiries" && request.method === "GET") {
+      const rows = await env.DB.prepare(
+        `SELECT id, name, email, message, locale, mail_state, mail_error, read_at, created_at
+         FROM enquiries ORDER BY created_at DESC LIMIT 200`
+      ).all();
+      return json(rows.results ?? []);
+    }
+
+    const enquiryMatch = pathname.match(/^\/api\/enquiries\/([A-Za-z0-9-]+)$/);
+    if (enquiryMatch) {
+      const id = enquiryMatch[1];
+      if (request.method === "PUT") {
+        await env.DB.prepare(`UPDATE enquiries SET read_at = datetime('now') WHERE id = ?`)
+          .bind(id).run();
+        return json({ ok: true });
+      }
+      if (request.method === "DELETE") {
+        await env.DB.prepare(`DELETE FROM enquiries WHERE id = ?`).bind(id).run();
+        await audit(env, identity.email, "delete", "enquiry", id);
+        return json({ ok: true });
+      }
     }
 
     if (pathname === "/api/audit" && request.method === "GET") {

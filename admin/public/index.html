@@ -56,6 +56,23 @@
            opacity:0; pointer-events:none; transition:opacity .2s }
   .toast.show { opacity:1 }
   .empty { color:var(--muted); padding:40px 0; text-align:center }
+  .tab { border:none; border-bottom:2px solid transparent; background:none; padding:6px 2px;
+         margin-right:20px; color:var(--muted); font-size:15px }
+  .tab.active { color:var(--ink); border-bottom-color:var(--ink) }
+  .tab:hover { background:none; color:var(--ink) }
+  #unread { display:none; background:var(--ink); color:#fff; border-radius:9px;
+            padding:1px 7px; font-size:12px; margin-left:5px }
+  #unread.show { display:inline-block }
+  .msg { border-bottom:1px solid var(--line); padding:16px 10px }
+  .msg.unread { background:var(--soft) }
+  .msg .top { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap }
+  .msg .who { font-weight:500 }
+  .msg .addr { color:var(--muted); font-size:13.5px }
+  .msg .when { margin-left:auto; color:var(--faint); font-size:12.5px; white-space:nowrap }
+  .msg .body { margin-top:8px; white-space:pre-wrap; line-height:1.55; color:#3b4049 }
+  .msg .acts { margin-top:10px; display:flex; gap:8px }
+  .msg .acts button { padding:4px 10px; font-size:13px }
+  .warn { color:#a3312b; font-size:12.5px; margin-top:6px }
   .publish { display:flex; align-items:center; gap:14px; border:1px solid var(--line);
              padding:16px 18px; margin:0 0 26px; background:var(--soft); flex-wrap:wrap }
   .publish strong { display:block; font-weight:500; font-size:14px }
@@ -117,6 +134,12 @@
     <button id="deploy-production" class="primary">Publish to the live site</button>
   </div>
 
+  <div class="bar" id="tabs">
+    <button class="tab active" data-tab="projects">Projects</button>
+    <button class="tab" data-tab="inbox">Messages <span id="unread"></span></button>
+  </div>
+
+  <div id="pane-projects">
   <div class="bar">
     <h2 id="count">Projects</h2>
     <button class="primary" style="margin-left:auto" id="new">Add project</button>
@@ -129,6 +152,13 @@
     <tbody id="rows"></tbody>
   </table>
   <div class="empty" id="empty" hidden>No projects yet.</div>
+  </div>
+
+  <div id="pane-inbox" hidden>
+    <div class="bar"><h2 id="inbox-count">Messages</h2></div>
+    <div id="enquiries"></div>
+    <div class="empty" id="inbox-empty" hidden>No messages yet.</div>
+  </div>
 </main>
 
 <dialog id="dlg">
@@ -465,10 +495,82 @@ async function loadState() {
   } catch { /* non-fatal */ }
 }
 
+/* ---------- messages ---------- */
+let enquiries = [];
+
+const esc = (v) => String(v ?? "").replace(/[&<>"]/g, c =>
+  ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+
+function renderInbox() {
+  const wrap = $("#enquiries"); wrap.innerHTML = "";
+  const unread = enquiries.filter(e => !e.read_at).length;
+  $("#inbox-count").textContent = `${enquiries.length} message${enquiries.length === 1 ? "" : "s"}`;
+  $("#unread").textContent = unread;
+  $("#unread").className = unread ? "show" : "";
+  $("#inbox-empty").hidden = enquiries.length > 0;
+
+  for (const e of enquiries) {
+    const el = document.createElement("div");
+    el.className = "msg" + (e.read_at ? "" : " unread");
+    el.innerHTML = `
+      <div class="top">
+        <span class="who">${esc(e.name)}</span>
+        <a class="addr" href="mailto:${esc(e.email)}">${esc(e.email)}</a>
+        <span class="when">${when(e.created_at)}</span>
+      </div>
+      <div class="body">${esc(e.message)}</div>
+      ${e.mail_state === "failed"
+        ? `<div class="warn">The email copy did not send (${esc(e.mail_error || "unknown")}). The message itself is safe here.</div>`
+        : e.mail_state === "skipped"
+        ? `<div class="warn">Email forwarding is not configured yet, so this arrived here only.</div>`
+        : ""}
+      <div class="acts">
+        <button data-a="reply">Reply</button>
+        ${e.read_at ? "" : '<button data-a="read">Mark read</button>'}
+        <button data-a="del" class="danger">Delete</button>
+      </div>`;
+    const [reply, maybeRead, del] = el.querySelectorAll("button");
+    reply.onclick = () => {
+      window.location.href =
+        `mailto:${e.email}?subject=${encodeURIComponent("Re: your message to DOCA")}`;
+      markRead(e);
+    };
+    if (!e.read_at) maybeRead.onclick = () => markRead(e);
+    (e.read_at ? maybeRead : del).onclick = async () => {
+      if (!confirm("Delete this message?")) return;
+      try { await api(`/api/enquiries/${e.id}`, { method: "DELETE" }); await loadInbox(); }
+      catch (err) { toast(err.message); }
+    };
+    wrap.appendChild(el);
+  }
+}
+
+async function markRead(e) {
+  if (e.read_at) return;
+  try { await api(`/api/enquiries/${e.id}`, { method: "PUT" }); await loadInbox(); }
+  catch (err) { toast(err.message); }
+}
+
+async function loadInbox() {
+  try { enquiries = await api("/api/enquiries"); renderInbox(); }
+  catch (err) { toast(err.message); }
+}
+
+document.querySelectorAll(".tab").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".tab").forEach(b => b.classList.toggle("active", b === btn));
+    const inbox = btn.dataset.tab === "inbox";
+    $("#pane-projects").hidden = inbox;
+    $("#pane-inbox").hidden = !inbox;
+    if (inbox) loadInbox();
+  };
+});
+
 async function load() {
   projects = (await api("/api/content")).projects;
   render();
   await loadState();
+  await loadInbox();
 }
 
 (async () => {
