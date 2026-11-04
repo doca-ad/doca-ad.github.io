@@ -112,11 +112,14 @@ registration anywhere.
   Match the existing quietness when adding UI.
 - Typography is `Archivo Narrow Variable`, self-hosted via `@fontsource-variable`. It replaced
   a bare `Arial Narrow` stack that was not self-hosted and rendered differently per OS.
-- **There is no SVG favicon, on purpose.** Google preferred the edge-to-edge SVG and its
-  circular crop clipped the corners. The large icons Google picks from (`favicon.ico` 48
-  layer, `apple-touch-icon.png`, `icon-192.png`) carry a wider margin; 16/32 stay tight.
-- The logo is black on transparent. Every raster variant in `public/` is baked onto a solid
-  background on purpose — iOS composites alpha on black, and Google rendered the transparent
+- **Every favicon draws the mark at 70% of its box** (SVG, ico, 16/32/180/192 PNG). Google
+  crops result favicons to a circle and reads the same `rel="icon"` links browsers do; the
+  mark's square corners clip above 70.7%, as the old edge-to-edge SVG did. Smaller looked
+  tiny in tabs. The ground is a white circle (transparent corners) so dark tab bars show a
+  round badge, not a white square; only `apple-touch-icon.png` stays square and opaque.
+  No dark-mode/inverted variant: DOCA's logo stays black on white (owner's call).
+- The logo is black on transparent. Every raster variant in `public/` puts it on a solid
+  white ground (square or circle) on purpose — iOS composites alpha on black, and Google rendered the transparent
   PNG unreadably. `src/assets/doca-logo.svg` uses `currentColor` for in-page use.
 
 ## Roadmap
