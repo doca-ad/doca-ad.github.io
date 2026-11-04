@@ -14,7 +14,6 @@ export interface Env {
   CONTACT_TO?: string;
   CONTACT_FROM?: string;
   GITHUB_REPO?: string;
-  SITE_REF?: string;
 }
 
 type Target = "staging" | "production";
@@ -68,36 +67,46 @@ async function dispatchBuild(env: Env, target: Target): Promise<{ ok: boolean; e
   if (!env.GITHUB_TOKEN) return { ok: false, error: "GITHUB_TOKEN is not configured" };
   const repo = env.GITHUB_REPO ?? "doca-ad/doca-ad.github.io";
 
-  const res = await fetch(`https://api.github.com/repos/${repo}/dispatches`, {
-    method: "POST",
-    headers: {
-      authorization: `Bearer ${env.GITHUB_TOKEN}`,
-      accept: "application/vnd.github+json",
-      "content-type": "application/json",
-      "user-agent": "doca-admin",
-    },
-    body: JSON.stringify({
-      event_type: "publish",
-      client_payload: { target, ref: env.SITE_REF ?? "main" },
-    }),
-  });
+  /**
+   * workflow_dispatch, NOT repository_dispatch. A fine-grained PAT needs Contents: WRITE to
+   * create a repository_dispatch event — i.e. the power to push code — and without it
+   * GitHub answers 403 "Resource not accessible by personal access token". That is exactly
+   * how DOCA's first publish failed. workflow_dispatch needs only Actions: write.
+   */
+  const res = await fetch(
+    `https://api.github.com/repos/${repo}/actions/workflows/deploy.yml/dispatches`,
+    {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${env.GITHUB_TOKEN}`,
+        accept: "application/vnd.github+json",
+        "content-type": "application/json",
+        "user-agent": "doca-admin",
+      },
+      body: JSON.stringify({
+        // Each environment builds its own branch: staging previews code that is not on main
+        // yet, and production must never pick up unreviewed staging code.
+        ref: target === "production" ? "main" : "staging",
+        inputs: { target },
+        return_run_details: true,
+      }),
+    }
+  );
 
+  if (res.status === 200) return { ok: true };   // run details returned: it started
   if (res.status !== 204) {
     return { ok: false, error: `GitHub returned ${res.status}: ${(await res.text()).slice(0, 200)}` };
   }
 
   /**
-   * A dispatch returns 204 even when nothing runs.
-   *
-   * repository_dispatch only triggers workflows defined on the DEFAULT branch — if the
-   * workflow is missing there, GitHub accepts the request and silently does nothing. That
-   * once made the Publish button report success while doing nothing at all, which is worse
-   * than failing. Confirm a run actually started.
+   * A bare 204 does not prove anything ran: GitHub has accepted dispatches before and then
+   * silently done nothing, which made the Publish button report success while doing
+   * nothing at all — worse than failing. Confirm a run actually started.
    */
   await new Promise((r) => setTimeout(r, 3000));
   const since = new Date(Date.now() - 120_000).toISOString();
   const runs = await fetch(
-    `https://api.github.com/repos/${repo}/actions/runs?event=repository_dispatch&created=>${since}&per_page=1`,
+    `https://api.github.com/repos/${repo}/actions/runs?event=workflow_dispatch&created=>${since}&per_page=1`,
     {
       headers: {
         authorization: `Bearer ${env.GITHUB_TOKEN}`,
@@ -112,8 +121,8 @@ async function dispatchBuild(env: Env, target: Target): Promise<{ ok: boolean; e
       return {
         ok: false,
         error:
-          "GitHub accepted the request but no build started. The deploy workflow must exist " +
-          "on the repository's default branch for this to work.",
+          "GitHub accepted the request but no build started. .github/workflows/deploy.yml " +
+          "must exist on the branch being published.",
       };
     }
   }

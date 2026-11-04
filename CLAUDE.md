@@ -36,15 +36,15 @@ Production promotion is a **separate, explicit decision** — ask the user first
 | Environment | Pages project       | Production branch | Domain                  | Auth |
 |-------------|---------------------|-------------------|-------------------------|------|
 | Staging     | `doca-staging`      | `staging`         | `staging.docastudio.ro` | Cloudflare Access, 3 emails |
-| Production  | `doca-ad-github-io` | `main`            | `docastudio.ro`         | public |
+| Production  | `doca-prod`         | `main`            | `docastudio.ro`         | public |
 | Admin       | Worker `doca-admin` | —             | `admin.docastudio.ro`   | Cloudflare Access |
 
 - Cloudflare account `4619edab308cab4c20177a04b6149f84`. DNS for `docastudio.ro` is on
   Cloudflare nameservers in that same account.
-- **Production is still served by GitHub Pages** (`.github/workflows/jekyll-gh-pages.yml`)
-  until the cutover. The `doca-ad-github-io` Pages project exists but **every git-triggered
-  build has failed for over a month** — unresolved. Prefer direct upload, or replace the git
-  integration with `cloudflare/wrangler-action`.
+- Production was cut over from GitHub Pages to `doca-prod` (direct upload). The old
+  git-connected `doca-ad-github-io` project is unused; its builds have failed for months.
+- Both environments are built by `.github/workflows/deploy.yml`. The admin starts it with
+  **`workflow_dispatch`**, `ref: staging` for staging and `ref: main` for production.
 - Access identities: `sstefan.diaconescu@gmail.com`, `vlad.capitanu@gmail.com`,
   `calincapitanu@gmail.com` (one-time PIN).
   The doubled leading `s` in `sstefan...` is **correct, verified with the owner**. Do not
@@ -112,6 +112,9 @@ registration anywhere.
   Match the existing quietness when adding UI.
 - Typography is `Archivo Narrow Variable`, self-hosted via `@fontsource-variable`. It replaced
   a bare `Arial Narrow` stack that was not self-hosted and rendered differently per OS.
+- **There is no SVG favicon, on purpose.** Google preferred the edge-to-edge SVG and its
+  circular crop clipped the corners. The large icons Google picks from (`favicon.ico` 48
+  layer, `apple-touch-icon.png`, `icon-192.png`) carry a wider margin; 16/32 stay tight.
 - The logo is black on transparent. Every raster variant in `public/` is baked onto a solid
   background on purpose — iOS composites alpha on black, and Google rendered the transparent
   PNG unreadably. `src/assets/doca-logo.svg` uses `currentColor` for in-page use.
@@ -176,7 +179,9 @@ Two, in different places:
 
 1. **Worker → GitHub.** A fine-grained PAT on `doca-ad/doca-ad.github.io` with
    *Actions: read and write* and *Contents: read*. It never leaves the Worker and is never
-   exposed to DOCA.
+   exposed to DOCA. **Do not switch back to `repository_dispatch`**: on a fine-grained PAT
+   it needs *Contents: write* (push access) and otherwise 403s with "Resource not
+   accessible by personal access token" — which is how DOCA's first publish failed.
    ```bash
    cd admin && npx wrangler secret put GITHUB_TOKEN
    ```
