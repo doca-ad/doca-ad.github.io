@@ -63,32 +63,33 @@ async function throttled(env: Env, ip: string): Promise<boolean> {
 
 /**
  * Email is attempted after the enquiry is safely stored, and its outcome is recorded.
- * docastudio.ro has no MX and office@doca-ad.ro is on a self-hosted domain with its own
- * SPF, so sending "as" the site would fail SPF and land in spam. Delivery therefore goes
- * through whatever relay is configured; until one is, enquiries simply wait in the admin.
+ *
+ * Cloudflare Email Routing's send_email binding, not a third-party relay: no API key to leak,
+ * and it is free because the binding is locked (wrangler.jsonc `destination_address`) to one
+ * verified inbox. That lock also means this endpoint cannot be abused to mail anyone else.
+ * It sends as noreply@docastudio.ro, which docastudio.ro's own SPF/DKIM cover; sending "as"
+ * office@doca-ad.ro would fail SPF on that self-hosted domain and land in spam. Reply-To is
+ * the person who wrote in, so DOCA can simply press Reply.
  */
-async function deliver(env: Env, e: { id: string; name: string; email: string; message: string }) {
-  if (!env.RESEND_API_KEY || !env.CONTACT_TO) return { state: "skipped", error: null };
+async function deliver(env: Env, e: { name: string; email: string; message: string; locale: string }) {
+  if (!env.EMAIL || !env.CONTACT_TO) return { state: "skipped", error: null };
 
+  // No line breaks in anything that reaches a header.
+  const name = e.name.replace(/[\r\n]+/g, " ").slice(0, 120);
   try {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        authorization: `Bearer ${env.RESEND_API_KEY}`,
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        from: env.CONTACT_FROM ?? "DOCA website <onboarding@resend.dev>",
-        to: [env.CONTACT_TO],
-        reply_to: e.email,
-        subject: `Website enquiry — ${e.name}`,
-        text: `${e.message}\n\n—\nFrom: ${e.name} <${e.email}>\nhttps://admin.docastudio.ro/`,
-      }),
+    await env.EMAIL.send({
+      from: { email: env.CONTACT_FROM ?? "noreply@docastudio.ro", name: "DOCA website" },
+      to: env.CONTACT_TO,
+      replyTo: { email: e.email, name },
+      subject: `Website enquiry — ${name}`,
+      text:
+        `${e.message}\n\n` +
+        `—\nFrom: ${name} <${e.email}>\nLanguage: ${e.locale.toUpperCase()}\n` +
+        `Reply to this email to answer. All enquiries: https://admin.docastudio.ro/`,
     });
-    if (!res.ok) return { state: "failed", error: `${res.status}: ${(await res.text()).slice(0, 180)}` };
     return { state: "sent", error: null };
   } catch (err) {
-    return { state: "failed", error: err instanceof Error ? err.message : String(err) };
+    return { state: "failed", error: (err instanceof Error ? err.message : String(err)).slice(0, 200) };
   }
 }
 
@@ -134,7 +135,7 @@ export async function handleContact(request: Request, env: Env): Promise<Contact
     (request.headers.get("user-agent") ?? "").slice(0, 200)
   ).run();
 
-  const sent = await deliver(env, { id, name, email, message });
+  const sent = await deliver(env, { name, email, message, locale });
   await env.DB.prepare(`UPDATE enquiries SET mail_state = ?, mail_error = ? WHERE id = ?`)
     .bind(sent.state, sent.error, id).run();
 

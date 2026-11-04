@@ -24,8 +24,22 @@
 
   "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "doca-media" }],
 
+  // Contact form email. Locked to ONE verified recipient and ONE sender, so the public
+  // /api/contact endpoint can never be used to mail anyone else. Sending to a verified
+  // destination is free on the Workers Free plan; arbitrary recipients would need Paid.
+  // Requires Email Routing on docastudio.ro and office@doca-ad.ro verified as a destination.
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "destination_address": "office@doca-ad.ro",
+      "allowed_sender_addresses": ["noreply@docastudio.ro"]
+    }
+  ],
+
   "vars": {
     // Cloudflare Access team domain, used to verify the signed JWT.
-    "ACCESS_TEAM_DOMAIN": "rapid-fog-f675.cloudflareaccess.com"
+    "ACCESS_TEAM_DOMAIN": "rapid-fog-f675.cloudflareaccess.com",
+    "CONTACT_TO": "office@doca-ad.ro",
+    "CONTACT_FROM": "noreply@docastudio.ro"
   }
 }

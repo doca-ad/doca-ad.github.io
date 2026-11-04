@@ -8,9 +8,9 @@ export interface Env {
   MEDIA?: R2Bucket;
   /** Fine-grained PAT, repo-scoped, with Actions: write. Never leaves the Worker. */
   GITHUB_TOKEN?: string;
-  /** Contact form. Without these the form still stores enquiries; it just does not email. */
+  /** Contact form. Without EMAIL/CONTACT_TO it still stores enquiries; it just does not email. */
   TURNSTILE_SECRET?: string;
-  RESEND_API_KEY?: string;
+  EMAIL?: SendEmail;
   CONTACT_TO?: string;
   CONTACT_FROM?: string;
   GITHUB_REPO?: string;
