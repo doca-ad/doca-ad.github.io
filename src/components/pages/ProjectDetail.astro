@@ -11,13 +11,15 @@ const { locale, project: raw } = Astro.props;
 
 const project = localizeProject(raw, locale, PROJECT_DESCRIPTIONS_RO[raw.id]);
 const description = project.description;
+/** Line breaks DOCA type in the admin are kept on the page; search snippets get one line. */
+const summary = (description ?? "").replace(/\s+/g, " ").trim();
 const [hero, ...rest] = project.images;
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CreativeWork",
   name: project.title,
-  description,
+  description: summary,
   inLanguage: locale,
   creator: { "@id": "https://docastudio.ro/#organization" },
   dateCreated: project.year,
@@ -26,7 +28,7 @@ const jsonLd = {
 };
 ---
 
-<Base title={project.title} description={description.slice(0, 160)} breadcrumb={project.title} image={hero.src}>
+<Base title={project.title} description={summary.slice(0, 160)} breadcrumb={project.title} image={hero.src}>
   <div class="min-h-screen bg-background">
     <Navigation locale={locale} routeKey={`/projects/${project.slug}`} client:load />
     <main class="pt-32 pb-24">
@@ -46,7 +48,7 @@ const jsonLd = {
         />
 
         {description && (
-          <p class="max-w-3xl mx-auto text-base md:text-lg text-text-secondary leading-relaxed text-justify mb-16">
+          <p class="max-w-3xl mx-auto text-base md:text-lg text-text-secondary leading-relaxed text-justify whitespace-pre-line mb-16">
             {description}
           </p>
         )}

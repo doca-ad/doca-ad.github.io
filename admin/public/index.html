@@ -463,8 +463,8 @@ async function deploy(target) {
       body: JSON.stringify({ target }),
     });
     toast(target === "production"
-      ? "Publishing to the live site — it updates in a minute or two"
-      : "Updating the preview — it refreshes in a minute or two");
+      ? "Publishing to the live site — it usually takes 2 to 8 minutes. Press Publish only once."
+      : "Updating the preview — it usually takes 2 to 8 minutes. Press Publish only once.");
     await loadState();
   } catch (e) { toast(e.message, 5000); }
   finally { btn.disabled = false; btn.textContent = label; }

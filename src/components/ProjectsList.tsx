@@ -170,7 +170,7 @@ const ProjectsList = ({ projects }: ProjectsListProps) => {
 
             <div className="w-full md:w-1/3">
               <div className="h-60 md:h-72 bg-muted/20 flex flex-col p-6 overflow-y-auto">
-                <p className="text-sm text-text-secondary leading-relaxed">{project.description}</p>
+                <p className="text-sm text-text-secondary leading-relaxed whitespace-pre-line">{project.description}</p>
               </div>
             </div>
           </div>
